@@ -16,7 +16,7 @@ namespace 鼠连点
     {
         protected delegate void UpdateControlText1();
 
-        [System.Runtime.InteropServices.DllImport("user32")]
+        [DllImport("user32")]
         private static extern int mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);//模拟鼠标消息
 
         const int MOUSEEVENTF_LEFTDOWN = 0x0002;   //模拟鼠标左键按下      
@@ -25,13 +25,16 @@ namespace 鼠连点
         const int MOUSEEVENTF_RIGHTUP = 0x0010;    //模拟鼠标右键抬起 
         const int MOUSEEVENTF_MIDDLEDOWN = 0x0020; //模拟鼠标中键按下 
         const int MOUSEEVENTF_MIDDLEUP = 0x0040;   //模拟鼠标中键抬起 
-                                                   // const int MOUSEEVENTF_WHEEL = 0x0800;      //模拟鼠标滚轮滚动操作，必须配合dwData参数
+        const int MOUSEEVENTF_WHEEL = 0x0800;      //模拟鼠标滚轮滚动
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, Keys vk);//注册热键
 
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);//释放注册的的热键
+
+
+
         public Form1()
         {
             InitializeComponent();
@@ -48,15 +51,17 @@ namespace 鼠连点
                     label5.Text = "使用方法：\n1、点击上面按钮开始\n2、把鼠标移动到需要点击的地方";
                 }
             }
+
+            comboBox1.SelectedIndex = 0;
         }
 
 
 
 
         private Thread newThread;
-        private int number;
-        double sec;
-        bool start = false, infiniteNumber;
+        private int number, roll;
+        private double sec;
+        private bool start = false, infiniteNumber;
 
         /// <summary>
         /// 点击按钮或按F8开启
@@ -81,6 +86,11 @@ namespace 鼠连点
                 textBox1.Text = "0.001";
                 return;
             }
+            if (numericUpDown2.Enabled)
+            {
+                roll = int.Parse(numericUpDown2.Value.ToString());
+            }
+
             sec *= 1000;//把秒化成毫秒
 
 
@@ -117,11 +127,14 @@ namespace 鼠连点
                 newThread = new Thread(LeftMouseButton);
             else if (comboBox1.Text == "鼠标右键")
                 newThread = new Thread(RightMouseButton);
-            else//鼠标中键
+            else if(comboBox1.Text=="鼠标中键")
                 newThread = new Thread(MiddleMouseButton);
+            else if(comboBox1.Text=="向上滚动")
+                newThread = new Thread(ScrollUp);
+            else if(comboBox1.Text=="向下滚动")
+                newThread = new Thread(ScrollDown);
 
-
-            Thread.Sleep(1000);//延时1秒启动
+            Thread.Sleep(500);//延时500ms启动
             newThread.Start();//启动新线程
         }
 
@@ -180,6 +193,43 @@ namespace 鼠连点
             this.Invoke(update);//调用窗体Invoke方法
         }
 
+        private void ScrollUp()
+        {
+            while (infiniteNumber == true)
+            {
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
+                Thread.Sleep((int)sec);//延时
+            }
+
+
+            for (int i = 1; i <= number; i++)
+            {
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
+                Thread.Sleep((int)sec);//延时
+            }
+            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
+            this.Invoke(update);//调用窗体Invoke方法
+        }
+
+        private void ScrollDown()
+        {
+            roll *= -1;
+
+            while (infiniteNumber == true)
+            {
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
+                Thread.Sleep((int)sec);//延时
+            }
+
+
+            for (int i = 1; i <= number; i++)
+            {
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
+                Thread.Sleep((int)sec);//延时
+            }
+            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
+            this.Invoke(update);//调用窗体Invoke方法
+        }
 
         /// <summary>
         /// 在多线程中刷新控件
@@ -299,6 +349,15 @@ namespace 鼠连点
             UnregisterHotKey(this.Handle, 100);//卸载快捷键
             notifyIcon1.Dispose();//释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
             Environment.Exit(0);//退出程序 
+        }
+
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex == 3 || comboBox1.SelectedIndex == 4)
+                numericUpDown2.Enabled = true;
+            else
+                numericUpDown2.Enabled = false;
         }
 
 
