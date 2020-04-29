@@ -1,0 +1,13 @@
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\bin\Debug\ReadOrWriteFile.dll
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\bin\Debug\vcruntime140.dll
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\bin\Debug\自动进入钉钉直播间.exe.config
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\bin\Debug\自动进入钉钉直播间.exe
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\bin\Debug\自动进入钉钉直播间.pdb
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.CustomScreenshot.resources
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.Form1.resources
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.Properties.Resources.resources
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.csproj.GenerateResource.cache
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.csproj.CoreCompileInputs.cache
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.exe
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.pdb
+G:\C#\C#源代码\测试\自动进入钉钉直播间\自动进入钉钉直播间\obj\Debug\自动进入钉钉直播间.csprojAssemblyReference.cache
