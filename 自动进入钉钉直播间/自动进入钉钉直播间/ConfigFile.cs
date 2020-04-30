@@ -18,19 +18,19 @@ namespace 自动进入钉钉直播间
         private static extern IntPtr Write_File(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive, ref int OpenLiveTime,
         ref int Time1Start, string Time1Time, ref int Time2Start, string Time2Time, ref int Time3Start, string Time3Time, ref int Time4Start, string Time4Time,
         ref int Time5Start, string Time5Time, ref int Time6Start, string Time6Time, ref int Time7Start, string Time7Time, ref int Time8Start, string Time8Time,
-        ref int ShowTop, string config_file_path);
+        ref int ShowTop, ref int PositionX, ref int PositionY, ref int PositionW, ref int PositionH, string config_file_path);
 
 
         public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
         int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
         int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
-        int ShowTop, string config_file_path)
+        int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, string config_file_path)
         {
 
             IntPtr p = Write_File(ref AutoOpenLive, ref CheckLive, ref StopCheckLive, ref AutoOPenNextLive, ref OpenLiveTime,
             ref Time1Start, Time1Time, ref Time2Start, Time2Time, ref Time3Start, Time3Time, ref Time4Start, Time4Time,
             ref Time5Start, Time5Time, ref Time6Start, Time6Time, ref Time7Start, Time7Time, ref Time8Start, Time8Time,
-            ref ShowTop, config_file_path);
+            ref ShowTop, ref PositionX, ref PositionY, ref PositionW, ref PositionH, config_file_path);
 
             if (p != IntPtr.Zero)
                 return Marshal.PtrToStringAnsi(p);
@@ -45,13 +45,13 @@ namespace 自动进入钉钉直播间
         private static extern IntPtr Read_File(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive, ref int OpenLiveTime,
         ref int Time1Start, StringBuilder Time1Time, ref int Time2Start, StringBuilder Time2Time, ref int Time3Start, StringBuilder Time3Time, ref int Time4Start, StringBuilder Time4Time,
         ref int Time5Start, StringBuilder Time5Time, ref int Time6Start, StringBuilder Time6Time, ref int Time7Start, StringBuilder Time7Time, ref int Time8Start, StringBuilder Time8Time,
-        ref int ShowTop, string config_file_path);
+        ref int ShowTop, ref int PositionX, ref int PositionY, ref int PositionW, ref int PositionH, string config_file_path);
 
 
         public static string ReadFile(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive, ref int OpenLiveTime,
         ref int Time1Start, out string Time1Time, ref int Time2Start, out string Time2Time, ref int Time3Start, out string Time3Time, ref int Time4Start, out string Time4Time,
         ref int Time5Start, out string Time5Time, ref int Time6Start, out string Time6Time, ref int Time7Start, out string Time7Time, ref int Time8Start, out string Time8Time,
-        ref int ShowTop, string config_file_path)
+        ref int ShowTop, ref int PositionX, ref int PositionY, ref int PositionW, ref int PositionH, string config_file_path)
         {
             StringBuilder SB_Time1Time = new StringBuilder(MAXSIZE);
             StringBuilder SB_Time2Time = new StringBuilder(MAXSIZE);
@@ -65,7 +65,7 @@ namespace 自动进入钉钉直播间
             IntPtr p = Read_File(ref AutoOpenLive, ref CheckLive, ref StopCheckLive, ref AutoOPenNextLive, ref OpenLiveTime,
             ref Time1Start, SB_Time1Time, ref Time2Start, SB_Time2Time, ref Time3Start, SB_Time3Time, ref Time4Start, SB_Time4Time,
             ref Time5Start, SB_Time5Time, ref Time6Start, SB_Time6Time, ref Time7Start, SB_Time7Time, ref Time8Start, SB_Time8Time,
-            ref ShowTop, config_file_path);
+            ref ShowTop, ref PositionX, ref PositionY, ref PositionW, ref PositionH, config_file_path);
 
             if (p != IntPtr.Zero)
             {

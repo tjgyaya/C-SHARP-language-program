@@ -43,7 +43,6 @@ namespace 自动进入钉钉直播间
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //this.TopMost = true;
             //设置窗口透明
             pictureBox1.BackColor = Color.Red;
             this.TransparencyKey = Color.Red;
@@ -86,14 +85,27 @@ namespace 自动进入钉钉直播间
                     System.Threading.Thread.Sleep(3000);//如未找到则等待3秒再查找
                 }
 
-                //查找钉钉窗口句柄
-                IntPtr hwnd = FindWindow(null, "钉钉");
-                if (hwnd == IntPtr.Zero)
-                {
-                    MessageBox.Show("获取钉钉窗口句柄失败，请以管理员权限运行");
-                    this.Close();
-                }
-                SetForegroundWindow(hwnd);//激活钉钉窗口到最前端
+                ////查找钉钉窗口句柄
+                //IntPtr hwnd = FindWindow(null, "钉钉");
+                //if (hwnd == IntPtr.Zero)
+                //{
+                //    MessageBox.Show("获取钉钉窗口句柄失败，请以管理员权限运行");
+                //    this.Close();
+                //}
+                ////获取钉钉窗口坐标
+                //Rect re;
+                //if (GetWindowRect(hwnd, out re) == 0)
+                //{
+                //    MessageBox.Show("获取钉钉窗口坐标失败！");
+                //    return;
+                //}
+
+                //DingDingX = re.Left;
+                //DingDingY = re.Top;
+                //DingDingWidth = re.Right - re.Left;
+                //DingDingHeight = re.Bottom - re.Top;
+                //PictureWidth = pictureBox1.Width;
+                //PictureHeight = pictureBox1.Height;
             }
             catch (Exception ex)
             {
@@ -116,59 +128,62 @@ namespace 自动进入钉钉直播间
                 pictureBox1.Image = ScreenCapture.Screenshot(PictureX, PictureY, pictureBox1.Width, pictureBox1.Height);
 
                 if (SaveDesktop)
-                    pictureBox1.Image.Save(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\自动进入钉钉直播间截图.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                    pictureBox1.Image.Save(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\自动进入钉钉直播间" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+
 
                 //判断图片rgb颜色是否是钉钉正在直播时的rgb
-                if (ScreenCapture.GetPixel((Bitmap)pictureBox1.Image) == true)///////////////////////
-                {
-                    label1.Text = "验证成功！\n请退出并重新打开本软件";
-
-                    //查找钉钉窗口句柄
-                    IntPtr hwnd = FindWindow(null, "钉钉");
-                    if (hwnd == IntPtr.Zero)
-                    {
-                        MessageBox.Show("获取钉钉窗口句柄失败！");
-                        return;
-                    }
-
-                    //激活显示钉钉窗口
-                    SetForegroundWindow(hwnd);
-
-                    //获取钉钉窗口坐标
-                    Rect re;
-                    if (GetWindowRect(hwnd, out re) == 0)
-                    {
-                        MessageBox.Show("获取钉钉窗口坐标失败！");
-                        return;
-                    }
-
-                    DingDingX = re.Left;
-                    DingDingY = re.Top;
-                    DingDingWidth = re.Right - re.Left;
-                    DingDingHeight = re.Bottom - re.Top;
-                    PictureWidth = pictureBox1.Width;
-                    PictureHeight = pictureBox1.Height;
-
-                    MessageBox.Show(string.Format($"图片左上角坐标：{PictureX}x{PictureY}\n图片高x宽：{PictureHeight}x{PictureWidth}\n" +
-                       $"钉钉左上角坐标：{DingDingX}x{DingDingY}\n钉钉高x宽：{DingDingHeight}x{DingDingWidth}"));
-                    //label2.Text = 
-
-
-                    if (!Directory.Exists(iniDirectory))
-                        Directory.CreateDirectory(iniDirectory);
-
-
-                    //写入配置文件
-                    string err = ConfigFile.ScreenWriteFile(DingDingX, DingDingY, DingDingWidth, DingDingHeight,
-                        PictureX, PictureY, PictureWidth, PictureHeight, iniPath);
-                    if (err != null)
-                        MessageBox.Show("写入配置文件错误\n原因：" + err, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
+                if (ScreenCapture.GetPixel((Bitmap)pictureBox1.Image) != true)///////////////////////
                 {
                     label1.Text = "验证失败！";
                     label2.Text = "";
+                    return;
                 }
+
+
+                label1.Text = "验证成功！\n请退出并重新打开本软件";
+
+                //查找钉钉窗口句柄
+                IntPtr hwnd = FindWindow(null, "钉钉");
+                if (hwnd == IntPtr.Zero)
+                {
+                    MessageBox.Show("获取钉钉窗口句柄失败！");
+                    return;
+                }
+
+                //激活显示钉钉窗口
+                SetForegroundWindow(hwnd);
+
+                //获取钉钉窗口坐标
+                Rect re;
+                if (GetWindowRect(hwnd, out re) == 0)
+                {
+                    MessageBox.Show("获取钉钉窗口坐标失败！");
+                    return;
+                }
+
+                DingDingX = re.Left;
+                DingDingY = re.Top;
+                DingDingWidth = re.Right - re.Left;
+                DingDingHeight = re.Bottom - re.Top;
+                PictureWidth = pictureBox1.Width;
+                PictureHeight = pictureBox1.Height;
+
+                this.Height = 185;
+
+                label2.Text = string.Format($"图片左上角坐标：{PictureX}x{PictureY}\n图片高x宽：{PictureHeight}x{PictureWidth}\n" +
+                   $"钉钉左上角坐标：{DingDingX}x{DingDingY}\n钉钉高x宽：{DingDingHeight}x{DingDingWidth}");
+
+                this.Activate();
+
+                if (!Directory.Exists(iniDirectory))
+                    Directory.CreateDirectory(iniDirectory);
+
+                //写入配置文件
+                string err = ConfigFile.ScreenWriteFile(DingDingX, DingDingY, DingDingWidth, DingDingHeight,
+                    PictureX, PictureY, PictureWidth, PictureHeight, iniPath);
+                if (err != null)
+                    MessageBox.Show("写入配置文件错误\n原因：" + err, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
             catch (Exception ex)
             {
@@ -183,6 +198,7 @@ namespace 自动进入钉钉直播间
             pictureBox1.Image = null;
             label1.Text = "请将透明区移到钉钉左上角\nxx群正在直播区域并截图";
             label2.Text = "";
+            this.Height = 130;
         }
     }
 }
