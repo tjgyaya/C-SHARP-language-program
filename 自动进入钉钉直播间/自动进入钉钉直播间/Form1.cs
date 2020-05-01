@@ -27,6 +27,7 @@ namespace 自动进入钉钉直播间
             label1.Enabled = false;
             label21.Enabled = false;
             label23.Enabled = false;
+            toolTip1.ShowAlways = true;
 
 
             for (int i = 0; i < 24; i++)
@@ -1142,7 +1143,7 @@ namespace 自动进入钉钉直播间
             Process.Start("https://www.52pojie.cn/thread-1168398-3-1.html");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button6_delConfigFile_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1169,8 +1170,41 @@ namespace 自动进入钉钉直播间
         }
 
 
+        //在button按钮显示提示
+        private void button1_CustomScreenshot_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.button1_CustomScreenshot, "多次检测直播失败时请使用此功能\n有几率 提高 识别钉钉直播是否开启的准确性");
+        }
 
+        private void button2_AddStart_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.button2_AddStart, "添加自启动后本软件将 会 在系统启动时自动启动");
+        }
 
+        private void button3_DelStart_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.button3_DelStart, "删除自启动后本软件将 不会 在系统启动时自动启动");
+        }
+
+        private void button4_DelCustomScreenshot_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.button4_DelCustomScreenshot, "删除截图数据后，截图数据会恢复到默认，\n有可能 降低 识别钉钉直播是否开启的准确性");
+        }
+
+        private void button6_delConfigFile_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.button6_delConfigFile, "此功能会删除 您设定的自定义时间数据，\n但不会删除自定义截图数据");
+        }
+
+        private void checkBox2_AutoOPenNextLive_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.checkBox2_AutoOPenNextLive, "启用此功能后会在当前直播完后\n按照设定并启用的自定义时间自动打开下一场直播");
+        }
+
+        private void label19_Explain_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.label19_Explain, "学生党请以学习为重");
+        }
 
         const int MOUSEEVENTF_LEFTUP = 0x0004;     //模拟鼠标左键抬起 
 

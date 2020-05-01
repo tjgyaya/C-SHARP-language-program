@@ -98,7 +98,8 @@
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button6_delConfigFile = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1_CheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2_StopCheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -123,10 +124,11 @@
             this.button1_CustomScreenshot.Location = new System.Drawing.Point(2, 105);
             this.button1_CustomScreenshot.Name = "button1_CustomScreenshot";
             this.button1_CustomScreenshot.Size = new System.Drawing.Size(75, 25);
-            this.button1_CustomScreenshot.TabIndex = 0;
+            this.button1_CustomScreenshot.TabIndex = 3;
             this.button1_CustomScreenshot.Text = "自定义截图";
             this.button1_CustomScreenshot.UseVisualStyleBackColor = true;
             this.button1_CustomScreenshot.Click += new System.EventHandler(this.button1_CustomScreenshot_Click);
+            this.button1_CustomScreenshot.MouseEnter += new System.EventHandler(this.button1_CustomScreenshot_MouseEnter);
             // 
             // checkBox1_AutoOpenLive
             // 
@@ -137,7 +139,7 @@
             this.checkBox1_AutoOpenLive.Location = new System.Drawing.Point(2, 183);
             this.checkBox1_AutoOpenLive.Name = "checkBox1_AutoOpenLive";
             this.checkBox1_AutoOpenLive.Size = new System.Drawing.Size(141, 22);
-            this.checkBox1_AutoOpenLive.TabIndex = 1;
+            this.checkBox1_AutoOpenLive.TabIndex = 8;
             this.checkBox1_AutoOpenLive.Text = "中断直播时自动进入";
             this.checkBox1_AutoOpenLive.UseVisualStyleBackColor = true;
             this.checkBox1_AutoOpenLive.CheckedChanged += new System.EventHandler(this.checkBox1_AutoOpenLive_CheckedChanged);
@@ -161,7 +163,7 @@
             0});
             this.numericUpDown1_CheckLiveTime.Name = "numericUpDown1_CheckLiveTime";
             this.numericUpDown1_CheckLiveTime.Size = new System.Drawing.Size(41, 23);
-            this.numericUpDown1_CheckLiveTime.TabIndex = 2;
+            this.numericUpDown1_CheckLiveTime.TabIndex = 9;
             this.numericUpDown1_CheckLiveTime.Value = new decimal(new int[] {
             30,
             0,
@@ -188,11 +190,12 @@
             this.checkBox2_AutoOPenNextLive.Location = new System.Drawing.Point(313, 12);
             this.checkBox2_AutoOPenNextLive.Name = "checkBox2_AutoOPenNextLive";
             this.checkBox2_AutoOPenNextLive.Size = new System.Drawing.Size(160, 25);
-            this.checkBox2_AutoOPenNextLive.TabIndex = 5;
+            this.checkBox2_AutoOPenNextLive.TabIndex = 15;
             this.checkBox2_AutoOPenNextLive.Text = "自动开启下一次直播";
             this.checkBox2_AutoOPenNextLive.UseVisualStyleBackColor = true;
             this.checkBox2_AutoOPenNextLive.CheckedChanged += new System.EventHandler(this.checkBox2_AutoOPenNextLive_CheckedChanged);
             this.checkBox2_AutoOPenNextLive.Click += new System.EventHandler(this.checkBox2_AutoOPenNextLive_Click);
+            this.checkBox2_AutoOPenNextLive.MouseEnter += new System.EventHandler(this.checkBox2_AutoOPenNextLive_MouseEnter);
             // 
             // comboBox1
             // 
@@ -206,7 +209,7 @@
             this.comboBox1.MaxDropDownItems = 10;
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(48, 25);
-            this.comboBox1.TabIndex = 6;
+            this.comboBox1.TabIndex = 18;
             // 
             // label3
             // 
@@ -231,7 +234,7 @@
             this.comboBox2.MaxDropDownItems = 10;
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(48, 25);
-            this.comboBox2.TabIndex = 8;
+            this.comboBox2.TabIndex = 19;
             // 
             // label4
             // 
@@ -267,7 +270,7 @@
             this.comboBox4.MaxDropDownItems = 10;
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(48, 25);
-            this.comboBox4.TabIndex = 13;
+            this.comboBox4.TabIndex = 22;
             // 
             // label8
             // 
@@ -292,7 +295,7 @@
             this.comboBox3.MaxDropDownItems = 10;
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(48, 25);
-            this.comboBox3.TabIndex = 11;
+            this.comboBox3.TabIndex = 21;
             // 
             // label10
             // 
@@ -317,7 +320,7 @@
             this.comboBox6.MaxDropDownItems = 10;
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(48, 25);
-            this.comboBox6.TabIndex = 18;
+            this.comboBox6.TabIndex = 25;
             // 
             // label11
             // 
@@ -342,7 +345,7 @@
             this.comboBox5.MaxDropDownItems = 10;
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(48, 25);
-            this.comboBox5.TabIndex = 16;
+            this.comboBox5.TabIndex = 24;
             // 
             // label13
             // 
@@ -367,7 +370,7 @@
             this.comboBox8.MaxDropDownItems = 10;
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(48, 25);
-            this.comboBox8.TabIndex = 23;
+            this.comboBox8.TabIndex = 28;
             // 
             // label14
             // 
@@ -392,7 +395,7 @@
             this.comboBox7.MaxDropDownItems = 10;
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(48, 25);
-            this.comboBox7.TabIndex = 21;
+            this.comboBox7.TabIndex = 27;
             // 
             // checkBox3_Time1
             // 
@@ -403,7 +406,7 @@
             this.checkBox3_Time1.Location = new System.Drawing.Point(313, 63);
             this.checkBox3_Time1.Name = "checkBox3_Time1";
             this.checkBox3_Time1.Size = new System.Drawing.Size(117, 22);
-            this.checkBox3_Time1.TabIndex = 25;
+            this.checkBox3_Time1.TabIndex = 17;
             this.checkBox3_Time1.Text = "自定义时间一：";
             this.checkBox3_Time1.UseVisualStyleBackColor = true;
             this.checkBox3_Time1.CheckedChanged += new System.EventHandler(this.checkBox3_Time1_CheckedChanged);
@@ -418,7 +421,7 @@
             this.checkBox4_Time2.Location = new System.Drawing.Point(313, 101);
             this.checkBox4_Time2.Name = "checkBox4_Time2";
             this.checkBox4_Time2.Size = new System.Drawing.Size(117, 22);
-            this.checkBox4_Time2.TabIndex = 26;
+            this.checkBox4_Time2.TabIndex = 20;
             this.checkBox4_Time2.Text = "自定义时间二：";
             this.checkBox4_Time2.UseVisualStyleBackColor = true;
             this.checkBox4_Time2.CheckedChanged += new System.EventHandler(this.checkBox4_Time2_CheckedChanged);
@@ -433,7 +436,7 @@
             this.checkBox5_Time3.Location = new System.Drawing.Point(313, 133);
             this.checkBox5_Time3.Name = "checkBox5_Time3";
             this.checkBox5_Time3.Size = new System.Drawing.Size(117, 22);
-            this.checkBox5_Time3.TabIndex = 27;
+            this.checkBox5_Time3.TabIndex = 23;
             this.checkBox5_Time3.Text = "自定义时间三：";
             this.checkBox5_Time3.UseVisualStyleBackColor = true;
             this.checkBox5_Time3.CheckedChanged += new System.EventHandler(this.checkBox5_Time3_CheckedChanged);
@@ -448,7 +451,7 @@
             this.checkBox6_Time4.Location = new System.Drawing.Point(313, 166);
             this.checkBox6_Time4.Name = "checkBox6_Time4";
             this.checkBox6_Time4.Size = new System.Drawing.Size(117, 22);
-            this.checkBox6_Time4.TabIndex = 28;
+            this.checkBox6_Time4.TabIndex = 26;
             this.checkBox6_Time4.Text = "自定义时间四：";
             this.checkBox6_Time4.UseVisualStyleBackColor = true;
             this.checkBox6_Time4.CheckedChanged += new System.EventHandler(this.checkBox6_Time4_CheckedChanged);
@@ -463,7 +466,7 @@
             this.checkBox10_Time8.Location = new System.Drawing.Point(313, 307);
             this.checkBox10_Time8.Name = "checkBox10_Time8";
             this.checkBox10_Time8.Size = new System.Drawing.Size(117, 22);
-            this.checkBox10_Time8.TabIndex = 48;
+            this.checkBox10_Time8.TabIndex = 38;
             this.checkBox10_Time8.Text = "自定义时间八：";
             this.checkBox10_Time8.UseVisualStyleBackColor = true;
             this.checkBox10_Time8.CheckedChanged += new System.EventHandler(this.checkBox10_Time8_CheckedChanged);
@@ -478,7 +481,7 @@
             this.checkBox9_Time7.Location = new System.Drawing.Point(313, 273);
             this.checkBox9_Time7.Name = "checkBox9_Time7";
             this.checkBox9_Time7.Size = new System.Drawing.Size(117, 22);
-            this.checkBox9_Time7.TabIndex = 47;
+            this.checkBox9_Time7.TabIndex = 35;
             this.checkBox9_Time7.Text = "自定义时间七：";
             this.checkBox9_Time7.UseVisualStyleBackColor = true;
             this.checkBox9_Time7.CheckedChanged += new System.EventHandler(this.checkBox9_Time7_CheckedChanged);
@@ -493,7 +496,7 @@
             this.checkBox8_Time6.Location = new System.Drawing.Point(313, 239);
             this.checkBox8_Time6.Name = "checkBox8_Time6";
             this.checkBox8_Time6.Size = new System.Drawing.Size(117, 22);
-            this.checkBox8_Time6.TabIndex = 46;
+            this.checkBox8_Time6.TabIndex = 32;
             this.checkBox8_Time6.Text = "自定义时间六：";
             this.checkBox8_Time6.UseVisualStyleBackColor = true;
             this.checkBox8_Time6.CheckedChanged += new System.EventHandler(this.checkBox8_Time6_CheckedChanged);
@@ -508,7 +511,7 @@
             this.checkBox7_Time5.Location = new System.Drawing.Point(313, 206);
             this.checkBox7_Time5.Name = "checkBox7_Time5";
             this.checkBox7_Time5.Size = new System.Drawing.Size(117, 22);
-            this.checkBox7_Time5.TabIndex = 45;
+            this.checkBox7_Time5.TabIndex = 29;
             this.checkBox7_Time5.Text = "自定义时间五：";
             this.checkBox7_Time5.UseVisualStyleBackColor = true;
             this.checkBox7_Time5.CheckedChanged += new System.EventHandler(this.checkBox7_Time5_CheckedChanged);
@@ -537,7 +540,7 @@
             this.comboBox16.MaxDropDownItems = 10;
             this.comboBox16.Name = "comboBox16";
             this.comboBox16.Size = new System.Drawing.Size(48, 25);
-            this.comboBox16.TabIndex = 43;
+            this.comboBox16.TabIndex = 40;
             // 
             // label6
             // 
@@ -562,7 +565,7 @@
             this.comboBox15.MaxDropDownItems = 10;
             this.comboBox15.Name = "comboBox15";
             this.comboBox15.Size = new System.Drawing.Size(48, 25);
-            this.comboBox15.TabIndex = 41;
+            this.comboBox15.TabIndex = 39;
             // 
             // label9
             // 
@@ -587,7 +590,7 @@
             this.comboBox14.MaxDropDownItems = 10;
             this.comboBox14.Name = "comboBox14";
             this.comboBox14.Size = new System.Drawing.Size(48, 25);
-            this.comboBox14.TabIndex = 39;
+            this.comboBox14.TabIndex = 37;
             // 
             // label12
             // 
@@ -612,7 +615,7 @@
             this.comboBox13.MaxDropDownItems = 10;
             this.comboBox13.Name = "comboBox13";
             this.comboBox13.Size = new System.Drawing.Size(48, 25);
-            this.comboBox13.TabIndex = 37;
+            this.comboBox13.TabIndex = 36;
             // 
             // label15
             // 
@@ -637,7 +640,7 @@
             this.comboBox12.MaxDropDownItems = 10;
             this.comboBox12.Name = "comboBox12";
             this.comboBox12.Size = new System.Drawing.Size(48, 25);
-            this.comboBox12.TabIndex = 35;
+            this.comboBox12.TabIndex = 34;
             // 
             // label16
             // 
@@ -712,7 +715,7 @@
             this.comboBox9.MaxDropDownItems = 10;
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(48, 25);
-            this.comboBox9.TabIndex = 29;
+            this.comboBox9.TabIndex = 30;
             // 
             // label19_Explain
             // 
@@ -725,8 +728,9 @@
             this.label19_Explain.Location = new System.Drawing.Point(2, 2);
             this.label19_Explain.Name = "label19_Explain";
             this.label19_Explain.Size = new System.Drawing.Size(179, 74);
-            this.label19_Explain.TabIndex = 49;
+            this.label19_Explain.TabIndex = 14;
             this.label19_Explain.Text = "你若不努力，\r\n谁也救不了你";
+            this.label19_Explain.MouseEnter += new System.EventHandler(this.label19_Explain_MouseEnter);
             // 
             // label19
             // 
@@ -738,7 +742,7 @@
             this.label19.Location = new System.Drawing.Point(215, 348);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(125, 19);
-            this.label19.TabIndex = 50;
+            this.label19.TabIndex = 42;
             this.label19.Text = "Copyright (C) 2020";
             // 
             // label20
@@ -753,7 +757,7 @@
             this.label20.Location = new System.Drawing.Point(2, 348);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(82, 19);
-            this.label20.TabIndex = 51;
+            this.label20.TabIndex = 41;
             this.label20.Text = "吾爱破解首发";
             this.label20.Click += new System.EventHandler(this.label20_Click);
             // 
@@ -775,7 +779,7 @@
             0});
             this.numericUpDown2_StopCheckLiveTime.Name = "numericUpDown2_StopCheckLiveTime";
             this.numericUpDown2_StopCheckLiveTime.Size = new System.Drawing.Size(41, 23);
-            this.numericUpDown2_StopCheckLiveTime.TabIndex = 52;
+            this.numericUpDown2_StopCheckLiveTime.TabIndex = 10;
             this.numericUpDown2_StopCheckLiveTime.Value = new decimal(new int[] {
             2,
             0,
@@ -804,7 +808,7 @@
             this.textBox1_log.Name = "textBox1_log";
             this.textBox1_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1_log.Size = new System.Drawing.Size(302, 92);
-            this.textBox1_log.TabIndex = 54;
+            this.textBox1_log.TabIndex = 11;
             this.textBox1_log.TabStop = false;
             this.textBox1_log.Text = "日志...\r\n";
             this.textBox1_log.TextChanged += new System.EventHandler(this.textBox1_log_TextChanged);
@@ -833,7 +837,7 @@
             0});
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(47, 23);
-            this.numericUpDown3.TabIndex = 56;
+            this.numericUpDown3.TabIndex = 16;
             this.numericUpDown3.Value = new decimal(new int[] {
             1,
             0,
@@ -857,10 +861,10 @@
             this.label23_DistanceTime.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label23_DistanceTime.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold);
             this.label23_DistanceTime.ForeColor = System.Drawing.Color.Tomato;
-            this.label23_DistanceTime.Location = new System.Drawing.Point(233, 2);
+            this.label23_DistanceTime.Location = new System.Drawing.Point(238, 2);
             this.label23_DistanceTime.Name = "label23_DistanceTime";
             this.label23_DistanceTime.Size = new System.Drawing.Size(63, 135);
-            this.label23_DistanceTime.TabIndex = 59;
+            this.label23_DistanceTime.TabIndex = 13;
             this.label23_DistanceTime.Text = "距   00\r\n离   时\r\n开   00\r\n启   分\r\n还   00\r\n有   秒\r\n";
             this.label23_DistanceTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -873,7 +877,7 @@
             this.checkBox11_ShowTop.Location = new System.Drawing.Point(2, 156);
             this.checkBox11_ShowTop.Name = "checkBox11_ShowTop";
             this.checkBox11_ShowTop.Size = new System.Drawing.Size(165, 22);
-            this.checkBox11_ShowTop.TabIndex = 60;
+            this.checkBox11_ShowTop.TabIndex = 7;
             this.checkBox11_ShowTop.Text = "将钉钉窗口显示在最前方";
             this.checkBox11_ShowTop.UseVisualStyleBackColor = true;
             this.checkBox11_ShowTop.Click += new System.EventHandler(this.checkBox11_ShowTop_Click);
@@ -885,10 +889,11 @@
             this.button2_AddStart.Location = new System.Drawing.Point(2, 79);
             this.button2_AddStart.Name = "button2_AddStart";
             this.button2_AddStart.Size = new System.Drawing.Size(75, 25);
-            this.button2_AddStart.TabIndex = 61;
+            this.button2_AddStart.TabIndex = 1;
             this.button2_AddStart.Text = "添加自启";
             this.button2_AddStart.UseVisualStyleBackColor = true;
             this.button2_AddStart.Click += new System.EventHandler(this.button2_AddStart_Click);
+            this.button2_AddStart.MouseEnter += new System.EventHandler(this.button2_AddStart_MouseEnter);
             // 
             // button3_DelStart
             // 
@@ -897,10 +902,11 @@
             this.button3_DelStart.Location = new System.Drawing.Point(80, 79);
             this.button3_DelStart.Name = "button3_DelStart";
             this.button3_DelStart.Size = new System.Drawing.Size(75, 25);
-            this.button3_DelStart.TabIndex = 62;
+            this.button3_DelStart.TabIndex = 2;
             this.button3_DelStart.Text = "删除自启";
             this.button3_DelStart.UseVisualStyleBackColor = true;
             this.button3_DelStart.Click += new System.EventHandler(this.button3_DelStart_Click);
+            this.button3_DelStart.MouseEnter += new System.EventHandler(this.button3_DelStart_MouseEnter);
             // 
             // button4_DelCustomScreenshot
             // 
@@ -908,11 +914,12 @@
             this.button4_DelCustomScreenshot.Font = new System.Drawing.Font("微软雅黑", 8F);
             this.button4_DelCustomScreenshot.Location = new System.Drawing.Point(80, 105);
             this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
-            this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(116, 25);
-            this.button4_DelCustomScreenshot.TabIndex = 63;
-            this.button4_DelCustomScreenshot.Text = "删除自定义截图文件";
+            this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(75, 25);
+            this.button4_DelCustomScreenshot.TabIndex = 4;
+            this.button4_DelCustomScreenshot.Text = "删除截图数据";
             this.button4_DelCustomScreenshot.UseVisualStyleBackColor = true;
             this.button4_DelCustomScreenshot.Click += new System.EventHandler(this.button4_DelCustomScreenshot_Click);
+            this.button4_DelCustomScreenshot.MouseEnter += new System.EventHandler(this.button4_DelCustomScreenshot_MouseEnter);
             // 
             // button5_start
             // 
@@ -924,7 +931,7 @@
             this.button5_start.Location = new System.Drawing.Point(166, 153);
             this.button5_start.Name = "button5_start";
             this.button5_start.Size = new System.Drawing.Size(139, 40);
-            this.button5_start.TabIndex = 64;
+            this.button5_start.TabIndex = 12;
             this.button5_start.Text = "开启";
             this.button5_start.UseVisualStyleBackColor = false;
             this.button5_start.Click += new System.EventHandler(this.button5_Start_Click);
@@ -937,7 +944,7 @@
             this.checkBox12_SaveDesk.Location = new System.Drawing.Point(2, 134);
             this.checkBox12_SaveDesk.Name = "checkBox12_SaveDesk";
             this.checkBox12_SaveDesk.Size = new System.Drawing.Size(164, 22);
-            this.checkBox12_SaveDesk.TabIndex = 65;
+            this.checkBox12_SaveDesk.TabIndex = 6;
             this.checkBox12_SaveDesk.Text = "截图保存到桌面(Debug)";
             this.checkBox12_SaveDesk.UseVisualStyleBackColor = true;
             this.checkBox12_SaveDesk.CheckedChanged += new System.EventHandler(this.checkBox12_SaveDesk_CheckedChanged);
@@ -979,23 +986,31 @@
             this.linkLabel1.Location = new System.Drawing.Point(468, 346);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(109, 21);
-            this.linkLabel1.TabIndex = 67;
+            this.linkLabel1.TabIndex = 43;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "戳我看使用教程";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // button1
+            // button6_delConfigFile
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.Control;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(184, 44);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(40, 60);
-            this.button1.TabIndex = 68;
-            this.button1.Text = "删除配置文件";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button6_delConfigFile.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button6_delConfigFile.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.button6_delConfigFile.Location = new System.Drawing.Point(158, 105);
+            this.button6_delConfigFile.Name = "button6_delConfigFile";
+            this.button6_delConfigFile.Size = new System.Drawing.Size(76, 25);
+            this.button6_delConfigFile.TabIndex = 5;
+            this.button6_delConfigFile.Text = "删除配置文件";
+            this.button6_delConfigFile.UseVisualStyleBackColor = true;
+            this.button6_delConfigFile.Click += new System.EventHandler(this.button6_delConfigFile_Click);
+            this.button6_delConfigFile.MouseEnter += new System.EventHandler(this.button6_delConfigFile_MouseEnter);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 10000;
+            this.toolTip1.BackColor = System.Drawing.Color.White;
+            this.toolTip1.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.ReshowDelay = 100;
             // 
             // Form1
             // 
@@ -1003,7 +1018,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(582, 374);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button6_delConfigFile);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.checkBox12_SaveDesk);
@@ -1154,6 +1169,7 @@
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.Timer timer4;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button6_delConfigFile;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
