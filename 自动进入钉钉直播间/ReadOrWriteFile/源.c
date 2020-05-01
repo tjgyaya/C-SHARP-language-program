@@ -10,7 +10,7 @@
 extern  _declspec(dllexport) char* Write_File(const int* AutoOpenLive, const int* CheckLive, const int* StopCheckLive, const int* AutoOPenNextLive, const int* OpenLiveTime,
 	const int* Time1Start, const char* Time1Time, const int* Time2Start, const char* Time2Time, const  int* Time3Start, const char* Time3Time, const int* Time4Start, const char* Time4Time,
 	const int* Time5Start, const char* Time5Time, const int* Time6Start, const char* Time6Time, const int* Time7Start, const char* Time7Time, const int* Time8Start, const char* Time8Time,
-	const int* ShowTop, const char* config_file_path)
+	const int* ShowTop, const int* PositionX, const int* PositionY, const int* PositionW, const int* PositionH, const char* config_file_path)
 {
 	char buff[MAXPATH];
 	static char err[MAXSIZE];
@@ -36,10 +36,15 @@ extern  _declspec(dllexport) char* Write_File(const int* AutoOpenLive, const int
 		"时间七 = %s;\n"
 		"时间八开启 = %d;\n"
 		"时间八 = %s;\n"
-		"钉钉始终显示在最顶层 = %d;\n",
+		"钉钉始终显示在最顶层 = %d;\n"
+		"主窗体X坐标 = %d;\n"
+		"主窗体Y坐标 = %d;\n"
+		"主窗体宽度 = %d;\n"
+		"主窗体高度 = %d;\n",
 		*AutoOpenLive, *CheckLive, *StopCheckLive, *AutoOPenNextLive, *OpenLiveTime,
 		*Time1Start, Time1Time, *Time2Start, Time2Time, *Time3Start, Time3Time, *Time4Start, Time4Time,
-		*Time5Start, Time5Time, *Time6Start, Time6Time, *Time7Start, Time7Time, *Time8Start, Time8Time, *ShowTop);
+		*Time5Start, Time5Time, *Time6Start, Time6Time, *Time7Start, Time7Time, *Time8Start, Time8Time, *ShowTop,
+		*PositionX, *PositionY, *PositionW, *PositionH);
 
 	FILE* fp;
 	if (fopen_s(&fp, config_file_path, "w") != 0)
@@ -62,7 +67,7 @@ extern  _declspec(dllexport) char* Write_File(const int* AutoOpenLive, const int
 extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, int* StopCheckLive, int* AutoOPenNextLive, int* OpenLiveTime,
 	int* Time1Start, char* Time1Time, int* Time2Start, char* Time2Time, int* Time3Start, char* Time3Time, int* Time4Start, char* Time4Time,
 	int* Time5Start, char* Time5Time, int* Time6Start, char* Time6Time, int* Time7Start, char* Time7Time, int* Time8Start, char* Time8Time,
-	int* ShowTop, const char* config_file_path)
+	int* ShowTop, int* PositionX, int* PositionY, int* PositionW, int* PositionH, const char* config_file_path)
 {
 	int ch, i = 0, j = 0;
 	int al = 0;//中断直播时自动进入
@@ -87,6 +92,10 @@ extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, 
 	int t8s = 0;
 	char t8t[MAXSIZE] = { "0,0" };//时间八内容
 	int st = 0;//钉钉始终显示在最顶层
+	int px = 0;
+	int py = 0;
+	int pw = 0;
+	int ph = 0;
 
 	char config[MAXSIZE];     //储存从文件读取的参数
 	static char err[MAXSIZE];//储存错误信息
@@ -168,6 +177,14 @@ extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, 
 			else if (j == 21)
 				sscanf_s(config, "%d", &st); //第二一行的内容是钉钉始终显示在最顶层
 			else if (j == 22)
+				sscanf_s(config, "%d", &px); //第二二行的内容是主窗体x坐标
+			else if (j == 23)
+				sscanf_s(config, "%d", &py); //第二三行的内容是主窗体y坐标
+			else if (j == 24)
+				sscanf_s(config, "%d", &pw); //第二四行的内容是主窗体宽
+			else if (j == 25)
+				sscanf_s(config, "%d", &ph); //第二五行的内容是主窗体高
+			else if (j == 26)
 				break;
 
 			j++;
@@ -199,6 +216,10 @@ extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, 
 	*Time8Start = t8s;
 	strcpy_s(Time8Time, MAXSIZE, t8t);
 	*ShowTop = st;
+	*PositionX = px;
+	*PositionY = py;
+	*PositionW = pw;
+	*PositionH = ph;
 
 	fclose(fp);
 	return NULL;
@@ -212,8 +233,9 @@ extern _declspec(dllexport)  char* Screen_Write_File(const int* DingDingX, const
 	static char err[MAXSIZE];
 
 	sprintf_s(buff, MAXPATH, "钉钉X坐标 = %d;\n钉钉Y坐标 = %d;\n钉钉宽度 = %d;\n钉钉高度 = %d;\n截图X坐标 = %d;\n截图Y坐标 = %d;\n截图宽度 = %d;\n截图高度 = %d;\n",
-		*DingDingX, *DingDingY, *DingDingWidth, *DingDingHeigth, *ScreenShotX, *ScreenShotX, *ScreenShotWidth, *ScreenShotHeight);
+		*DingDingX, *DingDingY, *DingDingWidth, *DingDingHeigth, *ScreenShotX, *ScreenShotY, *ScreenShotWidth, *ScreenShotHeight);
 
+	//MessageBoxA(NULL, buff, "aaa", MB_OK);
 	FILE* fp;
 	if (fopen_s(&fp, config_file_path, "w") != 0)
 	{
@@ -235,6 +257,7 @@ extern _declspec(dllexport)  char* Screen_Write_File(const int* DingDingX, const
 extern _declspec(dllexport) char* Screen_Read_File(int* DingDingX, int* DingDingY, int* DingDingWidth, int* DingDingHeigth, int* ScreenShotX,
 	int* ScreenShotY, int* ScreenShotWidth, int* ScreenShotHeight, const char* config_file_path)
 {
+
 	int ch, i = 0, j = 0;
 	int Dx = 0;	  //钉钉x坐标
 	int Dy = 0;   //钉钉y坐标
@@ -244,7 +267,6 @@ extern _declspec(dllexport) char* Screen_Read_File(int* DingDingX, int* DingDing
 	int Sy = 0;   //截图y坐标
 	int Sw = 0;   //截图宽度
 	int Sh = 0;   //截图高度
-
 
 	char config[MAXSIZE];     //储存从文件读取的参数
 	static char err[MAXSIZE];//储存错误信息

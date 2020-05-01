@@ -118,6 +118,7 @@
             // 
             // button1_CustomScreenshot
             // 
+            this.button1_CustomScreenshot.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button1_CustomScreenshot.Font = new System.Drawing.Font("微软雅黑", 8F);
             this.button1_CustomScreenshot.Location = new System.Drawing.Point(2, 105);
             this.button1_CustomScreenshot.Name = "button1_CustomScreenshot";
@@ -184,7 +185,7 @@
             this.checkBox2_AutoOPenNextLive.AutoSize = true;
             this.checkBox2_AutoOPenNextLive.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox2_AutoOPenNextLive.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.checkBox2_AutoOPenNextLive.Location = new System.Drawing.Point(315, 12);
+            this.checkBox2_AutoOPenNextLive.Location = new System.Drawing.Point(313, 12);
             this.checkBox2_AutoOPenNextLive.Name = "checkBox2_AutoOPenNextLive";
             this.checkBox2_AutoOPenNextLive.Size = new System.Drawing.Size(160, 25);
             this.checkBox2_AutoOPenNextLive.TabIndex = 5;
@@ -206,14 +207,13 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(48, 25);
             this.comboBox1.TabIndex = 6;
-            this.comboBox1.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(486, 68);
+            this.label3.Location = new System.Drawing.Point(485, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(20, 17);
             this.label3.TabIndex = 7;
@@ -232,14 +232,13 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(48, 25);
             this.comboBox2.TabIndex = 8;
-            this.comboBox2.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(563, 68);
+            this.label4.Location = new System.Drawing.Point(565, 68);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(20, 17);
             this.label4.TabIndex = 9;
@@ -250,7 +249,7 @@
             this.label7.AutoSize = true;
             this.label7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label7.Location = new System.Drawing.Point(563, 103);
+            this.label7.Location = new System.Drawing.Point(565, 103);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(20, 17);
             this.label7.TabIndex = 14;
@@ -269,7 +268,6 @@
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(48, 25);
             this.comboBox4.TabIndex = 13;
-            this.comboBox4.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label8
             // 
@@ -295,7 +293,6 @@
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(48, 25);
             this.comboBox3.TabIndex = 11;
-            this.comboBox3.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label10
             // 
@@ -321,14 +318,13 @@
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(48, 25);
             this.comboBox6.TabIndex = 18;
-            this.comboBox6.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label11.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.Location = new System.Drawing.Point(488, 137);
+            this.label11.Location = new System.Drawing.Point(485, 137);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(20, 17);
             this.label11.TabIndex = 17;
@@ -347,7 +343,6 @@
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(48, 25);
             this.comboBox5.TabIndex = 16;
-            this.comboBox5.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label13
             // 
@@ -373,14 +368,13 @@
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(48, 25);
             this.comboBox8.TabIndex = 23;
-            this.comboBox8.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label14.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label14.Location = new System.Drawing.Point(488, 173);
+            this.label14.Location = new System.Drawing.Point(485, 171);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(20, 17);
             this.label14.TabIndex = 22;
@@ -399,7 +393,6 @@
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(48, 25);
             this.comboBox7.TabIndex = 21;
-            this.comboBox7.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // checkBox3_Time1
             // 
@@ -452,7 +445,7 @@
             this.checkBox6_Time4.AutoSize = true;
             this.checkBox6_Time4.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox6_Time4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox6_Time4.Location = new System.Drawing.Point(315, 166);
+            this.checkBox6_Time4.Location = new System.Drawing.Point(313, 166);
             this.checkBox6_Time4.Name = "checkBox6_Time4";
             this.checkBox6_Time4.Size = new System.Drawing.Size(117, 22);
             this.checkBox6_Time4.TabIndex = 28;
@@ -467,7 +460,7 @@
             this.checkBox10_Time8.AutoSize = true;
             this.checkBox10_Time8.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox10_Time8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox10_Time8.Location = new System.Drawing.Point(314, 307);
+            this.checkBox10_Time8.Location = new System.Drawing.Point(313, 307);
             this.checkBox10_Time8.Name = "checkBox10_Time8";
             this.checkBox10_Time8.Size = new System.Drawing.Size(117, 22);
             this.checkBox10_Time8.TabIndex = 48;
@@ -482,7 +475,7 @@
             this.checkBox9_Time7.AutoSize = true;
             this.checkBox9_Time7.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox9_Time7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox9_Time7.Location = new System.Drawing.Point(314, 273);
+            this.checkBox9_Time7.Location = new System.Drawing.Point(313, 273);
             this.checkBox9_Time7.Name = "checkBox9_Time7";
             this.checkBox9_Time7.Size = new System.Drawing.Size(117, 22);
             this.checkBox9_Time7.TabIndex = 47;
@@ -497,7 +490,7 @@
             this.checkBox8_Time6.AutoSize = true;
             this.checkBox8_Time6.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox8_Time6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox8_Time6.Location = new System.Drawing.Point(314, 239);
+            this.checkBox8_Time6.Location = new System.Drawing.Point(313, 239);
             this.checkBox8_Time6.Name = "checkBox8_Time6";
             this.checkBox8_Time6.Size = new System.Drawing.Size(117, 22);
             this.checkBox8_Time6.TabIndex = 46;
@@ -512,7 +505,7 @@
             this.checkBox7_Time5.AutoSize = true;
             this.checkBox7_Time5.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox7_Time5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox7_Time5.Location = new System.Drawing.Point(314, 206);
+            this.checkBox7_Time5.Location = new System.Drawing.Point(313, 206);
             this.checkBox7_Time5.Name = "checkBox7_Time5";
             this.checkBox7_Time5.Size = new System.Drawing.Size(117, 22);
             this.checkBox7_Time5.TabIndex = 45;
@@ -526,7 +519,7 @@
             this.label5.AutoSize = true;
             this.label5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(563, 309);
+            this.label5.Location = new System.Drawing.Point(565, 309);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(20, 17);
             this.label5.TabIndex = 44;
@@ -545,14 +538,13 @@
             this.comboBox16.Name = "comboBox16";
             this.comboBox16.Size = new System.Drawing.Size(48, 25);
             this.comboBox16.TabIndex = 43;
-            this.comboBox16.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(485, 311);
+            this.label6.Location = new System.Drawing.Point(485, 309);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(20, 17);
             this.label6.TabIndex = 42;
@@ -571,7 +563,6 @@
             this.comboBox15.Name = "comboBox15";
             this.comboBox15.Size = new System.Drawing.Size(48, 25);
             this.comboBox15.TabIndex = 41;
-            this.comboBox15.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label9
             // 
@@ -597,14 +588,13 @@
             this.comboBox14.Name = "comboBox14";
             this.comboBox14.Size = new System.Drawing.Size(48, 25);
             this.comboBox14.TabIndex = 39;
-            this.comboBox14.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label12.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label12.Location = new System.Drawing.Point(486, 275);
+            this.label12.Location = new System.Drawing.Point(485, 277);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(20, 17);
             this.label12.TabIndex = 38;
@@ -623,7 +613,6 @@
             this.comboBox13.Name = "comboBox13";
             this.comboBox13.Size = new System.Drawing.Size(48, 25);
             this.comboBox13.TabIndex = 37;
-            this.comboBox13.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label15
             // 
@@ -649,14 +638,13 @@
             this.comboBox12.Name = "comboBox12";
             this.comboBox12.Size = new System.Drawing.Size(48, 25);
             this.comboBox12.TabIndex = 35;
-            this.comboBox12.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label16.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label16.Location = new System.Drawing.Point(485, 241);
+            this.label16.Location = new System.Drawing.Point(485, 243);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(20, 17);
             this.label16.TabIndex = 34;
@@ -675,14 +663,13 @@
             this.comboBox11.Name = "comboBox11";
             this.comboBox11.Size = new System.Drawing.Size(48, 25);
             this.comboBox11.TabIndex = 33;
-            this.comboBox11.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label17
             // 
             this.label17.AutoSize = true;
             this.label17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label17.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label17.Location = new System.Drawing.Point(563, 208);
+            this.label17.Location = new System.Drawing.Point(565, 208);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(20, 17);
             this.label17.TabIndex = 32;
@@ -701,14 +688,13 @@
             this.comboBox10.Name = "comboBox10";
             this.comboBox10.Size = new System.Drawing.Size(48, 25);
             this.comboBox10.TabIndex = 31;
-            this.comboBox10.TextUpdate += new System.EventHandler(this.comboBox_Min_TextUpdate);
             // 
             // label18
             // 
             this.label18.AutoSize = true;
             this.label18.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label18.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label18.Location = new System.Drawing.Point(486, 208);
+            this.label18.Location = new System.Drawing.Point(485, 208);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(20, 17);
             this.label18.TabIndex = 30;
@@ -727,7 +713,6 @@
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(48, 25);
             this.comboBox9.TabIndex = 29;
-            this.comboBox9.TextUpdate += new System.EventHandler(this.comboBox_Hour_TextUpdate);
             // 
             // label19_Explain
             // 
@@ -778,6 +763,11 @@
             this.numericUpDown2_StopCheckLiveTime.Cursor = System.Windows.Forms.Cursors.Hand;
             this.numericUpDown2_StopCheckLiveTime.Font = new System.Drawing.Font("微软雅黑", 9F);
             this.numericUpDown2_StopCheckLiveTime.Location = new System.Drawing.Point(37, 230);
+            this.numericUpDown2_StopCheckLiveTime.Maximum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
             this.numericUpDown2_StopCheckLiveTime.Minimum = new decimal(new int[] {
             1,
             0,
@@ -837,7 +827,7 @@
             this.numericUpDown3.Font = new System.Drawing.Font("微软雅黑", 9F);
             this.numericUpDown3.Location = new System.Drawing.Point(432, 34);
             this.numericUpDown3.Maximum = new decimal(new int[] {
-            10,
+            40,
             0,
             0,
             0});
@@ -867,7 +857,7 @@
             this.label23_DistanceTime.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label23_DistanceTime.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold);
             this.label23_DistanceTime.ForeColor = System.Drawing.Color.Tomato;
-            this.label23_DistanceTime.Location = new System.Drawing.Point(231, 2);
+            this.label23_DistanceTime.Location = new System.Drawing.Point(233, 2);
             this.label23_DistanceTime.Name = "label23_DistanceTime";
             this.label23_DistanceTime.Size = new System.Drawing.Size(63, 135);
             this.label23_DistanceTime.TabIndex = 59;
@@ -880,7 +870,7 @@
             this.checkBox11_ShowTop.AutoSize = true;
             this.checkBox11_ShowTop.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox11_ShowTop.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox11_ShowTop.Location = new System.Drawing.Point(2, 155);
+            this.checkBox11_ShowTop.Location = new System.Drawing.Point(2, 156);
             this.checkBox11_ShowTop.Name = "checkBox11_ShowTop";
             this.checkBox11_ShowTop.Size = new System.Drawing.Size(165, 22);
             this.checkBox11_ShowTop.TabIndex = 60;
@@ -890,6 +880,7 @@
             // 
             // button2_AddStart
             // 
+            this.button2_AddStart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button2_AddStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2_AddStart.Location = new System.Drawing.Point(2, 79);
             this.button2_AddStart.Name = "button2_AddStart";
@@ -901,6 +892,7 @@
             // 
             // button3_DelStart
             // 
+            this.button3_DelStart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button3_DelStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3_DelStart.Location = new System.Drawing.Point(80, 79);
             this.button3_DelStart.Name = "button3_DelStart";
@@ -912,6 +904,7 @@
             // 
             // button4_DelCustomScreenshot
             // 
+            this.button4_DelCustomScreenshot.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button4_DelCustomScreenshot.Font = new System.Drawing.Font("微软雅黑", 8F);
             this.button4_DelCustomScreenshot.Location = new System.Drawing.Point(80, 105);
             this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
@@ -939,10 +932,11 @@
             // checkBox12_SaveDesk
             // 
             this.checkBox12_SaveDesk.AutoSize = true;
+            this.checkBox12_SaveDesk.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.checkBox12_SaveDesk.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox12_SaveDesk.Location = new System.Drawing.Point(2, 134);
             this.checkBox12_SaveDesk.Name = "checkBox12_SaveDesk";
-            this.checkBox12_SaveDesk.Size = new System.Drawing.Size(158, 21);
+            this.checkBox12_SaveDesk.Size = new System.Drawing.Size(164, 22);
             this.checkBox12_SaveDesk.TabIndex = 65;
             this.checkBox12_SaveDesk.Text = "截图保存到桌面(Debug)";
             this.checkBox12_SaveDesk.UseVisualStyleBackColor = true;
@@ -959,7 +953,7 @@
             this.label23.AutoSize = true;
             this.label23.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label23.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.label23.Location = new System.Drawing.Point(-1, 236);
+            this.label23.Location = new System.Drawing.Point(2, 236);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(32, 17);
             this.label23.TabIndex = 66;
@@ -992,19 +986,22 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.SystemColors.Control;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.Location = new System.Drawing.Point(184, 44);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(40, 60);
             this.button1.TabIndex = 68;
             this.button1.Text = "删除配置文件";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(582, 374);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.linkLabel1);
