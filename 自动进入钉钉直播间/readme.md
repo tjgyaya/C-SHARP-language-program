@@ -22,7 +22,7 @@
 
    
 
-![图片](https://uploader.shimo.im/f/WDbdcXs5Qb0YKGe5.png!thumbnail)                                    ![图片](https://uploader.shimo.im/f/NN8BRrVaCWQsVxUw.png!thumbnail)
+![图片](https://uploader.shimo.im/f/WDbdcXs5Qb0YKGe5.png!thumbnail)   ![图片](https://uploader.shimo.im/f/NN8BRrVaCWQsVxUw.png!thumbnail)
 
 
 
@@ -45,7 +45,7 @@
 
 请将自定义截图透明区域移到钉钉窗口左上角”XX群 正在直播“处，然后点击截图，验证成功后退出软件再重新打开。截图成功后将有几率会提高识别钉钉直播是否开启的准确性。
 
-**注意：截图成功后将会保存当前钉钉窗口大小、坐标、截图区域大小、坐标，并且自定义截图需要在钉钉正在直播时进行，才会显示验证成功****。**
+**注意：截图成功后将会保存当前钉钉窗口大小、坐标、截图区域大小、坐标，并且自定义截图需要在钉钉正在直播时进行，才会显示验证成功。**
 
 2. 删除截图数据：
 
@@ -112,7 +112,7 @@
 
 这个操作就相当于重新设置了截图区域，如果想要恢复默认请点击删除自定义截图。
 
-4、**自定义截图需要在钉钉正在直播时进行，才会显示验证成****功**                 
+4、**自定义截图需要在钉钉正在直播时进行，才会显示验证成功**                 
 
 ![图片](https://uploader.shimo.im/f/MXMjFpub1aMqr5KA.png!thumbnail)
 
