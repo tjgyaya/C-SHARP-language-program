@@ -1206,6 +1206,11 @@ namespace 自动进入钉钉直播间
             toolTip1.SetToolTip(this.checkBox2_AutoOPenNextLive, "自动开启下一次直播\n启用此功能，将在当前直播完后\n自动按照设定并启用的自定义时间打开下一场直播");
         }
 
+        private void checkBox13_preventSleep_MouseEnter(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.checkBox13_preventSleep, "阻止系统休眠\n启用此功能，将在运行本软件时阻止系统休眠");
+        }
+
         private void label19_Explain_MouseEnter(object sender, EventArgs e)
         {
             toolTip1.SetToolTip(this.label19_Explain, "学生党以学习为重");
@@ -1220,6 +1225,7 @@ namespace 自动进入钉钉直播间
         protected delegate void UpdateLabel();   // 刷新控件
         private string threadErr;                // 错误提示
         private IntPtr hwnd;                     // 窗口句柄
+
 
 
         /// <summary>

@@ -1031,6 +1031,7 @@
             this.checkBox13_preventSleep.UseVisualStyleBackColor = true;
             this.checkBox13_preventSleep.CheckedChanged += new System.EventHandler(this.checkBox13_preventSleep_CheckedChanged);
             this.checkBox13_preventSleep.Click += new System.EventHandler(this.checkBox13_preventSleep_Click);
+            this.checkBox13_preventSleep.MouseEnter += new System.EventHandler(this.checkBox13_preventSleep_MouseEnter);
             // 
             // button7_SaveConfigFile
             // 
