@@ -11,17 +11,18 @@ namespace 自动进入钉钉直播间
     public partial class CustomScreenshot : Form
     {
         private bool SaveDesktop;
-        public CustomScreenshot(bool SaveDesk)
+        private string DesktopPath;
+        public CustomScreenshot(bool SaveDesk, string DeskPath,string cfFileDir,string scIniPath)
         {
             SaveDesktop = SaveDesk;
+            DesktopPath = DeskPath;
+            configFileDir = cfFileDir;
+            screenIniPath = scIniPath;
             InitializeComponent();
         }
 
-        private string iniDirectory = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间";
-        private string iniPath = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间\截图.ini";
+        private string configFileDir, screenIniPath;
         private int DingDingX, DingDingY, DingDingWidth, DingDingHeight, PictureX, PictureY, PictureWidth, PictureHeight;
-
-
 
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -43,13 +44,13 @@ namespace 自动进入钉钉直播间
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //设置窗口透明
+            // 设置窗口透明
             pictureBox1.BackColor = Color.Red;
             this.TransparencyKey = Color.Red;
             this.BackColor = Color.Red;
 
             string DingDingPath;
-            string err = Reg.GetDingDingPath(out DingDingPath);//获取钉钉路径
+            string err = Reg.GetDingDingPath(out DingDingPath);// 获取钉钉路径
             if (err != null)
             {
                 MessageBox.Show(err, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -62,9 +63,9 @@ namespace 自动进入钉钉直播间
 
             try
             {
-                Process.Start(DingDingPath);//打开钉钉
+                Process.Start(DingDingPath);// 打开钉钉
 
-                for (int i = 1; i <= 20; i++)//寻找钉钉进程
+                for (int i = 1; i <= 20; i++)// 寻找钉钉进程
                 {
                     foreach (Process pro in Process.GetProcesses())
                     {
@@ -82,7 +83,7 @@ namespace 自动进入钉钉直播间
                         MessageBox.Show("未找到钉钉进程，请手动打开钉钉", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         this.Close();
                     }
-                    System.Threading.Thread.Sleep(3000);//如未找到则等待3秒再查找
+                    System.Threading.Thread.Sleep(3000);// 如未找到则等待3秒再查找
                 }
 
                 ////查找钉钉窗口句柄
@@ -114,46 +115,45 @@ namespace 自动进入钉钉直播间
             }
         }
 
+
+        // 截图按钮
         private void button1_Click(object sender, System.EventArgs e)
         {
             try
             {
                 pictureBox1.Image = null;
 
-                Point point = PointToScreen(pictureBox1.Location);//将控件相对于窗体坐标转为相对于屏幕坐标
+                Point point = PointToScreen(pictureBox1.Location);// 将控件相对于窗体坐标转为相对于屏幕坐标
                 PictureX = point.X;
                 PictureY = point.Y;
 
-                //截取指定区域并显示到pictureBox1
-                pictureBox1.Image = ScreenCapture.Screenshot(PictureX, PictureY, pictureBox1.Width, pictureBox1.Height);
-
+                // 截取指定区域
+                Bitmap bit = ScreenCapture.Screenshot(PictureX, PictureY, pictureBox1.Width, pictureBox1.Height);
+                // 显示到pictureBox
+                pictureBox1.Image = bit;
+                // 如果打开截图保存到桌面
                 if (SaveDesktop)
-                    pictureBox1.Image.Save(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\自动进入钉钉直播间" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-
-
-                //判断图片rgb颜色是否是钉钉正在直播时的rgb
-                if (ScreenCapture.GetPixel((Bitmap)pictureBox1.Image) != true)///////////////////////
+                    bit.Save(DesktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                // 判断图片rgb颜色是否是钉钉正在直播时的rgb
+                if (ScreenCapture.GetPixel(bit) != true)
                 {
                     label1.Text = "验证失败！";
                     label2.Text = "";
                     return;
                 }
 
-
                 label1.Text = "验证成功！\n请退出并重新打开本软件";
 
-                //查找钉钉窗口句柄
+                // 查找钉钉窗口句柄
                 IntPtr hwnd = FindWindow(null, "钉钉");
                 if (hwnd == IntPtr.Zero)
                 {
                     MessageBox.Show("获取钉钉窗口句柄失败！");
                     return;
                 }
-
-                //激活显示钉钉窗口
+                // 激活显示钉钉窗口
                 SetForegroundWindow(hwnd);
-
-                //获取钉钉窗口坐标
+                // 获取钉钉窗口坐标
                 Rect re;
                 if (GetWindowRect(hwnd, out re) == 0)
                 {
@@ -168,31 +168,32 @@ namespace 自动进入钉钉直播间
                 PictureWidth = pictureBox1.Width;
                 PictureHeight = pictureBox1.Height;
 
+                // 调整窗体高度，以便显示下面的信息
                 this.Height = 185;
-
                 label2.Text = string.Format($"图片左上角坐标：{PictureX}x{PictureY}\n图片高x宽：{PictureHeight}x{PictureWidth}\n" +
                    $"钉钉左上角坐标：{DingDingX}x{DingDingY}\n钉钉高x宽：{DingDingHeight}x{DingDingWidth}");
-
+                // 激活窗体
                 this.Activate();
 
-                if (!Directory.Exists(iniDirectory))
-                    Directory.CreateDirectory(iniDirectory);
-
-                //写入配置文件
+                // 写入配置文件
+                if (!Directory.Exists(configFileDir))
+                    Directory.CreateDirectory(configFileDir);
+               
                 string err = ConfigFile.ScreenWriteFile(DingDingX, DingDingY, DingDingWidth, DingDingHeight,
-                    PictureX, PictureY, PictureWidth, PictureHeight, iniPath);
+                    PictureX, PictureY, PictureWidth, PictureHeight, screenIniPath);
                 if (err != null)
-                    MessageBox.Show("写入配置文件错误\n原因：" + err, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                    throw new Exception("写入自定义截图数据文件错误\n原因：" + err);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "自定义截图", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 label1.Text = "截图失败！";
                 label2.Text = "";
             }
         }
 
+
+        // 清除按钮
         private void button2_Click(object sender, EventArgs e)
         {
             pictureBox1.Image = null;

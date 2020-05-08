@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -13,8 +14,30 @@ namespace 自动进入钉钉直播间
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            // 删除配置文件
+            if (args.Length > 0 && args[0] == "del")
+            {
+                try
+                {
+                    string configFileDir = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间";
+                    if (Directory.Exists(configFileDir))
+                    {
+                        Directory.Delete(configFileDir, true);
+                        MessageBox.Show("删除配置文件成功！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                        MessageBox.Show("未找到配置文件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Environment.Exit(0);// 退出
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("删除配置文件失败！\n原因：" + ex.Message, "删除配置文件失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Environment.Exit(0);// 退出
+                }
+            }
+
             if (!IsRun())
             {
                 Application.EnableVisualStyles();
@@ -25,7 +48,7 @@ namespace 自动进入钉钉直播间
             {
                 //已经有一个实例在运行      
                 MessageBox.Show("当前程序已经在运行！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                Environment.Exit(0);
             }
         }
 
