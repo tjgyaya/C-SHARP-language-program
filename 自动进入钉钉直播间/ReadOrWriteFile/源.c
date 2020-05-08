@@ -5,19 +5,19 @@
 #include <wtypes.h>
 //#include <Windows.h>
 #define MAXSIZE 50
-#define MAXPATH 512
+#define MAXPATH 768
 
 extern  _declspec(dllexport) char* Write_File(const int* AutoOpenLive, const int* CheckLive, const int* StopCheckLive, const int* AutoOPenNextLive, const int* OpenLiveTime,
 	const int* Time1Start, const char* Time1Time, const int* Time2Start, const char* Time2Time, const  int* Time3Start, const char* Time3Time, const int* Time4Start, const char* Time4Time,
 	const int* Time5Start, const char* Time5Time, const int* Time6Start, const char* Time6Time, const int* Time7Start, const char* Time7Time, const int* Time8Start, const char* Time8Time,
-	const int* ShowTop, const int* PositionX, const int* PositionY, const int* PositionW, const int* PositionH, const char* config_file_path)
+	const int* ShowTop, const int* PositionX, const int* PositionY, const int* PositionW, const int* PositionH, const int* PreventSleep, const char* config_file_path)
 {
 	char buff[MAXPATH];
 	static char err[MAXSIZE];
 
-	sprintf_s(buff, 512, "中断直播时自动进入 = %d;\n"
-		"xx分钟检测一次直播是否中断 = %d;\n"
-		"xx分钟后还未检测到直播开启则中断检测 = %d;\n"
+	sprintf_s(buff, MAXPATH, "中断直播时自动进入 = %d;\n"
+		"XX秒钟检测一次直播是否中断 = %d;\n"
+		"XX分钟后还未检测到直播开启则中断检测 = %d;\n"
 		"自动开启下一次直播 = %d;\n"
 		"距离直播还有xx分钟自动开启 = %d;\n"
 		"时间一开启 = %d;\n"
@@ -40,11 +40,12 @@ extern  _declspec(dllexport) char* Write_File(const int* AutoOpenLive, const int
 		"主窗体X坐标 = %d;\n"
 		"主窗体Y坐标 = %d;\n"
 		"主窗体宽度 = %d;\n"
-		"主窗体高度 = %d;\n",
+		"主窗体高度 = %d;\n"
+		"阻止系统休眠 = %d;\n",
 		*AutoOpenLive, *CheckLive, *StopCheckLive, *AutoOPenNextLive, *OpenLiveTime,
 		*Time1Start, Time1Time, *Time2Start, Time2Time, *Time3Start, Time3Time, *Time4Start, Time4Time,
 		*Time5Start, Time5Time, *Time6Start, Time6Time, *Time7Start, Time7Time, *Time8Start, Time8Time, *ShowTop,
-		*PositionX, *PositionY, *PositionW, *PositionH);
+		*PositionX, *PositionY, *PositionW, *PositionH, *PreventSleep);
 
 	FILE* fp;
 	if (fopen_s(&fp, config_file_path, "w") != 0)
@@ -67,7 +68,7 @@ extern  _declspec(dllexport) char* Write_File(const int* AutoOpenLive, const int
 extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, int* StopCheckLive, int* AutoOPenNextLive, int* OpenLiveTime,
 	int* Time1Start, char* Time1Time, int* Time2Start, char* Time2Time, int* Time3Start, char* Time3Time, int* Time4Start, char* Time4Time,
 	int* Time5Start, char* Time5Time, int* Time6Start, char* Time6Time, int* Time7Start, char* Time7Time, int* Time8Start, char* Time8Time,
-	int* ShowTop, int* PositionX, int* PositionY, int* PositionW, int* PositionH, const char* config_file_path)
+	int* ShowTop, int* PositionX, int* PositionY, int* PositionW, int* PositionH, int* PreventSleep, const char* config_file_path)
 {
 	int ch, i = 0, j = 0;
 	int al = 0;//中断直播时自动进入
@@ -96,6 +97,7 @@ extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, 
 	int py = 0;
 	int pw = 0;
 	int ph = 0;
+	int ps = 0;
 
 	char config[MAXSIZE];     //储存从文件读取的参数
 	static char err[MAXSIZE];//储存错误信息
@@ -185,13 +187,14 @@ extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, 
 			else if (j == 25)
 				sscanf_s(config, "%d", &ph); //第二五行的内容是主窗体高
 			else if (j == 26)
+				sscanf_s(config, "%d", &ps); //第二六行的内容是是否阻止系统休眠
+			else if (j == 27)
 				break;
 
 			j++;
 			i = 0;
 			memset(config, 0, MAXSIZE);//数组每次循环前清零
 		}
-
 	}
 
 	*AutoOpenLive = al;
@@ -220,6 +223,7 @@ extern  _declspec(dllexport) char* Read_File(int* AutoOpenLive, int* CheckLive, 
 	*PositionY = py;
 	*PositionW = pw;
 	*PositionH = ph;
+	*PreventSleep = ps;
 
 	fclose(fp);
 	return NULL;

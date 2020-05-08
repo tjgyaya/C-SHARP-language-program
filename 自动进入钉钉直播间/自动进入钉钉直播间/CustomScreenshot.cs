@@ -48,6 +48,7 @@ namespace 自动进入钉钉直播间
             pictureBox1.BackColor = Color.Red;
             this.TransparencyKey = Color.Red;
             this.BackColor = Color.Red;
+            this.TopMost = true;
 
             string DingDingPath;
             string err = Reg.GetDingDingPath(out DingDingPath);// 获取钉钉路径
@@ -87,7 +88,7 @@ namespace 自动进入钉钉直播间
                 }
 
                 ////查找钉钉窗口句柄
-                //IntPtr hwnd = FindWindow(null, "钉钉");
+                //IntPtr hwnd = FindWindow("StandardFrame_DingTalk", null);
                 //if (hwnd == IntPtr.Zero)
                 //{
                 //    MessageBox.Show("获取钉钉窗口句柄失败，请以管理员权限运行");
@@ -145,7 +146,7 @@ namespace 自动进入钉钉直播间
                 label1.Text = "验证成功！\n请退出并重新打开本软件";
 
                 // 查找钉钉窗口句柄
-                IntPtr hwnd = FindWindow(null, "钉钉");
+                IntPtr hwnd = FindWindow("StandardFrame_DingTalk", null);
                 if (hwnd == IntPtr.Zero)
                 {
                     MessageBox.Show("获取钉钉窗口句柄失败！");
@@ -200,6 +201,9 @@ namespace 自动进入钉钉直播间
             label1.Text = "请将透明区移到钉钉左上角\nxx群正在直播区域并截图";
             label2.Text = "";
             this.Height = 130;
+
+            if (File.Exists(screenIniPath))
+                File.Delete(screenIniPath);
         }
     }
 }

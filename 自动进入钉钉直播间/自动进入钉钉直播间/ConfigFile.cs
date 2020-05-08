@@ -11,6 +11,7 @@ namespace 自动进入钉钉直播间
 {
     class ConfigFile
     {
+        // 写入 主窗体配置文件，储存自定义时间，是否自动开启下一次直播等
         public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
@@ -19,8 +20,8 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
             try
             {
                 string buff = string.Format($"中断直播时自动进入 = {AutoOpenLive};\n" +
-                        $"xx分钟检测一次直播是否中断 = {CheckLive};\n" +
-                        $"xx分钟后还未检测到直播开启则中断检测 = {StopCheckLive};\n" +
+                        $"XX秒钟检测一次直播是否中断 = {CheckLive};\n" +
+                        $"XX分钟后还未检测到直播开启则中断检测 = {StopCheckLive};\n" +
                         $"自动开启下一次直播 = {AutoOPenNextLive};\n" +
                         $"距离直播还有xx分钟自动开启 = {OpenLiveTime};\n" +
                         $"时间一开启 = {Time1Start};\n" +
@@ -56,7 +57,7 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
         }
 
 
-
+        // 读取 主窗体配置文件，储存自定义时间，是否自动开启下一次直播等
         public static string ReadFile(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive, ref int OpenLiveTime,
    ref int Time1Start, ref string Time1Time, ref int Time2Start, ref string Time2Time, ref int Time3Start, ref string Time3Time, ref int Time4Start, ref string Time4Time,
    ref int Time5Start, ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time, ref int Time8Start, ref string Time8Time,
@@ -198,7 +199,7 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
         }
 
 
-
+        // 写入 截图配置文件，储存截图的坐标高宽和钉钉窗口的坐标高宽
         public static string ScreenWriteFile(int DingDingX, int DingDingY, int DingDingWidth, int DingDingHeigth,
     int ScreenShotX, int ScreenShotY, int ScreenShotWidth, int ScreenShotHeight, string config_file_path)
         {
@@ -223,6 +224,7 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
         }
 
 
+        // 读取 截图配置文件，储存截图的坐标高宽和钉钉窗口的坐标高宽
         public static string ScreenReadFile(ref int DingDingX, ref int DingDingY, ref int DingDingWidth, ref int DingDingHeigth, ref int ScreenShotX,
     ref int ScreenShotY, ref int ScreenShotWidth, ref int ScreenShotHeight, string config_file_path)
         {

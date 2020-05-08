@@ -127,7 +127,7 @@
             this.button1_CustomScreenshot.Name = "button1_CustomScreenshot";
             this.button1_CustomScreenshot.Size = new System.Drawing.Size(75, 25);
             this.button1_CustomScreenshot.TabIndex = 3;
-            this.button1_CustomScreenshot.Text = "自定义截图";
+            this.button1_CustomScreenshot.Text = "自定义截图区域";
             this.button1_CustomScreenshot.UseVisualStyleBackColor = true;
             this.button1_CustomScreenshot.Click += new System.EventHandler(this.button1_CustomScreenshot_Click);
             this.button1_CustomScreenshot.MouseEnter += new System.EventHandler(this.button1_CustomScreenshot_MouseEnter);
@@ -921,7 +921,7 @@
             this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
             this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(75, 25);
             this.button4_DelCustomScreenshot.TabIndex = 4;
-            this.button4_DelCustomScreenshot.Text = "删除截图数据";
+            this.button4_DelCustomScreenshot.Text = "删除截图配置文件";
             this.button4_DelCustomScreenshot.UseVisualStyleBackColor = true;
             this.button4_DelCustomScreenshot.Click += new System.EventHandler(this.button4_DelCustomScreenshot_Click);
             this.button4_DelCustomScreenshot.MouseEnter += new System.EventHandler(this.button4_DelCustomScreenshot_MouseEnter);
@@ -999,12 +999,12 @@
             // button6_delConfigFile
             // 
             this.button6_delConfigFile.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button6_delConfigFile.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.button6_delConfigFile.Font = new System.Drawing.Font("微软雅黑", 8F);
             this.button6_delConfigFile.Location = new System.Drawing.Point(159, 105);
             this.button6_delConfigFile.Name = "button6_delConfigFile";
             this.button6_delConfigFile.Size = new System.Drawing.Size(75, 25);
             this.button6_delConfigFile.TabIndex = 5;
-            this.button6_delConfigFile.Text = "删除配置文件";
+            this.button6_delConfigFile.Text = "删除主配置文件";
             this.button6_delConfigFile.UseVisualStyleBackColor = true;
             this.button6_delConfigFile.Click += new System.EventHandler(this.button6_delConfigFile_Click);
             this.button6_delConfigFile.MouseEnter += new System.EventHandler(this.button6_delConfigFile_MouseEnter);
@@ -1035,12 +1035,12 @@
             // button7_SaveConfigFile
             // 
             this.button7_SaveConfigFile.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button7_SaveConfigFile.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.button7_SaveConfigFile.Font = new System.Drawing.Font("微软雅黑", 8F);
             this.button7_SaveConfigFile.Location = new System.Drawing.Point(159, 79);
             this.button7_SaveConfigFile.Name = "button7_SaveConfigFile";
             this.button7_SaveConfigFile.Size = new System.Drawing.Size(75, 25);
             this.button7_SaveConfigFile.TabIndex = 68;
-            this.button7_SaveConfigFile.Text = "保存配置文件";
+            this.button7_SaveConfigFile.Text = "保存主配置文件";
             this.button7_SaveConfigFile.UseVisualStyleBackColor = true;
             this.button7_SaveConfigFile.Click += new System.EventHandler(this.button7_SaveConfigFile_Click);
             this.button7_SaveConfigFile.MouseEnter += new System.EventHandler(this.button7_SaveConfigFile_MouseEnter);
@@ -1123,7 +1123,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动进入钉钉直播间V2.0";
+            this.Text = "自动进入钉钉直播间V2.0.5";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
