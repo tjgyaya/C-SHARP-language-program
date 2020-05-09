@@ -85,7 +85,7 @@ namespace 自动进入钉钉直播间
             notifyIcon1.Text = "自动进入钉钉直播间\r\n点击此处显示窗口";
 
             // 日志框只读属性
-           textBox1_log.ReadOnly = true;
+            textBox1_log.ReadOnly = true;
         }
 
         // 配置文件路径
@@ -99,8 +99,9 @@ namespace 自动进入钉钉直播间
         private int DingDingW = 930, DingDingH = 640;    // 钉钉窗口默认宽度和高度
         private int ScreenshotX = 132, ScreenshotY = 102;// 默认截图坐标
         private int ScreenshotW = 165, ScreenshotH = 30; // 截图宽度和高度
-        private int MouseClickX = 214, MouseClickY = 109;// 默认鼠标点击坐标
+        private int MouseClickX = 214, MouseClickY = 109, MouseClickX_1 = 214 + 20, MouseClickY_1 = 109 + 20;// 默认鼠标点击坐标
         private string DingDingPath;                     // 钉钉安装路径
+        private string PictureType;                      // 图片识别类型
         private int Element = 0, first = 0;              // 当前使用的自定义时间数组 元素下标
         private Thread newThread;                        // 新线程
         private bool start = false;                      // 启动状态（是否启动）
@@ -211,7 +212,7 @@ namespace 自动进入钉钉直播间
         private void button1_CustomScreenshot_Click(object sender, EventArgs e)
         {
             // 判断截图窗口是否打开
-            if (cs == null||cs.IsDisposed)
+            if (cs == null || cs.IsDisposed)
             {
                 cs = new CustomScreenshot(checkBox12_SaveDesk.Checked, DeskDir, configFileDir, screenIniPath);
                 cs.Show();
@@ -550,7 +551,7 @@ namespace 自动进入钉钉直播间
         // 将日志显示到textbox
         private void RefLog(string log)
         {
-            textBox1_log.AppendText(DateTime.Now.ToString() + "  " + log + Environment.NewLine);
+            textBox1_log.AppendText(DateTime.Now.ToString("HH:mm:ss") + "  " + log + Environment.NewLine);
         }
 
         private bool success = true;
@@ -996,12 +997,13 @@ namespace 自动进入钉钉直播间
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Interval = decimal.ToInt32(numericUpDown1_CheckLiveTime.Value) * 1000;// 将秒化为毫秒
+
             RefLog("第" + timer1_Num++.ToString() + "次检测直播是否中断...");
 
             // 判断图片中的rgb是否与钉钉正在直播时的rgb一致
             if (!JudgePixel())
             {
-                RefLog("检测到直播中断");
+                RefLog("(" + PictureType + ")检测到直播中断");
                 LiveBSTime = DateTime.Now;// 保存直播断开时间
                 timer2.Enabled = true;    // 检测直播断开后直播是否重新开启
                 timer2_Num = 1;
@@ -1019,7 +1021,7 @@ namespace 自动进入钉钉直播间
             // 如果当前时间 大于 （直播断开时间 + xx分钟后还未检测到直播开启则停止检测时间）
             if (DateTime.Now > LiveBSTime.AddMinutes(decimal.ToDouble(numericUpDown2_StopCheckLiveTime.Value)))
             {
-                RefLog("检测直播是否重新开启超时，即将停止检测");
+                RefLog("(" + PictureType + ")检测直播是否重新开启超时，即将停止检测");
                 timer2.Enabled = false;
                 timer4.Enabled = false;
 
@@ -1037,10 +1039,11 @@ namespace 自动进入钉钉直播间
                 }
             }
 
-            if (JudgePixel())// 截取指定区域图片，判断直播是否恢复
+            // 截取指定区域图片，判断直播是否恢复
+            if (JudgePixel())
             {
                 timer2.Enabled = false;
-                RefLog("已检测到直播重新开启");
+                RefLog("(" + PictureType + ")已检测到直播重新开启");
 
                 // 如果线程还在运行则关闭
                 if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
@@ -1257,7 +1260,7 @@ namespace 自动进入钉钉直播间
                 threadErr = "正在打开钉钉...";
                 this.Invoke(update);
 
-                for (i = 1; i <= 3; i++)
+                for (i = 1; i <= 5; i++)
                 {
                     // 关闭所有timer控件，避免在打开钉钉时 勾选中断直播时自动进入
                     Update_Contro_Mode = 1;
@@ -1410,7 +1413,7 @@ namespace 自动进入钉钉直播间
 
                     if (JudgePixel())// 判断是否在直播
                     {
-                        threadErr = "检测到当前正在直播";
+                        threadErr = "(" + PictureType + ")检测到当前正在直播";
                         this.Invoke(update);
                         break;
                     }
@@ -1431,16 +1434,49 @@ namespace 自动进入钉钉直播间
                 // 获取鼠标光标位置
                 POINT p = new POINT();
                 GetCursorPos(out p);
-                // 设置鼠标光标位置
-                SetCursorPos(MouseClickX, MouseClickY);
-                // 模拟鼠标左键按下                                     
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 
-                threadErr = "已打开直播";
+                // 模拟鼠标左键按下  
+                for (i = 1; i <= 30; i++)
+                {
+                    if (i == 1)
+                    {
+                        // 第一次点击
+                        SetCursorPos(MouseClickX, MouseClickY);
+                        mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                    }
+                    else if (i == 2)
+                    {
+                        // 第二次点击
+                        SetCursorPos(MouseClickX_1, MouseClickY_1);
+                        mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                    }
+                    else if (i == 3)
+                    {
+                        // 第三次点击
+                        SetCursorPos(ScreenshotX, ScreenshotY);
+                        mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                    }
+                    else
+                    {
+                        // 第N次点击  在截图坐标的基础上：X坐标 + i * 4，Y坐标 + i
+                        SetCursorPos(ScreenshotX + i * 4, ScreenshotY + i);
+                        mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                    }
+                    if (FindWindow("StandardFrame", null) != IntPtr.Zero)
+                    {
+                        threadErr = "已打开直播";
+                        break;
+                    }
+
+                    Thread.Sleep(1000);
+                    if (i == 30)
+                        threadErr = "可能 已打开直播";
+                }
+
                 this.Invoke(update);
 
                 // 恢复鼠标原来的位置
-                SetCursorPos(p.X, p.Y);
+                //SetCursorPos(p.X, p.Y);
 
                 // 启动timer1，检测直播是否中断
                 Update_Contro_Mode = 2;
@@ -1535,41 +1571,73 @@ namespace 自动进入钉钉直播间
         }
 
 
-
+        private string picturePath;
+        private Bitmap bit;
         // 判断图片中的rgb是否与钉钉正在直播时的rgb一致
         private bool JudgePixel()
         {
-            Bitmap bit;
-            bit = ScreenCapture.Screenshot(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH);//截取指定坐标图片，通过rgb判断钉钉是否在直播
-
-            // 如果打开截图保存到桌面
-            if (saveDesk)
+            try
             {
-                try
+                // 截取指定坐标图片，通过rgb判断钉钉是否在直播
+                bit = ScreenCapture.Screenshot(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH);
+
+                // 如果打开截图保存到桌面
+                if (saveDesk)
                 {
                     // 目录不存在则创建
                     if (!File.Exists(DeskDir))
                         Directory.CreateDirectory(DeskDir);
 
-                    bit.Save(DeskDir + "\\截图" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg");
+                    picturePath = DeskDir + "\\截图" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg";
+                    bit.Save(picturePath);
                 }
-                catch (Exception ex)
+                else
                 {
-                    RefLog(ex.Message);
+                    picturePath = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间截图.jpg";
+                    bit.Save(picturePath);
                 }
+
+
+                // 判断图片中的rgb是否与钉钉正在直播时的rgb一致
+                if (ScreenCapture.GetPixel(bit, out MouseClickX, out MouseClickY) == true)
+                {
+                    PictureType = "RGB";
+                    // 点击坐标1
+                    MouseClickX += ScreenshotX;
+                    MouseClickY += ScreenshotY;
+                    // 点击坐标2
+                    MouseClickX_1 = ScreenshotX + 10;
+                    MouseClickY_1 = ScreenshotY + 10;
+                    return true;
+                }
+                else if (OCR.Live(picturePath) == true)
+                {
+                    if (File.Exists(picturePath))
+                        File.Delete(picturePath);
+
+                    PictureType = "OCR";
+                    // 点击坐标1
+                    MouseClickX = ScreenshotX + 10;
+                    MouseClickY = ScreenshotY + 10;
+                    // 点击坐标2
+                    MouseClickX_1 = ScreenshotX + 20;
+                    MouseClickY_1 = ScreenshotY + 20;
+                    return true;
+                }
+                else
+                {
+                    MouseClickX = 214;
+                    MouseClickY = 109;
+                    return false;
+                }
+
             }
-            if (ScreenCapture.GetPixel(bit, out MouseClickX, out MouseClickY) == true)//判断图片中的rgb是否与钉钉正在直播时的rgb一致
+            catch (Exception ex)
             {
-                MouseClickX += ScreenshotX;
-                MouseClickY += ScreenshotY;
-                return true;
-            }
-            else
-            {
-                MouseClickX = 214;
-                MouseClickY = 109;
+                RefLog(ex.Message);
                 return false;
             }
+
         }
     }
 }

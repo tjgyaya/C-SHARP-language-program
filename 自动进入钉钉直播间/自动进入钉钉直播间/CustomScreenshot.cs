@@ -11,8 +11,8 @@ namespace 自动进入钉钉直播间
     public partial class CustomScreenshot : Form
     {
         private bool SaveDesktop;
-        private string DesktopPath;
-        public CustomScreenshot(bool SaveDesk, string DeskPath,string cfFileDir,string scIniPath)
+        private string DesktopPath, path, type;
+        public CustomScreenshot(bool SaveDesk, string DeskPath, string cfFileDir, string scIniPath)
         {
             SaveDesktop = SaveDesk;
             DesktopPath = DeskPath;
@@ -86,28 +86,6 @@ namespace 自动进入钉钉直播间
                     }
                     System.Threading.Thread.Sleep(3000);// 如未找到则等待3秒再查找
                 }
-
-                ////查找钉钉窗口句柄
-                //IntPtr hwnd = FindWindow("StandardFrame_DingTalk", null);
-                //if (hwnd == IntPtr.Zero)
-                //{
-                //    MessageBox.Show("获取钉钉窗口句柄失败，请以管理员权限运行");
-                //    this.Close();
-                //}
-                ////获取钉钉窗口坐标
-                //Rect re;
-                //if (GetWindowRect(hwnd, out re) == 0)
-                //{
-                //    MessageBox.Show("获取钉钉窗口坐标失败！");
-                //    return;
-                //}
-
-                //DingDingX = re.Left;
-                //DingDingY = re.Top;
-                //DingDingWidth = re.Right - re.Left;
-                //DingDingHeight = re.Bottom - re.Top;
-                //PictureWidth = pictureBox1.Width;
-                //PictureHeight = pictureBox1.Height;
             }
             catch (Exception ex)
             {
@@ -118,7 +96,7 @@ namespace 自动进入钉钉直播间
 
 
         // 截图按钮
-        private void button1_Click(object sender, System.EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             try
             {
@@ -134,16 +112,32 @@ namespace 自动进入钉钉直播间
                 pictureBox1.Image = bit;
                 // 如果打开截图保存到桌面
                 if (SaveDesktop)
-                    bit.Save(DesktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                // 判断图片rgb颜色是否是钉钉正在直播时的rgb
-                if (ScreenCapture.GetPixel(bit) != true)
                 {
-                    label1.Text = "验证失败！";
-                    label2.Text = "";
-                    return;
+                    path = DesktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg";
+                    bit.Save(path);
+                }
+                else
+                {
+                    path = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间截图.jpg";
+                    bit.Save(path);
                 }
 
-                label1.Text = "验证成功！\n请退出并重新打开本软件";
+                type = "RGB";
+                // 判断图片rgb颜色是否是钉钉正在直播时的rgb
+                if (ScreenCapture.GetPixel(bit) == false)
+                {
+                    type = "OCR";
+                    // 判断关键字
+                    if (OCR.Live(path) == false)
+                    {
+                        type = "RGB和OCR";
+                        label1.Text = "(" + type + ")验证失败！";
+                        label2.Text = "";
+                        return;
+                    }
+                }
+
+                label1.Text = "(" + type + ")验证成功！\n请退出并重新打开本软件";
 
                 // 查找钉钉窗口句柄
                 IntPtr hwnd = FindWindow("StandardFrame_DingTalk", null);
@@ -179,7 +173,7 @@ namespace 自动进入钉钉直播间
                 // 写入配置文件
                 if (!Directory.Exists(configFileDir))
                     Directory.CreateDirectory(configFileDir);
-               
+
                 string err = ConfigFile.ScreenWriteFile(DingDingX, DingDingY, DingDingWidth, DingDingHeight,
                     PictureX, PictureY, PictureWidth, PictureHeight, screenIniPath);
                 if (err != null)
@@ -205,5 +199,6 @@ namespace 自动进入钉钉直播间
             if (File.Exists(screenIniPath))
                 File.Delete(screenIniPath);
         }
+
     }
 }
