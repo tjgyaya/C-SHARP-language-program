@@ -4,6 +4,10 @@ using System.Text;
 
 namespace 自动进入钉钉直播间
 {
+
+    // 已弃用    保留
+
+
     class ConfigFile_Dll
     {
         //#define MAXSIZE 50

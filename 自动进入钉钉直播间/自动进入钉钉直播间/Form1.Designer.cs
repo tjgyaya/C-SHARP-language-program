@@ -812,7 +812,7 @@
             this.textBox1_log.Multiline = true;
             this.textBox1_log.Name = "textBox1_log";
             this.textBox1_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1_log.Size = new System.Drawing.Size(307, 100);
+            this.textBox1_log.Size = new System.Drawing.Size(301, 100);
             this.textBox1_log.TabIndex = 11;
             this.textBox1_log.TabStop = false;
             this.textBox1_log.Text = "日志...\r\n";
@@ -1052,11 +1052,11 @@
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label24.ForeColor = System.Drawing.Color.DarkOrange;
-            this.label24.Location = new System.Drawing.Point(312, 309);
+            this.label24.Location = new System.Drawing.Point(308, 306);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(258, 38);
+            this.label24.Size = new System.Drawing.Size(270, 38);
             this.label24.TabIndex = 69;
-            this.label24.Text = "注意：1、请不要移动或遮挡钉钉窗口\r\n           2、请不要移动或使用鼠标";
+            this.label24.Text = "注  1.请不要移动或遮挡钉钉窗口\r\n意  2.打开直播前一分钟请不要使用鼠标";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form1
