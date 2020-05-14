@@ -15,7 +15,7 @@ namespace 自动进入钉钉直播间
         public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
-int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int PreventSleep, string config_file_path)
+int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int PreventSleep, string config_file_path)
         {
             try
             {
@@ -43,8 +43,8 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
                         $"钉钉始终显示在最顶层 = {ShowTop};\n" +
                         $"主窗体X坐标 = {PositionX};\n" +
                         $"主窗体Y坐标 = {PositionY};\n" +
-                        $"主窗体宽度 = {PositionW};\n" +
-                        $"主窗体高度 = {PositionH};\n" +
+                        $"截图相对X坐标 = {RelPosX};\n" +
+                        $"截图相对Y坐标 = {RelPosY};\n" +
                         $"阻止系统休眠 = {PreventSleep};\n");
 
                 File.WriteAllText(config_file_path, buff);
@@ -61,7 +61,7 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
         public static string ReadFile(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive, ref int OpenLiveTime,
    ref int Time1Start, ref string Time1Time, ref int Time2Start, ref string Time2Time, ref int Time3Start, ref string Time3Time, ref int Time4Start, ref string Time4Time,
    ref int Time5Start, ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time, ref int Time8Start, ref string Time8Time,
-   ref int ShowTop, ref int PositionX, ref int PositionY, ref int PositionW, ref int PositionH, ref int PreventSleep, string config_file_path)
+   ref int ShowTop, ref int PositionX, ref int PositionY, ref int RelPosX, ref int RelPosY, ref int PreventSleep, string config_file_path)
         {
             try
             {
@@ -141,9 +141,9 @@ int ShowTop, int PositionX, int PositionY, int PositionW, int PositionH, int Pre
                         else if (j == 23)
                             PositionY = Convert.ToInt32(new string(config));//第二三行的内容是主窗体y坐标
                         else if (j == 24)
-                            PositionW = Convert.ToInt32(new string(config)); //第二四行的内容是主窗体宽
+                            RelPosX = Convert.ToInt32(new string(config)); //第二四行的内容是截图相对x坐标
                         else if (j == 25)
-                            PositionH = Convert.ToInt32(new string(config)); //第二五行的内容是主窗体高
+                            RelPosY = Convert.ToInt32(new string(config)); //第二五行的内容是截图相对y坐标
                         else if (j == 26)
                             PreventSleep = Convert.ToInt32(new string(config));//第二六行的内容是是否阻止系统休眠
                         else if (j == 27)

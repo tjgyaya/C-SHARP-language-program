@@ -13,7 +13,7 @@ namespace 自动进入钉钉直播间
 {
     class AutoUpdate
     {
-        private static string UpdateVersion { get; set; }
+        private static Version UpdateVersion { get; set; }
         private static string FileName { get; set; }
         private static string FileUrl { get; set; }
         private static string FileMd5 { get; set; }
@@ -22,7 +22,7 @@ namespace 自动进入钉钉直播间
         // 获取更新
         public static bool GetUpdate()
         {
-            string currentVersion = Application.ProductVersion;                       // 当前程序版本
+            Version currentVersion = new Version(Application.ProductVersion);                       // 当前程序版本
             string xmlUrl = "https://gitee.com/fuhohua/Web/raw/master/DD/Update.xml"; // XML文件下载地址
             string xmlPath = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间Update.xml"; // XML本地路径
             string downFilePath = Process.GetCurrentProcess().MainModule.FileName;    // 当前程序名称
@@ -58,7 +58,7 @@ namespace 自动进入钉钉直播间
                 // 将节点转为元素
                 XmlElement element = (XmlElement)xn;
                 // 得到Version属性的值
-                UpdateVersion = element.GetAttribute("Version");
+                UpdateVersion = new Version(element.GetAttribute("Version"));
                 // 得到Update节点的所有子节点
                 XmlNodeList nodeList = element.ChildNodes;
                 FileName = nodeList.Item(0).InnerText;
@@ -72,7 +72,7 @@ namespace 自动进入钉钉直播间
 
 
             // 比较版本号，如果当前版本小于升级版本
-            if (string.Compare(currentVersion, UpdateVersion) < 0)
+            if (currentVersion < UpdateVersion)
             {
                 DialogResult result = MessageBox.Show("当前程序出新版啦！是否更新呢？"
                     + "\n当前版本：" + currentVersion
@@ -121,7 +121,8 @@ namespace 自动进入钉钉直播间
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Clipboard.SetText(FileUrl);
+                    MessageBox.Show("更新失败，已将下载链接复制到剪切板\n原因：" + ex.Message, "更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }

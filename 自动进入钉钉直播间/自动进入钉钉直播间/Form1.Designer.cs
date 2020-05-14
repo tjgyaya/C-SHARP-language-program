@@ -90,7 +90,6 @@
             this.checkBox11_ShowTop = new System.Windows.Forms.CheckBox();
             this.button2_AddStart = new System.Windows.Forms.Button();
             this.button3_DelStart = new System.Windows.Forms.Button();
-            this.button4_DelCustomScreenshot = new System.Windows.Forms.Button();
             this.button5_start = new System.Windows.Forms.Button();
             this.checkBox12_SaveDesk = new System.Windows.Forms.CheckBox();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
@@ -103,6 +102,7 @@
             this.checkBox13_preventSleep = new System.Windows.Forms.CheckBox();
             this.button7_SaveConfigFile = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
+            this.button4_DelCustomScreenshot = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1_CheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2_StopCheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -886,7 +886,6 @@
             this.checkBox11_ShowTop.Size = new System.Drawing.Size(153, 22);
             this.checkBox11_ShowTop.TabIndex = 7;
             this.checkBox11_ShowTop.Text = "钉钉窗口显示在最前方";
-            this.toolTip1.SetToolTip(this.checkBox11_ShowTop, "开启此功能有几率出现BUG");
             this.checkBox11_ShowTop.UseVisualStyleBackColor = true;
             this.checkBox11_ShowTop.Click += new System.EventHandler(this.checkBox11_ShowTop_Click);
             // 
@@ -915,19 +914,6 @@
             this.button3_DelStart.UseVisualStyleBackColor = true;
             this.button3_DelStart.Click += new System.EventHandler(this.button3_DelStart_Click);
             this.button3_DelStart.MouseEnter += new System.EventHandler(this.button3_DelStart_MouseEnter);
-            // 
-            // button4_DelCustomScreenshot
-            // 
-            this.button4_DelCustomScreenshot.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4_DelCustomScreenshot.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button4_DelCustomScreenshot.Location = new System.Drawing.Point(80, 105);
-            this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
-            this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(75, 25);
-            this.button4_DelCustomScreenshot.TabIndex = 4;
-            this.button4_DelCustomScreenshot.Text = "删除截图配置文件";
-            this.button4_DelCustomScreenshot.UseVisualStyleBackColor = true;
-            this.button4_DelCustomScreenshot.Click += new System.EventHandler(this.button4_DelCustomScreenshot_Click);
-            this.button4_DelCustomScreenshot.MouseEnter += new System.EventHandler(this.button4_DelCustomScreenshot_MouseEnter);
             // 
             // button5_start
             // 
@@ -1061,6 +1047,19 @@
             this.label24.Text = "注  1.请不要移动或遮挡钉钉窗口\r\n意  2.打开直播前一分钟请不要使用鼠标";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // button4_DelCustomScreenshot
+            // 
+            this.button4_DelCustomScreenshot.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button4_DelCustomScreenshot.Font = new System.Drawing.Font("微软雅黑", 8F);
+            this.button4_DelCustomScreenshot.Location = new System.Drawing.Point(80, 105);
+            this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
+            this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(75, 25);
+            this.button4_DelCustomScreenshot.TabIndex = 4;
+            this.button4_DelCustomScreenshot.Text = "删除截图配置文件";
+            this.button4_DelCustomScreenshot.UseVisualStyleBackColor = true;
+            this.button4_DelCustomScreenshot.Click += new System.EventHandler(this.button4_DelCustomScreenshot_Click);
+            this.button4_DelCustomScreenshot.MouseEnter += new System.EventHandler(this.button4_DelCustomScreenshot_MouseEnter);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1140,7 +1139,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动进入钉钉直播间V2.0.8";
+            this.Text = "自动进入钉钉直播间V2.1.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
@@ -1214,7 +1213,6 @@
         private System.Windows.Forms.TextBox textBox1_log;
         private System.Windows.Forms.Button button2_AddStart;
         private System.Windows.Forms.Button button3_DelStart;
-        private System.Windows.Forms.Button button4_DelCustomScreenshot;
         private System.Windows.Forms.Button button5_start;
         private System.Windows.Forms.CheckBox checkBox12_SaveDesk;
         private System.Windows.Forms.Timer timer2;
@@ -1227,5 +1225,6 @@
         private System.Windows.Forms.CheckBox checkBox13_preventSleep;
         private System.Windows.Forms.Button button7_SaveConfigFile;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Button button4_DelCustomScreenshot;
     }
 }

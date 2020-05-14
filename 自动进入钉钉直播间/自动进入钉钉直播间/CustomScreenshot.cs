@@ -10,20 +10,15 @@ namespace 自动进入钉钉直播间
 {
     public partial class CustomScreenshot : Form
     {
-        private bool SaveDesktop;
-        private string DesktopPath, path, type, DingDingClass;
+        private bool saveDesktop;
+        private string desktopPath, savePath, type, dingDingClass;
+        private int pictureX, pictureY;
 
-        // 截图配置文件
-        private string configFileDir, screenIniPath;
-        private int DingDingX, DingDingY, DingDingWidth, DingDingHeight, PictureX, PictureY, PictureWidth, PictureHeight;
-
-        public CustomScreenshot(bool saveDesk, string deskPath, string cfFileDir, string scIniPath,string dingDingClass)
+        public CustomScreenshot(bool saveDesk, string deskPath, string ding_ding_class)
         {
-            SaveDesktop = saveDesk;
-            DesktopPath = deskPath;
-            configFileDir = cfFileDir;
-            screenIniPath = scIniPath;
-            DingDingClass = dingDingClass;
+            saveDesktop = saveDesk;
+            desktopPath = deskPath;
+            dingDingClass = ding_ding_class;
             InitializeComponent();
         }
 
@@ -33,6 +28,14 @@ namespace 自动进入钉钉直播间
         private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll")]
         private static extern int GetWindowRect(IntPtr hwnd, out Rect lpRect);
+
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+        }
+        [DllImport("user32.dll")]
+        public static extern uint ScreenToClient(IntPtr hWnd, ref POINT p);
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -103,37 +106,40 @@ namespace 自动进入钉钉直播间
         // 截图按钮
         private void button1_Click(object sender, EventArgs e)
         {
+            Form1 f1 = (Form1)this.Owner;
             try
             {
+               
                 pictureBox1.Image = null;
 
                 Point point = PointToScreen(pictureBox1.Location);// 将控件相对于窗体坐标转为相对于屏幕坐标
-                PictureX = point.X;
-                PictureY = point.Y;
+                pictureX = point.X;
+                pictureY = point.Y;
 
                 // 截取指定区域
-                Bitmap bit = ScreenCapture.Screenshot(PictureX, PictureY, pictureBox1.Width, pictureBox1.Height);
+                Bitmap bit = ScreenCapture.Screenshot(pictureX, pictureY, pictureBox1.Width, pictureBox1.Height);
                 // 显示到pictureBox
                 pictureBox1.Image = bit;
                 // 如果打开截图保存到桌面
-                if (SaveDesktop)
+                if (saveDesktop)
                 {
-                    path = DesktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg";
-                    bit.Save(path);
+                    savePath = desktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg";
+                    bit.Save(savePath);
                 }
                 else
                 {
-                    path = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间截图.jpg";
-                    bit.Save(path);
+                    savePath = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间截图.jpg";
+                    bit.Save(savePath);
                 }
 
+                // 识别类型
                 type = "RGB";
                 // 判断图片rgb颜色是否是钉钉正在直播时的rgb
                 if (ScreenCapture.GetPixel(bit) == false)
                 {
                     type = "OCR";
                     // 判断关键字
-                    if (OCR.Live(path) == false)
+                    if (OCR.Live(savePath) == false)
                     {
                         type = "RGB和OCR";
                         label1.Text = "(" + type + ")验证失败！";
@@ -144,48 +150,39 @@ namespace 自动进入钉钉直播间
 
                 label1.Text = "(" + type + ")验证成功！\n请退出并重新打开本软件";
 
-                // 查找钉钉窗口句柄
-                IntPtr hwnd = FindWindow(DingDingClass, null);
+                IntPtr hwnd = FindWindow(dingDingClass, null);
                 if (hwnd == IntPtr.Zero)
-                {
-                    MessageBox.Show("获取钉钉窗口句柄失败！");
-                    return;
-                }
+                    throw new Exception("获取钉钉窗口句柄失败！");
+
+                Rect r = new Rect();
+                if (GetWindowRect(hwnd, out r) == 0)
+                    throw new Exception("获取钉钉窗口坐标失败！");
+
                 // 激活显示钉钉窗口
                 SetForegroundWindow(hwnd);
-                // 获取钉钉窗口坐标
-                Rect re;
-                if (GetWindowRect(hwnd, out re) == 0)
-                {
-                    MessageBox.Show("获取钉钉窗口坐标失败！");
-                    return;
-                }
 
-                DingDingX = re.Left;
-                DingDingY = re.Top;
-                DingDingWidth = re.Right - re.Left;
-                DingDingHeight = re.Bottom - re.Top;
-                PictureWidth = pictureBox1.Width;
-                PictureHeight = pictureBox1.Height;
+                POINT p = new POINT();
+                p.X = pictureX;
+                p.Y = pictureY;
+                // 获取相对坐标
+                ScreenToClient(hwnd, ref p);
 
                 // 调整窗体高度，以便显示下面的信息
                 this.Height = 185;
-                label2.Text = string.Format($"图片左上角坐标：{PictureX}x{PictureY}\n图片高x宽：{PictureHeight}x{PictureWidth}\n" +
-                   $"钉钉左上角坐标：{DingDingX}x{DingDingY}\n钉钉高x宽：{DingDingHeight}x{DingDingWidth}");
+                label2.Text = string.Format($"图片坐标：{pictureX}x{pictureY}\n图片高x宽：{pictureBox1.Height}x{pictureBox1.Width}" +
+                   $"\n图片相对钉钉坐标：{p.X}x{p.Y}\n钉钉坐标：{r.Left}x{r.Top}");
                 // 激活窗体
                 this.Activate();
 
-                // 写入配置文件
-                if (!Directory.Exists(configFileDir))
-                    Directory.CreateDirectory(configFileDir);
-
-                string err = ConfigFile.ScreenWriteFile(DingDingX, DingDingY, DingDingWidth, DingDingHeight,
-                    PictureX, PictureY, PictureWidth, PictureHeight, screenIniPath);
-                if (err != null)
-                    throw new Exception("写入自定义截图数据文件错误\n原因：" + err);
+               
+                // 设置成功，将form1的CustomScreenshotSuccess设为true
+                f1.CustomScreenshotSuccess = true;
+                f1.RelPosX = p.X;
+                f1.RelPosY = p.Y;
             }
             catch (Exception ex)
             {
+                f1.CustomScreenshotSuccess = false;
                 MessageBox.Show(ex.Message, "自定义截图", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 label1.Text = "截图失败！";
                 label2.Text = "";
@@ -200,9 +197,6 @@ namespace 自动进入钉钉直播间
             label1.Text = "请将透明区移到钉钉左上角\nxx群正在直播区域并截图";
             label2.Text = "";
             this.Height = 130;
-
-            if (File.Exists(screenIniPath))
-                File.Delete(screenIniPath);
         }
 
     }
