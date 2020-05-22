@@ -906,7 +906,7 @@
             // 
             this.button3_DelStart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button3_DelStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button3_DelStart.Location = new System.Drawing.Point(80, 79);
+            this.button3_DelStart.Location = new System.Drawing.Point(81, 79);
             this.button3_DelStart.Name = "button3_DelStart";
             this.button3_DelStart.Size = new System.Drawing.Size(75, 25);
             this.button3_DelStart.TabIndex = 2;
@@ -1051,7 +1051,7 @@
             // 
             this.button4_DelCustomScreenshot.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button4_DelCustomScreenshot.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button4_DelCustomScreenshot.Location = new System.Drawing.Point(80, 105);
+            this.button4_DelCustomScreenshot.Location = new System.Drawing.Point(81, 105);
             this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
             this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(75, 25);
             this.button4_DelCustomScreenshot.TabIndex = 4;
@@ -1139,7 +1139,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动进入钉钉直播间V2.1.1";
+            this.Text = "自动进入钉钉直播间V2.1.3";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);

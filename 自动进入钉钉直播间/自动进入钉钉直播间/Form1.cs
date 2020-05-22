@@ -105,8 +105,8 @@ namespace 自动进入钉钉直播间
 
 
         public int RelPosX, RelPosY;                     // 截图相对坐标
-        private int ScreenshotX = 132, ScreenshotY = 102;// 默认截图坐标
-        private int ScreenshotW = 165, ScreenshotH = 30; // 截图宽度和高度
+        public int ScreenshotX = 132, ScreenshotY = 102;// 默认截图坐标
+        public int ScreenshotW = 165, ScreenshotH = 30; // 截图宽度和高度
         private int MouseClickX = 214, MouseClickY = 109;// 默认鼠标点击坐标
         private string DingDingPath;                     // 钉钉安装路径
         private string PictureType;                      // 图片识别类型
@@ -566,6 +566,8 @@ namespace 自动进入钉钉直播间
         // 将日志显示到textbox
         private void RefLog(string log)
         {
+            if (log == null)
+                return;
             textBox1_log.AppendText(DateTime.Now.ToString("HH:mm:ss") + "  " + log + Environment.NewLine);
         }
 
@@ -658,7 +660,7 @@ namespace 自动进入钉钉直播间
                       BoolToNum(checkBox9_Time7.Checked), comboBox13.SelectedIndex + "," + comboBox14.SelectedIndex,
                       BoolToNum(checkBox10_Time8.Checked), comboBox15.SelectedIndex + "," + comboBox16.SelectedIndex,
                       BoolToNum(checkBox11_ShowTop.Checked), this.Location.X, this.Location.Y, RelPosX, RelPosY,
-                      BoolToNum(checkBox13_preventSleep.Checked), iniPath);
+                      ScreenshotH, ScreenshotW, BoolToNum(checkBox13_preventSleep.Checked), iniPath);
                 if (err != null)
                     throw new Exception(err);
             }
@@ -694,12 +696,14 @@ namespace 自动进入钉钉直播间
             try
             {
                 Graphics g = this.CreateGraphics();
-                if (g.DpiX > 96f || g.DpiY > 96f)
-                    MessageBox.Show("本软件仅对缩放比为100%的1920x1080分辨率的屏幕进行适配", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (g.DpiX > 144f || g.DpiY > 144f)
+                    MessageBox.Show("本软件仅对缩放比为100%、125%、150%的1920x1080分辨率的屏幕进行适配", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
 
                 // 自动更新
-                AutoUpdate.GetUpdate();
+                string err = AutoUpdate.GetUpdate();
+                if (err != null)
+                    RefLog(err);
 
                 // 如果当前目录存在NO这个文件，则在19点及19点后启动本软件不会启用深色模式
                 if (!File.Exists("NO") && !File.Exists("no"))
@@ -744,12 +748,15 @@ namespace 自动进入钉钉直播间
                     // 相对截图坐标
                     int sx = 0;
                     int sy = 0;
+                    // 截图高度和宽度
+                    int sh = 0;
+                    int sw = 0;
                     // 是否阻止系统休眠
                     int ps = 0;
 
                     // 读配置文件
-                    string err = ConfigFile.ReadFile(ref al, ref cl, ref scl, ref aonl, ref olt, ref t1s, ref t1t, ref t2s, ref t2t, ref t3s, ref t3t, ref t4s, ref t4t, ref t5s, ref t5t, ref t6s, ref t6t,
-                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref ps, iniPath);
+                    err = ConfigFile.ReadFile(ref al, ref cl, ref scl, ref aonl, ref olt, ref t1s, ref t1t, ref t2s, ref t2t, ref t3s, ref t3t, ref t4s, ref t4t, ref t5s, ref t5t, ref t6s, ref t6t,
+                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref sh, ref sw, ref ps, iniPath);
                     // 如果读配置文件出现错误
                     if (err != null)
                     {
@@ -759,7 +766,11 @@ namespace 自动进入钉钉直播间
                         throw new Exception(err);
                     }
                     else
+                    {
                         RefLog("加载主窗口配置文件成功");
+                        ScreenshotH = sh;
+                        ScreenshotW = sw;
+                    }
 
                     // 截图相对与钉钉窗口的坐标
                     RelPosX = sx;
@@ -879,11 +890,11 @@ namespace 自动进入钉钉直播间
         {
             if (!File.Exists(iniPath))
             {
-                MessageBox.Show("请自定义坐标后退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("请自定义截图区域后退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            // return;
+            //return;
 
             // 判断当前状态（启动|停止）
             if (start == false)
@@ -1008,11 +1019,11 @@ namespace 自动进入钉钉直播间
             dates = list.ToArray();
 
             // 冒泡排序，把最小时间的排到前面
-            for (int i = 0; i < dates.Length; i++)
+            for (int i = 0; i < dates.Length - 1; i++)
             {
-                for (int j = 0; j < dates.Length; j++)
+                for (int j = i + 1; j < dates.Length; j++)
                 {
-                    if (DateTime.Compare(dates[i], dates[j]) < 0)//进行比较
+                    if (DateTime.Compare(dates[i], dates[j]) > 0)//进行比较
                     {
                         tmp = dates[i];
                         dates[i] = dates[j];
@@ -1356,18 +1367,19 @@ namespace 自动进入钉钉直播间
             Update_Contro_Mode = 1;
             this.Invoke(ul);
 
-            string err = Reg.GetDingDingPath(out DingDingPath);//获取钉钉路径
-            if (err != null)
-            {
-                this.Invoke(update);
-                throw new Exception("获取钉钉路径失败"); // 抛出异常
-            }
-
-            threadErr = "获取钉钉路径成功";
-            this.Invoke(update);//调用窗体Invoke方法
 
             try
             {
+                string err = Reg.GetDingDingPath(out DingDingPath);//获取钉钉路径
+                if (err != null)
+                {
+                    throw new Exception("获取钉钉路径失败"); // 抛出异常
+                }
+
+                threadErr = "获取钉钉路径成功";
+                this.Invoke(update);//调用窗体Invoke方法
+
+
                 Process.Start(DingDingPath);//打开钉钉
 
                 threadErr = "正在打开钉钉...";
@@ -1573,8 +1585,11 @@ namespace 自动进入钉钉直播间
                 POINT p = new POINT();
                 GetCursorPos(out p);
 
+                // 获取屏幕缩放比
+                // Graphics g = this.CreateGraphics();
+
                 // 模拟鼠标左键按下  
-                for (i = 1; i <= 30; i++)
+                for (i = 0; i < 30; i++)
                 {
                     // 第N次点击  在钉钉窗口坐标的基础上 加：X坐标 + i * 4，Y坐标 + i
                     if (GetWindowRect(hwnd, out r) == 0)
@@ -1583,8 +1598,21 @@ namespace 自动进入钉钉直播间
                     }
                     else
                     {
+                        //if (g.DpiX == 96f || g.DpiY == 96f)       // 100%缩放
+                        //{
                         MouseClickX = r.Left + RelPosX + i * 2;
                         MouseClickY = r.Top + RelPosY + i;
+                        //}
+                        //else if (g.DpiX == 120f || g.DpiY == 120f) // 125%
+                        //{
+                        //    MouseClickX = r.Left + RelPosX + i * 2 + 25;
+                        //    MouseClickY = r.Top + RelPosY + i + 30;
+                        //}
+                        //else if (g.DpiX == 144f || g.DpiY == 144f) // 150%
+                        //{
+                        //    MouseClickX = r.Left + RelPosX + i * 2 + 25 * 2;
+                        //    MouseClickY = r.Top + RelPosY + i + 30 * 2;
+                        //}
                     }
 
                     SetCursorPos(MouseClickX, MouseClickY);

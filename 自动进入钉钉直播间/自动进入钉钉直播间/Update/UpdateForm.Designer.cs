@@ -122,6 +122,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "UpdateForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "自动进入钉钉直播间-发现新版本";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

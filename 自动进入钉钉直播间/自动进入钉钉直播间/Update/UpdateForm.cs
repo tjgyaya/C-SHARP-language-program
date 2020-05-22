@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -40,22 +41,24 @@ namespace 自动进入钉钉直播间
                 else
                     textBox1_UpdateCont.AppendText(Array[i] + "\r\n");
             }
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
 
         private void button1_Update_Click(object sender, EventArgs e)
         {
-            System.Net.WebClient client = new System.Net.WebClient();
+            WebClient client = new WebClient();
             // 下载更新文件
             client.DownloadFile(fileUrl, temp_file);
             // 判断下载的文件是否存在
             if (!File.Exists(temp_file))
-                throw new Exception("下载更新文件失败！");
+                throw new Exception("下载更新文件失败");
 
 
             // 判断下载的文件MD5是否和Xml文件中的一致
             if (!fileMd5.ToLower().Equals(AutoUpdate.GetMd5(temp_file).ToLower()))
-                throw new Exception("下载的文件MD5不一致！");
+                throw new Exception("下载的文件MD5不一致");
 
 
             // 写脚本
@@ -71,6 +74,8 @@ namespace 自动进入钉钉直播间
             FileInfo fi = new FileInfo(batPath);
             if (fi.Exists)
                 fi.Attributes = FileAttributes.Hidden;
+
+
 
             // 运行脚本
             Process pro = new Process();

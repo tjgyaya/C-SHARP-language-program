@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace 自动进入钉钉直播间
         private static string UpdateCont { get; set; }
 
         // 获取更新
-        public static bool GetUpdate()
+        public static string GetUpdate()
         {
             string currentVersion = Application.ProductVersion;                       // 当前程序版本
             string xmlUrl = "https://gitee.com/fuhohua/Web/raw/master/DD/Update.xml"; // XML文件下载地址
@@ -29,67 +30,77 @@ namespace 自动进入钉钉直播间
             string temp_File = downFilePath + ".tmp";                                 // 临时文件
             string batPath = Application.StartupPath + "\\自动进入钉钉直播间ren.bat"; // 脚本文件
 
-            // 删除上次残余文件
-            if (File.Exists(temp_File))
-                File.Delete(temp_File);
-            if (File.Exists(batPath))
-                File.Delete(batPath);
-            if (File.Exists(xmlPath))
-                File.Delete(xmlPath);
-
-
-            // 下载Xml文件
-            System.Net.WebClient client = new System.Net.WebClient();
-            client.DownloadFile(xmlUrl, xmlPath);
-
-            // 判断Xml文件是否存在
-            if (!File.Exists(xmlPath))
-                throw new Exception("下载XML文件失败！");
-
-            // 加载Xml文件
-            XmlDocument xml = new XmlDocument();
-            xml.Load(xmlPath);
-            // 得到根节点
-            XmlNode node = xml.SelectSingleNode("AutoUpdate");
-            XmlNodeList list = node.ChildNodes;
-
-            foreach (XmlNode xn in list)
+            try
             {
-                // 将节点转为元素
-                XmlElement element = (XmlElement)xn;
-                // 得到Version属性的值
-                UpdateVersion = element.GetAttribute("Version");
-                // 得到Update节点的所有子节点
-                XmlNodeList nodeList = element.ChildNodes;
-                FileName = nodeList.Item(0).InnerText;
-                FileMd5 = nodeList.Item(1).InnerText;
-                FileUrl = nodeList.Item(2).InnerText;
-                UpdateCont = nodeList.Item(3).InnerText;
-            }
-            // 删除Xml文件
-            if (File.Exists(xmlPath))
-                File.Delete(xmlPath);
+                // 删除上次残余文件
+                if (File.Exists(temp_File))
+                    File.Delete(temp_File);
+                if (File.Exists(batPath))
+                    File.Delete(batPath);
+                if (File.Exists(xmlPath))
+                    File.Delete(xmlPath);
 
 
-            // 比较版本号，如果当前版本小于升级版本
-            if (new Version(currentVersion) < new Version(UpdateVersion))
-            {
-                UpdateForm updateForm = new UpdateForm(currentVersion, UpdateVersion, UpdateCont, FileUrl, FileMd5, temp_File, batPath, downFilePath);
-                try
-                {  
-                    updateForm.ShowDialog();
-                    return true;
-                }
-                catch (Exception ex)
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                // 下载Xml文件
+                WebClient client = new WebClient();
+                client.DownloadFile(xmlUrl, xmlPath);
+
+
+                // 判断Xml文件是否存在
+                if (!File.Exists(xmlPath))
+                    throw new Exception("下载XML文件失败");
+
+                // 加载Xml文件
+                XmlDocument xml = new XmlDocument();
+                xml.Load(xmlPath);
+                // 得到根节点
+                XmlNode node = xml.SelectSingleNode("AutoUpdate");
+                XmlNodeList list = node.ChildNodes;
+
+                foreach (XmlNode xn in list)
                 {
-                    updateForm.Close();
-                    Clipboard.SetText(FileUrl);
-                    MessageBox.Show("更新失败，已将下载链接复制到剪切板\n原因：" + ex.Message, "更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    // 将节点转为元素
+                    XmlElement element = (XmlElement)xn;
+                    // 得到Version属性的值
+                    UpdateVersion = element.GetAttribute("Version");
+                    // 得到Update节点的所有子节点
+                    XmlNodeList nodeList = element.ChildNodes;
+                    FileName = nodeList.Item(0).InnerText;
+                    FileMd5 = nodeList.Item(1).InnerText;
+                    FileUrl = nodeList.Item(2).InnerText;
+                    UpdateCont = nodeList.Item(3).InnerText;
                 }
+                // 删除Xml文件
+                if (File.Exists(xmlPath))
+                    File.Delete(xmlPath);
+
+
+                // 比较版本号，如果当前版本小于升级版本
+                if (new Version(currentVersion) < new Version(UpdateVersion))
+                {
+                    UpdateForm updateForm = new UpdateForm(currentVersion, UpdateVersion, UpdateCont, FileUrl, FileMd5, temp_File, batPath, downFilePath);
+                    try
+                    {
+                        updateForm.ShowDialog();
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        updateForm.Close();
+                        Clipboard.SetText(FileUrl);
+                        return "\r\n更新失败，已将下载链接复制到剪切板\r\n              原因：" + ex.Message + "\r\n";
+                    }
+                }
+                else
+                    return null;
+
             }
-            else
-                return false;
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
 
