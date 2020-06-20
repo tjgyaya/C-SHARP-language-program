@@ -15,58 +15,45 @@ namespace 自动进入钉钉直播间
         /// <summary>
         /// 从注册表获取钉钉安装路径
         /// </summary>
-        /// <param name="path">返回钉钉安装路径</param>
-        /// <returns></returns>
-        public static string GetDingDingPath(out string path)
+        /// <returns>返回钉钉安装路径</returns>
+        public static string GetDingDingPath()
         {
+            // 64位系统注册表路径
             string Key = "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
-            string err;
+            string DingDeskPath;
 
             // 如果是32位系统
             if (!Environment.Is64BitOperatingSystem)
-                Key = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
+                Key = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";// 32位系统注册表路径
 
-
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(Key, false);//打开注册表
-            if (key != null)//如果打开成功
+            // 从注册表获取钉钉路径
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(Key, false);// 打开注册表
+            if (key != null)// 如果打开成功
             {
                 string val = key.GetValue("UninstallString").ToString();
                 if (val != null)
                 {
                     int index;
-                    if ((index = val.LastIndexOf("\\")) != -1)//分割路径
+                    if ((index = val.LastIndexOf("\\")) != -1)// 分割路径
                     {
-                        string DingPath = val.Substring(0, index + 1) + "DingtalkLauncher.exe";
-                        if (File.Exists(DingPath))//判断路径是否存在
+                        DingDeskPath = val.Substring(0, index + 1) + "DingtalkLauncher.exe";
+                        if (File.Exists(DingDeskPath))// 判断路径是否存在
                         {
-                            path = DingPath;
-                            return null;
+                            return DingDeskPath;
                         }
-                        else
-                            err = "未能在注册表寻找到正确的钉钉安装路径！";
                     }
-                    else
-                        err = "从注册表读取到的钉钉安装路径无效！";
                 }
-                else
-                    err = "从注册表读取键值“UninstallString”失败！";
             }
-            else
-                err = "打开注册表失败！";
 
-
-            //从桌面寻找钉钉快捷方式
-            string DingDeskPath = "C:\\Users\\Public\\Desktop\\钉钉.lnk";
+            // 从注册表获取钉钉路径失败时 将会 从桌面获取钉钉快捷方式
+            DingDeskPath = "C:\\Users\\Public\\Desktop\\钉钉.lnk";
             if (File.Exists(DingDeskPath))
             {
-                path = DingDeskPath + "\n已从桌面获取钉钉快捷方式！";
-                return err;
+                return DingDeskPath;
             }
             else
             {
-                path = null;
-                err += "\n无法获取桌面的钉钉快捷方式！";
-                return err;
+                throw new Exception("无法从注册表获取钉钉路径！\n无法获取桌面的钉钉快捷方式！");
             }
         }
 

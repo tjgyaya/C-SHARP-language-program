@@ -77,6 +77,13 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -95,7 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigFile\ConfigFile.cs" />
-    <Compile Include="ConfigFile\ConfigFile_Dll.cs" />
     <Compile Include="CustomScreenshot.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,12 +119,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reg.cs" />
     <Compile Include="ImageRecognition\ScreenCapture.cs" />
-    <Compile Include="Update\AutoUpdate.cs" />
-    <Compile Include="Update\UpdateForm.cs">
+    <Compile Include="Update\AutoUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Update\UpdateForm.Designer.cs">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
+    <Compile Include="Update\AutoUpdateForm.Designer.cs">
+      <DependentUpon>AutoUpdateForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="CustomScreenshot.resx">
       <DependentUpon>CustomScreenshot.cs</DependentUpon>
@@ -136,8 +141,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Update\UpdateForm.resx">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
+    <EmbeddedResource Include="Update\AutoUpdateForm.resx">
+      <DependentUpon>AutoUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />

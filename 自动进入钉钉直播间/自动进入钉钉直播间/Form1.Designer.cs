@@ -91,7 +91,7 @@
             this.button2_AddStart = new System.Windows.Forms.Button();
             this.button3_DelStart = new System.Windows.Forms.Button();
             this.button5_start = new System.Windows.Forms.Button();
-            this.checkBox12_SaveDesk = new System.Windows.Forms.CheckBox();
+            this.checkBox12_SaveToDesk = new System.Windows.Forms.CheckBox();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.label23 = new System.Windows.Forms.Label();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
@@ -101,8 +101,10 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.checkBox13_preventSleep = new System.Windows.Forms.CheckBox();
             this.button7_SaveConfigFile = new System.Windows.Forms.Button();
-            this.label24 = new System.Windows.Forms.Label();
             this.button4_DelCustomScreenshot = new System.Windows.Forms.Button();
+            this.label24 = new System.Windows.Forms.Label();
+            this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.label25 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1_CheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2_StopCheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -129,9 +131,9 @@
             this.button1_CustomScreenshot.Size = new System.Drawing.Size(75, 25);
             this.button1_CustomScreenshot.TabIndex = 3;
             this.button1_CustomScreenshot.Text = "自定义截图区域";
+            this.toolTip1.SetToolTip(this.button1_CustomScreenshot, "自定义截图区域\\n多次检测直播失败时请使用此功能\\n有几率 提高 识别钉钉直播是否开启的准确性");
             this.button1_CustomScreenshot.UseVisualStyleBackColor = true;
             this.button1_CustomScreenshot.Click += new System.EventHandler(this.button1_CustomScreenshot_Click);
-            this.button1_CustomScreenshot.MouseEnter += new System.EventHandler(this.button1_CustomScreenshot_MouseEnter);
             // 
             // checkBox1_AutoOpenLive
             // 
@@ -196,10 +198,10 @@
             this.checkBox2_AutoOPenNextLive.Size = new System.Drawing.Size(169, 25);
             this.checkBox2_AutoOPenNextLive.TabIndex = 15;
             this.checkBox2_AutoOPenNextLive.Text = "自动开启下一次直播";
+            this.toolTip1.SetToolTip(this.checkBox2_AutoOPenNextLive, "自动开启下一次直播\\n启用此功能，将在当前直播完后\\n自动按照设定并启用的自定义时间打开下一场直播");
             this.checkBox2_AutoOPenNextLive.UseVisualStyleBackColor = true;
             this.checkBox2_AutoOPenNextLive.CheckedChanged += new System.EventHandler(this.checkBox2_AutoOPenNextLive_CheckedChanged);
             this.checkBox2_AutoOPenNextLive.Click += new System.EventHandler(this.checkBox2_AutoOPenNextLive_Click);
-            this.checkBox2_AutoOPenNextLive.MouseEnter += new System.EventHandler(this.checkBox2_AutoOPenNextLive_MouseEnter);
             // 
             // comboBox1
             // 
@@ -735,7 +737,7 @@
             this.label19_Explain.TabIndex = 14;
             this.label19_Explain.Text = "你若不努力，\r\n谁也救不了你";
             this.label19_Explain.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label19_Explain.MouseEnter += new System.EventHandler(this.label19_Explain_MouseEnter);
+            this.toolTip1.SetToolTip(this.label19_Explain, "学生党以学习为重");
             // 
             // label19
             // 
@@ -817,7 +819,7 @@
             this.textBox1_log.Size = new System.Drawing.Size(301, 100);
             this.textBox1_log.TabIndex = 11;
             this.textBox1_log.TabStop = false;
-            this.textBox1_log.Text = "日志...\r\n";
+            this.textBox1_log.Text = "\r\n";
             this.textBox1_log.TextChanged += new System.EventHandler(this.textBox1_log_TextChanged);
             // 
             // label2
@@ -883,10 +885,12 @@
             this.checkBox11_ShowTop.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox11_ShowTop.Location = new System.Drawing.Point(2, 165);
             this.checkBox11_ShowTop.Name = "checkBox11_ShowTop";
-            this.checkBox11_ShowTop.Size = new System.Drawing.Size(153, 22);
+            this.checkBox11_ShowTop.Size = new System.Drawing.Size(165, 22);
             this.checkBox11_ShowTop.TabIndex = 7;
-            this.checkBox11_ShowTop.Text = "钉钉窗口显示在最前方";
+            this.checkBox11_ShowTop.Text = "钉钉窗口始终显示最前方";
+            this.toolTip1.SetToolTip(this.checkBox11_ShowTop, "钉钉窗口始终显示最前方，\r\n避免被其它窗口遮挡导致卡在“第xx次识别直播是否开启”");
             this.checkBox11_ShowTop.UseVisualStyleBackColor = true;
+            this.checkBox11_ShowTop.CheckedChanged += new System.EventHandler(this.checkBox11_ShowTop_CheckedChanged);
             this.checkBox11_ShowTop.Click += new System.EventHandler(this.checkBox11_ShowTop_Click);
             // 
             // button2_AddStart
@@ -898,9 +902,9 @@
             this.button2_AddStart.Size = new System.Drawing.Size(75, 25);
             this.button2_AddStart.TabIndex = 1;
             this.button2_AddStart.Text = "添加自启";
+            this.toolTip1.SetToolTip(this.button2_AddStart, "添加自启\\n添加自启动后本软件将 会 在系统启动时自动启动");
             this.button2_AddStart.UseVisualStyleBackColor = true;
             this.button2_AddStart.Click += new System.EventHandler(this.button2_AddStart_Click);
-            this.button2_AddStart.MouseEnter += new System.EventHandler(this.button2_AddStart_MouseEnter);
             // 
             // button3_DelStart
             // 
@@ -911,9 +915,9 @@
             this.button3_DelStart.Size = new System.Drawing.Size(75, 25);
             this.button3_DelStart.TabIndex = 2;
             this.button3_DelStart.Text = "删除自启";
+            this.toolTip1.SetToolTip(this.button3_DelStart, "删除自启动\\n删除自启动后本软件将 不会 在系统启动时自动启动");
             this.button3_DelStart.UseVisualStyleBackColor = true;
             this.button3_DelStart.Click += new System.EventHandler(this.button3_DelStart_Click);
-            this.button3_DelStart.MouseEnter += new System.EventHandler(this.button3_DelStart_MouseEnter);
             // 
             // button5_start
             // 
@@ -930,19 +934,19 @@
             this.button5_start.UseVisualStyleBackColor = false;
             this.button5_start.Click += new System.EventHandler(this.button5_Start_Click);
             // 
-            // checkBox12_SaveDesk
+            // checkBox12_SaveToDesk
             // 
-            this.checkBox12_SaveDesk.AutoSize = true;
-            this.checkBox12_SaveDesk.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.checkBox12_SaveDesk.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox12_SaveDesk.Location = new System.Drawing.Point(2, 130);
-            this.checkBox12_SaveDesk.Name = "checkBox12_SaveDesk";
-            this.checkBox12_SaveDesk.Size = new System.Drawing.Size(157, 22);
-            this.checkBox12_SaveDesk.TabIndex = 6;
-            this.checkBox12_SaveDesk.Text = "截图保存到桌面  (调试)";
-            this.checkBox12_SaveDesk.UseVisualStyleBackColor = true;
-            this.checkBox12_SaveDesk.CheckedChanged += new System.EventHandler(this.checkBox12_SaveDesk_CheckedChanged);
-            this.checkBox12_SaveDesk.Click += new System.EventHandler(this.checkBox12_SaveDesk_Click);
+            this.checkBox12_SaveToDesk.AutoSize = true;
+            this.checkBox12_SaveToDesk.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.checkBox12_SaveToDesk.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox12_SaveToDesk.Location = new System.Drawing.Point(2, 130);
+            this.checkBox12_SaveToDesk.Name = "checkBox12_SaveToDesk";
+            this.checkBox12_SaveToDesk.Size = new System.Drawing.Size(157, 22);
+            this.checkBox12_SaveToDesk.TabIndex = 6;
+            this.checkBox12_SaveToDesk.Text = "截图保存到桌面  (调试)";
+            this.checkBox12_SaveToDesk.UseVisualStyleBackColor = true;
+            this.checkBox12_SaveToDesk.CheckedChanged += new System.EventHandler(this.checkBox12_SaveToDesk_CheckedChanged);
+            this.checkBox12_SaveToDesk.Click += new System.EventHandler(this.checkBox12_SaveToDesk_Click);
             // 
             // timer2
             // 
@@ -993,10 +997,10 @@
             this.button6_delConfigFile.Name = "button6_delConfigFile";
             this.button6_delConfigFile.Size = new System.Drawing.Size(75, 25);
             this.button6_delConfigFile.TabIndex = 5;
-            this.button6_delConfigFile.Text = "删除主配置文件";
+            this.button6_delConfigFile.Text = "删除配置文件";
+            this.toolTip1.SetToolTip(this.button6_delConfigFile, "删除配置文件\\n删除配置文件会删除 您设定的自定义截图数据 和 自定义时间数据等");
             this.button6_delConfigFile.UseVisualStyleBackColor = true;
             this.button6_delConfigFile.Click += new System.EventHandler(this.button6_delConfigFile_Click);
-            this.button6_delConfigFile.MouseEnter += new System.EventHandler(this.button6_delConfigFile_MouseEnter);
             // 
             // toolTip1
             // 
@@ -1017,10 +1021,10 @@
             this.checkBox13_preventSleep.Size = new System.Drawing.Size(105, 22);
             this.checkBox13_preventSleep.TabIndex = 67;
             this.checkBox13_preventSleep.Text = "阻止系统休眠";
+            this.toolTip1.SetToolTip(this.checkBox13_preventSleep, "阻止系统休眠\\n启用此功能，将在运行本软件时阻止系统休眠");
             this.checkBox13_preventSleep.UseVisualStyleBackColor = true;
             this.checkBox13_preventSleep.CheckedChanged += new System.EventHandler(this.checkBox13_preventSleep_CheckedChanged);
             this.checkBox13_preventSleep.Click += new System.EventHandler(this.checkBox13_preventSleep_Click);
-            this.checkBox13_preventSleep.MouseEnter += new System.EventHandler(this.checkBox13_preventSleep_MouseEnter);
             // 
             // button7_SaveConfigFile
             // 
@@ -1030,22 +1034,10 @@
             this.button7_SaveConfigFile.Name = "button7_SaveConfigFile";
             this.button7_SaveConfigFile.Size = new System.Drawing.Size(75, 25);
             this.button7_SaveConfigFile.TabIndex = 68;
-            this.button7_SaveConfigFile.Text = "保存主配置文件";
+            this.button7_SaveConfigFile.Text = "保存配置文件";
+            this.toolTip1.SetToolTip(this.button7_SaveConfigFile, "保存配置文件\\n手动保存配置文件，避免软件意外退出不能自动保存");
             this.button7_SaveConfigFile.UseVisualStyleBackColor = true;
             this.button7_SaveConfigFile.Click += new System.EventHandler(this.button7_SaveConfigFile_Click);
-            this.button7_SaveConfigFile.MouseEnter += new System.EventHandler(this.button7_SaveConfigFile_MouseEnter);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label24.ForeColor = System.Drawing.Color.DarkOrange;
-            this.label24.Location = new System.Drawing.Point(308, 306);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(270, 38);
-            this.label24.TabIndex = 69;
-            this.label24.Text = "注  1.请不要移动或遮挡钉钉窗口\r\n意  2.打开直播前一分钟请不要使用鼠标";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // button4_DelCustomScreenshot
             // 
@@ -1055,10 +1047,42 @@
             this.button4_DelCustomScreenshot.Name = "button4_DelCustomScreenshot";
             this.button4_DelCustomScreenshot.Size = new System.Drawing.Size(75, 25);
             this.button4_DelCustomScreenshot.TabIndex = 4;
-            this.button4_DelCustomScreenshot.Text = "删除截图配置文件";
+            this.button4_DelCustomScreenshot.Text = "删除截图区域";
+            this.toolTip1.SetToolTip(this.button4_DelCustomScreenshot, "删除自定义截图区域\\n删除后截图数据会恢复到默认，\\n有可能 降低 识别钉钉直播是否开启的准确性");
             this.button4_DelCustomScreenshot.UseVisualStyleBackColor = true;
             this.button4_DelCustomScreenshot.Click += new System.EventHandler(this.button4_DelCustomScreenshot_Click);
-            this.button4_DelCustomScreenshot.MouseEnter += new System.EventHandler(this.button4_DelCustomScreenshot_MouseEnter);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label24.ForeColor = System.Drawing.Color.DarkOrange;
+            this.label24.Location = new System.Drawing.Point(308, 306);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(249, 38);
+            this.label24.TabIndex = 69;
+            this.label24.Text = "注  1.请不要移动或遮挡钉钉窗口\r\n意  2.打开直播前3秒内不要使用鼠标";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // timer5
+            // 
+            this.timer5.Interval = 1000;
+            this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.BackColor = System.Drawing.SystemColors.Control;
+            this.label25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label25.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label25.Font = new System.Drawing.Font("微软雅黑", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label25.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.label25.Location = new System.Drawing.Point(379, 355);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(66, 21);
+            this.label25.TabIndex = 70;
+            this.label25.Text = "BUG提交";
+            this.label25.Click += new System.EventHandler(this.label25_Click);
             // 
             // Form1
             // 
@@ -1066,13 +1090,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(582, 378);
+            this.Controls.Add(this.label25);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.button7_SaveConfigFile);
             this.Controls.Add(this.checkBox13_preventSleep);
             this.Controls.Add(this.button6_delConfigFile);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label23);
-            this.Controls.Add(this.checkBox12_SaveDesk);
+            this.Controls.Add(this.checkBox12_SaveToDesk);
             this.Controls.Add(this.button5_start);
             this.Controls.Add(this.button4_DelCustomScreenshot);
             this.Controls.Add(this.button3_DelStart);
@@ -1139,7 +1164,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动进入钉钉直播间V2.1.3";
+            this.Text = "自动进入钉钉直播间V2.2.0 Beta";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
@@ -1210,11 +1235,10 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23_DistanceTime;
         private System.Windows.Forms.CheckBox checkBox11_ShowTop;
-        private System.Windows.Forms.TextBox textBox1_log;
         private System.Windows.Forms.Button button2_AddStart;
         private System.Windows.Forms.Button button3_DelStart;
         private System.Windows.Forms.Button button5_start;
-        private System.Windows.Forms.CheckBox checkBox12_SaveDesk;
+        private System.Windows.Forms.CheckBox checkBox12_SaveToDesk;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Timer timer3;
@@ -1226,5 +1250,8 @@
         private System.Windows.Forms.Button button7_SaveConfigFile;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button button4_DelCustomScreenshot;
+        public System.Windows.Forms.TextBox textBox1_log;
+        private System.Windows.Forms.Timer timer5;
+        private System.Windows.Forms.Label label25;
     }
 }

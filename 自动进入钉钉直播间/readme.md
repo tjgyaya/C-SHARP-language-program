@@ -9,9 +9,9 @@
 
 1、主界面
 
-![图片](https://uploader.shimo.im/f/v8NMDwKeajGtqc71.png!thumbnail)
+![图片](https://uploader.shimo.im/f/qZhpuHeif4QTA2gi.png!thumbnail)
 
-![图片](https://uploader.shimo.im/f/iG58KrlJA9QLyKmA.png!thumbnail)
+![图片](https://uploader.shimo.im/f/vYrliboQ8C5PEdl8.png!thumbnail)
 
           
 
@@ -207,5 +207,19 @@
 
                              添加：对缩放比为125%、150%屏幕的支持
 
-最后修改时间：2020 - 05 - 23
+2020-06-20 19:30 修复：1、自定义截图时显示的图片位置不正确
+
+                                        2、钉钉窗口始终显示最前方无效
+
+                                        3、在高dpi屏幕显示模糊
+
+                              添加：BUG提交入口
+
+                              其它：提高RGB识别的准确性
+
+                              注意：1、此版本为Beta版，可能会有重大BUG
+
+                                        2、此次更新请重新设定自定义截图区域
+
+最后修改时间：2020 - 06 - 20
 

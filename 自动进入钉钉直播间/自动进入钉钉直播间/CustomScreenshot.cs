@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,35 +11,36 @@ namespace 自动进入钉钉直播间
 {
     public partial class CustomScreenshot : Form
     {
-        private bool saveDesktop;
-        private string desktopPath, savePath, type, dingDingClass;
-        private int pictureX, pictureY, temp_h;
+        private bool saveToDesktop;
+        private string desktopPath, savePath, dingDingClass;
+        private int pictureX, pictureY, temp_Height, screenNum = -1;
 
-        public CustomScreenshot(bool saveDesk, string deskPath, string ding_ding_class)
+        public CustomScreenshot(bool save_to_desk, string desk_path, string ding_ding_class)
         {
-            saveDesktop = saveDesk;
-            desktopPath = deskPath;
+            saveToDesktop = save_to_desk;
+            desktopPath = desk_path;
             dingDingClass = ding_ding_class;
             InitializeComponent();
+            label2.Visible = false;
         }
-
 
 
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll")]
-        private static extern int GetWindowRect(IntPtr hwnd, out Rect lpRect);
+        private extern static int GetWindowRect(IntPtr hwnd, out Rect lpRect);
 
         public struct POINT
         {
             public int X;
             public int Y;
         }
-        [DllImport("user32.dll")]
-        public static extern uint ScreenToClient(IntPtr hWnd, ref POINT p);
 
         [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        public extern static uint ScreenToClient(IntPtr hWnd, ref POINT p);
+
+        [DllImport("user32.dll")]
+        private extern static bool SetForegroundWindow(IntPtr hWnd);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct Rect
@@ -56,22 +58,12 @@ namespace 自动进入钉钉直播间
             pictureBox1.BackColor = Color.Red;
             this.TransparencyKey = Color.Red;
             this.BackColor = Color.Red;
-            this.TopMost = true;
-
-            string DingDingPath;
-            string err = Reg.GetDingDingPath(out DingDingPath);// 获取钉钉路径
-            if (err != null)
-            {
-                MessageBox.Show(err, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (DingDingPath == null)
-                {
-                    MessageBox.Show("打开钉钉失败，请手动打开钉钉\n原因：" + err, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
-            }
+            this.TopMost = true;       // 设置当前窗口为顶层窗口      
+            temp_Height = this.Height; // 保存窗体高度
 
             try
             {
+                string DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
                 Process.Start(DingDingPath);// 打开钉钉
 
                 for (int i = 1; i <= 20; i++)// 寻找钉钉进程
@@ -80,7 +72,7 @@ namespace 自动进入钉钉直播间
                     {
                         if (pro.ProcessName.ToLower() == "DingTalk".ToLower())
                         {
-                            i = 999;
+                            i = 999; // 为了跳出外层的for循环
                             break;
                         }
                     }
@@ -89,8 +81,7 @@ namespace 自动进入钉钉直播间
                         break;
                     else if (i == 20)
                     {
-                        MessageBox.Show("未找到钉钉进程，请手动打开钉钉", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        this.Close();
+                        throw new Exception("未找到钉钉进程，请手动打开钉钉后重试！");
                     }
                     System.Threading.Thread.Sleep(3000);// 如未找到则等待3秒再查找
                 }
@@ -99,6 +90,7 @@ namespace 自动进入钉钉直播间
             {
                 MessageBox.Show("错误\n原因：" + ex.Message, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
+                return;
             }
         }
 
@@ -109,136 +101,97 @@ namespace 自动进入钉钉直播间
             Form1 f1 = (Form1)this.Owner;
             try
             {
-
-                pictureBox1.Image = null;
-
-                Point point = PointToScreen(pictureBox1.Location);// 将控件相对于窗体坐标转为相对于屏幕坐标
-                pictureX = point.X;
-                pictureY = point.Y;
-
+                Bitmap b = null;
+                pictureBox1.Image = b;
+                Rect r = new Rect();   // 钉钉窗口坐标
+                POINT p = new POINT(); // 钉钉窗口坐标 距离 截图坐标 的相对坐标
 
                 IntPtr hwnd = FindWindow(dingDingClass, null);
                 if (hwnd == IntPtr.Zero)
                     throw new Exception("获取钉钉窗口句柄失败！");
 
-                Rect r = new Rect();
                 if (GetWindowRect(hwnd, out r) == 0)
                     throw new Exception("获取钉钉窗口坐标失败！");
 
-                // 激活显示钉钉窗口
-                SetForegroundWindow(hwnd);
+                // 如果是“button1”控件触发
+                if (((System.Windows.Forms.Control)sender).Name == "button1")
+                {
+                    // 将pictureBox1控件相对于窗体的坐标 转为 相对于屏幕的坐标
+                    Point point = PointToScreen(pictureBox1.Location);
+                    pictureX = point.X;
+                    pictureY = point.Y;
 
-                POINT p = new POINT();
-                p.X = pictureX;
-                p.Y = pictureY;
-                // 获取相对坐标
-                ScreenToClient(hwnd, ref p);
+                    // 激活显示钉钉窗口
+                    SetForegroundWindow(hwnd);
 
+                    p.X = pictureX;
+                    p.Y = pictureY;
+                    // 获取截图坐标 相对于 钉钉窗口坐标的距离
+                    ScreenToClient(hwnd, ref p);
 
-                // 获取屏幕缩放比
-                Graphics g = this.CreateGraphics();
-                //if (g.DpiX == 96f || g.DpiY == 96f)        // 100%缩放
-                //{
-                //    f1.RelPosX = p.X;
-                //    f1.RelPosY = p.Y;
-                //}
-                //else if (g.DpiX == 120f || g.DpiY == 120f) // 125%
-                //{
-                //    f1.RelPosX = p.X + 25;
-                //    f1.RelPosY = p.Y + 30;
-                //}
-                //else if (g.DpiX == 144f || g.DpiY == 144f) // 150%
-                //{
-                //    f1.RelPosX = p.X + 25 * 2;
-                //    f1.RelPosY = p.Y + 30 * 2;
-                //}
-                //else
-                //{
-                //    MessageBox.Show("当前缩放比不受支持，可能会卡在“第xx次检测当前是否正在直播”。\n请将缩放比设置为100%或120%或144%后，再设置截图区域！", "当前缩放比不受支持", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                //}
+                    // 截图相对坐标
+                    f1.RelPosX = p.X;
+                    f1.RelPosY = p.Y;
 
-                // 截图相对坐标
-                f1.RelPosX = p.X;
-                f1.RelPosY = p.Y;
-                // 截图相对坐标+钉钉窗口坐标=截图坐标
+                    screenNum = 0;
+                }
+                else // 否则 则为“numericUpDown”控件调用此函数
+                {
+                    // 截图相对坐标
+                    f1.RelPosX = (int)numericUpDown1_X.Value;
+                    f1.RelPosY = (int)numericUpDown2_Y.Value;
+                }
+
+                // 截图坐标 = 截图相对坐标（钉钉窗口坐标 距离 截图坐标 的距离） + 钉钉窗口坐标
                 pictureX = f1.RelPosX + r.Left;
                 pictureY = f1.RelPosY + r.Top;
 
                 // 截取指定区域
                 Bitmap bit = ScreenCapture.Screenshot(pictureX, pictureY, pictureBox1.Width, pictureBox1.Height);
-                // 显示到pictureBox
                 pictureBox1.Image = bit;
+
                 // 如果打开截图保存到桌面
-                if (saveDesktop)
+                if (saveToDesktop)
                 {
-                    savePath = desktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".jpg";
-                    bit.Save(savePath);
+                    savePath = desktopPath + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".bmp";
+                    bit.Save(savePath, System.Drawing.Imaging.ImageFormat.Bmp);
                 }
                 else
                 {
-                    savePath = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间截图.jpg";
-                    bit.Save(savePath);
+                    savePath = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间截图.bmp";
+                    bit.Save(savePath, System.Drawing.Imaging.ImageFormat.Bmp);
                 }
 
-                // 识别类型
-                type = "RGB";
-                //// 判断图片rgb颜色是否是钉钉正在直播时的rgb
-                //if (ScreenCapture.GetPixel(bit) == false)
-                //{
-                //    type = "OCR";
-                //    // 判断关键字
-                //    if (OCR.Live(savePath) == false)
-                //    {
-                //        type = "RGB和OCR";
-                //        label1.Text = "(" + type + ")验证失败！";
-                //        label2.Text = "";
-                //        return;
-                //    }
-                //}
+                label1.Text = "截图成功！\n请退出并重新打开本软件\n坐标微调将本窗口移到其它处";
 
-                label1.Text = "(" + type + ")验证成功！\n请退出并重新打开本软件";
+                // 获取屏幕缩放比并设置窗口大小
+                Graphics g = this.CreateGraphics();
+                int h = temp_Height + 63 + (int)(g.DpiX - 96f) / 24 * 18;
+                if (h != this.Height)
+                    this.Height = h;
+
+                f1.DpiX = g.DpiX;
+                f1.DpiY = g.DpiY;
+
+                g.Dispose();
 
 
+                //label2.Text = string.Format($"截图坐标：{pictureX}x{pictureY}\n\n截图高x宽：{pictureBox1.Height}x{pictureBox1.Width}" +
+                //$"\n截图相对钉钉坐标：{f1.RelPosX}x{f1.RelPosY}");
 
-                //调整窗体高度，以便显示下面的信息
-                temp_h = this.Height;
-                // 获取屏幕缩放比
-                //Graphics g = this.CreateGraphics();
-                if (g.DpiX == 96f || g.DpiY == 96f)        // 100%缩放
-                {
-                    this.Height = 185;
-                }
-                else if (g.DpiX == 120f || g.DpiY == 120f) // 125%
-                {
-                    this.Height = 185 + 37;
-                }
-                else if (g.DpiX == 144f || g.DpiY == 144f) // 150%
-                {
-                    this.Height = 185 + 37 * 2;
-                }
-                else
-                {
-                    MessageBox.Show("当前缩放比不受支持，可能会卡在“第xx次检测当前是否正在直播”。\n请将缩放比设置为100%或120%或144%后，再设置截图区域！", "当前缩放比不受支持", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                label2.Text = string.Format($"截图坐标：{pictureX}x{pictureY}\n截图高x宽：{pictureBox1.Height}x{pictureBox1.Width}" +
-                   $"\n截图相对钉钉坐标：{p.X}x{p.Y}\n钉钉坐标：{r.Left}x{r.Top}");
                 // 激活窗体
                 this.Activate();
-
+                numericUpDown1_X.Value = f1.RelPosX;
+                numericUpDown2_Y.Value = f1.RelPosY;
 
                 // 设置成功，将form1的CustomScreenshotSuccess设为true
-                f1.CustomScreenshotSuccess = true;
-
-                f1.RelPosX = p.X;
-                f1.RelPosY = p.Y;
+                f1.CustScreenSuccess = true;
                 f1.ScreenshotH = pictureBox1.Height;
                 f1.ScreenshotW = pictureBox1.Width;
-                //f1.MouseClickX=
             }
             catch (Exception ex)
             {
-                f1.CustomScreenshotSuccess = false;
+                f1.CustScreenSuccess = false;
                 MessageBox.Show(ex.Message, "自定义截图", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 label1.Text = "截图失败！";
                 label2.Text = "";
@@ -249,11 +202,32 @@ namespace 自动进入钉钉直播间
         // 清除按钮
         private void button2_Click(object sender, EventArgs e)
         {
+            screenNum = -1;
+            numericUpDown1_X.Value = 0;
+            numericUpDown2_Y.Value = 0;
+
             pictureBox1.Image = null;
             label1.Text = "请将透明区移到钉钉左上角\nxx群正在直播区域并截图";
             label2.Text = "";
-            this.Height = temp_h;
+            this.Height = temp_Height;
         }
 
+
+        // 更改相对坐标的值时重新截图 
+        private void numericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (screenNum == -1)
+            {
+                numericUpDown1_X.Value = 0;
+                numericUpDown2_Y.Value = 0;
+                // MessageBox.Show("请先点击截图按钮", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            screenNum++;
+            if (screenNum > 2) // 因为截图后要给两个numericUpDown控件赋值，会调用两次此函数
+                button1_Click(sender, null);
+
+        }
     }
 }

@@ -22,6 +22,10 @@ namespace 自动进入钉钉直播间
         // 通过关键字判断钉钉是否在直播
         public static bool Live(string picturePath)
         {
+            string word, keyword = null;
+            // 关键字
+            char[] key_words = { '小', '初', '高', '大', '班', '中', '学', '群', '正', '在', '直', '播' };
+
             // 判断是否有自定义关键字文件
             DirectoryInfo dir = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
             FileInfo[] files = dir.GetFiles("*.txt");// 查找目录下时txt的文件
@@ -29,55 +33,51 @@ namespace 自动进入钉钉直播间
             {
                 // 读取自定义apikey文件
                 if (f.ToString().ToLower() == "apikey.txt")
-                    ReadKEYFile(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "apikey.txt");
+                {
+                    StreamReader sr = new StreamReader(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "apikey.txt");
+                    string str;
+                    int i = 0;
+                    while ((str = sr.ReadLine()) != null && i++ <= 2)
+                    {
+                        if (i == 1 && str != "\n")
+                            API_KEY = str;
+                        else if (i == 2 && str != "\n")
+                            SECRET_KEY = str;
+                    }
+                }
 
                 // 读取自定义关键字文件
                 if (f.ToString().ToLower() == "关键字.txt")
                 {
-                    if (Live_File(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "关键字.txt", picturePath) == true)
-                    {
-                        return true;
-                    }
+                    StreamReader sr = new StreamReader(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "关键字.txt");
+                    keyword = sr.ReadToEnd();
+                    sr.Close();
                 }
             }
 
-            string word;
-            string err = GeneralBasic(picturePath, out word);
-            if (err != null)
-                throw new Exception(err);
+            // 识别图片文字
+            word = GeneralBasic(picturePath);
+            if (word == null)
+                return false;
 
             foreach (char c in word)
             {
-                if (c == '小' || c == '初' || c == '高' || c == '大' || c == '班' || c == '中' ||
-                    c == '学' || c == '群' || c == '正' || c == '在' || c == '直' || c == '播')
+                // 如果自定义关键字文件存在且不为空，则从文件查找
+                if (keyword != null || keyword != "")
+                {
+                    if (keyword.IndexOf(c) != -1)
+                        return true;
+                }
+                // 从关键字数组中查找
+                if (Array.IndexOf(key_words, c) != -1)
                     return true;
             }
             return false;
         }
 
 
-        private static bool Live_File(string FilePath, string picturePath)
-        {
-            StreamReader sr = new StreamReader(FilePath);
-            string cont = sr.ReadToEnd();
-            string word;
-            string err = GeneralBasic(picturePath, out word);
-            if (err != null)
-                throw new Exception(err);
-
-            foreach (char c in word)
-            {
-                foreach (char ch in cont)
-                {
-                    if (c == ch)
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        // 获取access_token
-        private static string GetAccessToken(out string key)
+        // 获取AccessToken
+        private static void GetAccessToken(out string key)
         {
             string authHost = "https://aip.baidubce.com/oauth/2.0/token";
             HttpClient client = new HttpClient();
@@ -93,9 +93,7 @@ namespace 自动进入钉钉直播间
             Token list = js.Deserialize<Token>(result);          // 将json数据转化为对象并赋值给list
             key = list.access_token;
             if (list.error != null)
-                return "错误码：" + list.error + "\n原因：" + list.error_description;
-            else
-                return null;
+                throw new Exception("获取AccessToken失败！" + "\n原因：" + list.error_description);
         }
 
 
@@ -103,35 +101,26 @@ namespace 自动进入钉钉直播间
         private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
         // 通用文字识别（含位置信息版）
         private static string basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general?access_token=";
-        // 通用文字识别（高精度版）
-        private static string accurate_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=";
         // 通用文字识别（高精度含位置版）
         private static string accurate_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate?access_token=";
 
         // 调用百度API文字识别
-        private static string GeneralBasic(string path, out string res)
+        private static string GeneralBasic(string path)
         {
-            string host = null, err, token;
+            string host = null, token;
             int i = 0;
 
+            // 获取文字识别AccessToken
+            GetAccessToken(out token);
 
-            if ((err = GetAccessToken(out token)) != null)
-            {
-                res = null;
-                return "请求AccessToken失败\r\n" + err;
-            }
-
-            while (i++ < 5)
+            while (i++ < 4)
             {
                 if (i == 1)
                     host = general_basic_host + token;
                 else if (i == 2)
                     host = basic_host + token;
                 else if (i == 3)
-                    host = accurate_basic_host + token;
-                else if (i == 4)
                     host = accurate_host + token;
-
 
                 Encoding encoding = Encoding.Default;
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
@@ -151,11 +140,11 @@ namespace 自动进入钉钉直播间
                 Json.Root list = js.Deserialize<Json.Root>(result);  // 将json数据转化为对象类型并赋值给list
                 if (list.error_code != null) // 如果调用Api出现错误
                 {
-                    // 如果4个Api都调用了并且都出现了错误
-                    if (i == 4)
+                    // 如果3个Api都调用了并且都出现了错误
+                    if (i == 3)
                     {
-                        res = null;
-                        return "OCR错误码：" + list.error_code + "\n原因：" + list.error_msg;
+                        return null;
+                        throw new Exception("OCR识别错误！" + "\n原因：" + list.error_msg);
                     }
                     continue; // 否则继续调用下一个Api
                 }
@@ -165,11 +154,10 @@ namespace 自动进入钉钉直播间
                 foreach (var item in list.words_result)
                     builder.Append(item.words);
 
-                res = builder.ToString();
-                return null;
+                return builder.ToString();
             }
-            res = null;
-            return "OCR识别错误";
+            return null;
+            throw new Exception("OCR识别错误！");
         }
 
         private static string GetFileBase64(string fileName)
@@ -182,30 +170,6 @@ namespace 自动进入钉钉直播间
             return baser64;
         }
 
-
-        private static void ReadKEYFile(string path)
-        {
-            if (!File.Exists(path))
-                return;
-
-            StreamReader sr = new StreamReader(path);
-            string str, apiKey = null, secretKey = null;
-            int i = 0;
-
-            while ((str = sr.ReadLine()) != null && i++ <= 2)
-            {
-                if (i == 1)
-                    apiKey = str;
-                else if (i == 2)
-                    secretKey = str;
-            }
-
-            if (apiKey != null && secretKey != null)
-            {
-                API_KEY = apiKey;
-                SECRET_KEY = secretKey;
-            }
-        }
     }
 
     class Token

@@ -15,7 +15,8 @@ namespace 自动进入钉钉直播间
         public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
-int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int ScreenshotH, int ScreenshotW, int PreventSleep, string config_file_path)
+int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int ScreenshotH, int ScreenshotW,float DpiX,float DpiY,
+int PreventSleep, string config_file_path)
         {
             try
             {
@@ -46,7 +47,9 @@ int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int Screens
                         $"截图相对X坐标 = {RelPosX};\n" +
                         $"截图相对Y坐标 = {RelPosY};\n" +
                         $"截图高度 = {ScreenshotH};\n" +
-                        $"截图宽度 = {ScreenshotW};\n" +
+                        $"截图宽度 = {ScreenshotW};\n" + 
+                        $"横向缩放 = {DpiX};\n" +
+                        $"纵向缩放 = {DpiY};\n" +
                         $"阻止系统休眠 = {PreventSleep};\n");
 
                 File.WriteAllText(config_file_path, buff);
@@ -60,10 +63,13 @@ int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int Screens
 
 
         // 读取 主窗体配置文件，储存自定义时间，是否自动开启下一次直播等
-        public static string ReadFile(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive, ref int OpenLiveTime,
-   ref int Time1Start, ref string Time1Time, ref int Time2Start, ref string Time2Time, ref int Time3Start, ref string Time3Time, ref int Time4Start, ref string Time4Time,
-   ref int Time5Start, ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time, ref int Time8Start, ref string Time8Time,
-   ref int ShowTop, ref int PositionX, ref int PositionY, ref int RelPosX, ref int RelPosY, ref int ScreenshotH, ref int ScreenshotW, ref int PreventSleep, string config_file_path)
+        public static string ReadFile(ref int AutoOpenLive, ref int CheckLive, ref int StopCheckLive, ref int AutoOPenNextLive,
+            ref int OpenLiveTime, ref int Time1Start, ref string Time1Time, ref int Time2Start, ref string Time2Time,
+            ref int Time3Start, ref string Time3Time, ref int Time4Start, ref string Time4Time, ref int Time5Start,
+            ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time,
+            ref int Time8Start, ref string Time8Time, ref int ShowTop, ref int PositionX, ref int PositionY, ref int RelPosX,
+            ref int RelPosY, ref int ScreenshotH, ref int ScreenshotW,ref float DpiX,ref float DpiY,
+            ref int PreventSleep, string config_file_path)
         {
             try
             {
@@ -151,8 +157,12 @@ int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int Screens
                         else if (j == 27)
                             ScreenshotW = Convert.ToInt32(new string(config)); //第二七行的内容是截图宽度
                         else if (j == 28)
-                            PreventSleep = Convert.ToInt32(new string(config));//第二八行的内容是是否阻止系统休眠
+                            DpiX = (float)Convert.ToDouble(new string(config));//第二八行的内容是横向缩放比
                         else if (j == 29)
+                            DpiY = (float)Convert.ToDouble(new string(config)); //第二九行的内容是纵向缩放比
+                        else if (j == 30)
+                            PreventSleep = Convert.ToInt32(new string(config));//第三十行的内容是 是否阻止系统休眠
+                        else if (j == 31)
                             break;
 
                         j++;
@@ -204,6 +214,8 @@ int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int Screens
             }
         }
 
+
+        #region 以下两个函数不再使用
 
         // 写入 截图配置文件，储存截图的坐标高宽和钉钉窗口的坐标高宽
         public static string ScreenWriteFile(int DingDingX, int DingDingY, int DingDingWidth, int DingDingHeigth,
@@ -293,6 +305,7 @@ int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int Screens
                 return ex.Message;
             }
         }
+        #endregion
     }
 }
 
