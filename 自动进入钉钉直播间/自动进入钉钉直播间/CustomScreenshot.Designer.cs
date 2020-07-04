@@ -100,7 +100,7 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "坐标微调";
-            this.toolTip1.SetToolTip(this.groupBox1, "调整坐标前请将本窗口移到其它位置");
+            this.toolTip1.SetToolTip(this.groupBox1, "调整坐标前请将本窗口移到其它位置，避免遮挡");
             // 
             // numericUpDown2_Y
             // 
@@ -114,6 +114,7 @@
             this.numericUpDown2_Y.Name = "numericUpDown2_Y";
             this.numericUpDown2_Y.Size = new System.Drawing.Size(58, 22);
             this.numericUpDown2_Y.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.numericUpDown2_Y, "截图Y轴坐标相对于钉钉窗口坐标\r\n调整坐标前请将本窗口移到其它位置，避免遮挡");
             this.numericUpDown2_Y.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // numericUpDown1_X
@@ -128,7 +129,7 @@
             this.numericUpDown1_X.Name = "numericUpDown1_X";
             this.numericUpDown1_X.Size = new System.Drawing.Size(58, 22);
             this.numericUpDown1_X.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.numericUpDown1_X, "X轴截图坐标相对于钉钉窗口坐标");
+            this.toolTip1.SetToolTip(this.numericUpDown1_X, "截图X轴坐标相对于钉钉窗口坐标\r\n调整坐标前请将本窗口移到其它位置，避免遮挡");
             this.numericUpDown1_X.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // label3
@@ -157,11 +158,12 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("微软雅黑", 8F);
             this.label2.ForeColor = System.Drawing.Color.Cyan;
+            this.label2.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.label2.Location = new System.Drawing.Point(3, 67);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 16);
+            this.label2.Size = new System.Drawing.Size(39, 16);
             this.label2.TabIndex = 3;
-            this.label2.Text = "label2_保留";
+            this.label2.Text = "label2";
             // 
             // label1
             // 
@@ -170,7 +172,7 @@
             this.label1.ForeColor = System.Drawing.Color.Yellow;
             this.label1.Location = new System.Drawing.Point(1, 23);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(167, 60);
+            this.label1.Size = new System.Drawing.Size(167, 44);
             this.label1.TabIndex = 2;
             this.label1.Text = "请将透明区移到钉钉左上角\r\nxx群正在直播区域并截图";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

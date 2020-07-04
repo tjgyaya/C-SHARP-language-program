@@ -20,7 +20,7 @@ namespace 自动进入钉钉直播间
         {
             // 64位系统注册表路径
             string Key = "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
-            string DingDeskPath;
+            string DingDingPath;
 
             // 如果是32位系统
             if (!Environment.Is64BitOperatingSystem)
@@ -30,30 +30,30 @@ namespace 自动进入钉钉直播间
             RegistryKey key = Registry.LocalMachine.OpenSubKey(Key, false);// 打开注册表
             if (key != null)// 如果打开成功
             {
-                string val = key.GetValue("UninstallString").ToString();
+                string val = (string)key.GetValue("UninstallString");
                 if (val != null)
                 {
                     int index;
                     if ((index = val.LastIndexOf("\\")) != -1)// 分割路径
                     {
-                        DingDeskPath = val.Substring(0, index + 1) + "DingtalkLauncher.exe";
-                        if (File.Exists(DingDeskPath))// 判断路径是否存在
+                        DingDingPath = val.Substring(0, index + 1) + "DingtalkLauncher.exe";
+                        if (File.Exists(DingDingPath))// 判断路径是否存在
                         {
-                            return DingDeskPath;
+                            return DingDingPath;
                         }
                     }
                 }
             }
 
             // 从注册表获取钉钉路径失败时 将会 从桌面获取钉钉快捷方式
-            DingDeskPath = "C:\\Users\\Public\\Desktop\\钉钉.lnk";
-            if (File.Exists(DingDeskPath))
+            DingDingPath = "C:\\Users\\Public\\Desktop\\钉钉.lnk";
+            if (File.Exists(DingDingPath))
             {
-                return DingDeskPath;
+                return DingDingPath;
             }
             else
             {
-                throw new Exception("无法从注册表获取钉钉路径！\n无法获取桌面的钉钉快捷方式！");
+                throw new Exception("无法从注册表和桌面获取钉钉路径！");
             }
         }
 

@@ -57,6 +57,7 @@ namespace 自动进入钉钉直播间
         {
             try
             {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 WebClient client = new WebClient();
                 // 下载更新文件
                 client.DownloadFile(FileUrl, temp_filename);
@@ -71,13 +72,12 @@ namespace 自动进入钉钉直播间
 
                 // 写脚本
                 string bat =
-                      "@ping -n 1 127.1 > nul\r\n"                                 // 延时2秒等待软件退出
+                      "@ping -n 2 127.1 > nul\r\n"                                 // 延时2秒等待软件退出
                     + "del /f \"" + downloadPath + "\"\r\n"                        // 删除原文件
                     + "move /y \"" + temp_filename + "\" \"" + downloadPath + "\"\r\n" // 重命名文件
                     + "start \"自动进入钉钉直播间\" " + downloadPath + "\"\r\n"    // 打开新文件                                                
-                    + "del /f %0\r\n"
-                    + "exit\r\n";
-                // + "pause";
+                    + "del /f %0\r\n";
+                  //+ "pause";
                 File.WriteAllText(batPath, bat, Encoding.GetEncoding("GB2312"));   // 写入bat文件
                 FileInfo fi = new FileInfo(batPath);
                 if (fi.Exists)
@@ -87,8 +87,8 @@ namespace 自动进入钉钉直播间
                 Process pro = new Process();
                 pro.StartInfo.WorkingDirectory = Application.StartupPath;
                 pro.StartInfo.FileName = batPath;
-                //pro.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                pro.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                pro.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                //pro.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 pro.Start();
 
                 // 杀死当前进程

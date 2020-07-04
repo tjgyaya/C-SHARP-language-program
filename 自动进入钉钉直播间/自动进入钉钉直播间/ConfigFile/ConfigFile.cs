@@ -15,8 +15,8 @@ namespace 自动进入钉钉直播间
         public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
-int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int ScreenshotH, int ScreenshotW,float DpiX,float DpiY,
-int PreventSleep, string config_file_path)
+int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int ScreenshotH, int ScreenshotW, float DpiX, float DpiY,
+int PreventSleep, string CurrentVersion, string config_file_path)
         {
             try
             {
@@ -47,10 +47,11 @@ int PreventSleep, string config_file_path)
                         $"截图相对X坐标 = {RelPosX};\n" +
                         $"截图相对Y坐标 = {RelPosY};\n" +
                         $"截图高度 = {ScreenshotH};\n" +
-                        $"截图宽度 = {ScreenshotW};\n" + 
+                        $"截图宽度 = {ScreenshotW};\n" +
                         $"横向缩放 = {DpiX};\n" +
                         $"纵向缩放 = {DpiY};\n" +
-                        $"阻止系统休眠 = {PreventSleep};\n");
+                        $"阻止系统休眠 = {PreventSleep};\n" +
+                        $"当前软件版本 = {CurrentVersion};\n");
 
                 File.WriteAllText(config_file_path, buff);
                 return null;
@@ -68,8 +69,8 @@ int PreventSleep, string config_file_path)
             ref int Time3Start, ref string Time3Time, ref int Time4Start, ref string Time4Time, ref int Time5Start,
             ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time,
             ref int Time8Start, ref string Time8Time, ref int ShowTop, ref int PositionX, ref int PositionY, ref int RelPosX,
-            ref int RelPosY, ref int ScreenshotH, ref int ScreenshotW,ref float DpiX,ref float DpiY,
-            ref int PreventSleep, string config_file_path)
+            ref int RelPosY, ref int ScreenshotH, ref int ScreenshotW, ref float DpiX, ref float DpiY,
+            ref int PreventSleep, ref string CurrentVersion, string config_file_path)
         {
             try
             {
@@ -163,6 +164,8 @@ int PreventSleep, string config_file_path)
                         else if (j == 30)
                             PreventSleep = Convert.ToInt32(new string(config));//第三十行的内容是 是否阻止系统休眠
                         else if (j == 31)
+                            CurrentVersion = new string(config);//第三一行的内容是 当前软件版本号
+                        else if (j == 32)
                             break;
 
                         j++;

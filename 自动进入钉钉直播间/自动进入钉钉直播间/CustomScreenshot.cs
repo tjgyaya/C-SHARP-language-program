@@ -21,7 +21,8 @@ namespace 自动进入钉钉直播间
             desktopPath = desk_path;
             dingDingClass = ding_ding_class;
             InitializeComponent();
-            label2.Visible = false;
+            //label2.Visible = false;
+            label2.Text = "";
         }
 
 
@@ -88,7 +89,7 @@ namespace 自动进入钉钉直播间
             }
             catch (Exception ex)
             {
-                MessageBox.Show("错误\n原因：" + ex.Message, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("错误：" + ex.Message, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
                 return;
             }
@@ -162,9 +163,10 @@ namespace 自动进入钉钉直播间
                     bit.Save(savePath, System.Drawing.Imaging.ImageFormat.Bmp);
                 }
 
-                label1.Text = "截图成功！\n请退出并重新打开本软件\n坐标微调将本窗口移到其它处";
+                label1.Text = "截图成功！\n请退出并重新打开本软件";
+                label2.Text = "坐标微调前将本窗口移到其它区域";
 
-                // 获取屏幕缩放比并设置窗口大小
+                // 获取屏幕缩放比并设置窗口高度，以便完全显示所有内容
                 Graphics g = this.CreateGraphics();
                 int h = temp_Height + 63 + (int)(g.DpiX - 96f) / 24 * 18;
                 if (h != this.Height)
@@ -188,6 +190,7 @@ namespace 自动进入钉钉直播间
                 f1.CustScreenSuccess = true;
                 f1.ScreenshotH = pictureBox1.Height;
                 f1.ScreenshotW = pictureBox1.Width;
+                f1.CurrentVersion = Application.ProductVersion;
             }
             catch (Exception ex)
             {

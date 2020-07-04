@@ -35,14 +35,22 @@ namespace 自动进入钉钉直播间
                 if (f.ToString().ToLower() == "apikey.txt")
                 {
                     StreamReader sr = new StreamReader(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "apikey.txt");
-                    string str;
-                    int i = 0;
-                    while ((str = sr.ReadLine()) != null && i++ <= 2)
+                    try
                     {
-                        if (i == 1 && str != "\n")
-                            API_KEY = str;
-                        else if (i == 2 && str != "\n")
-                            SECRET_KEY = str;
+                        string str;
+                        int i = 0;
+                        while ((str = sr.ReadLine()) != null && i++ <= 2)
+                        {
+                            if (i == 1 && str != "\n")
+                                API_KEY = str;
+                            else if (i == 2 && str != "\n")
+                                SECRET_KEY = str;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        sr.Close();
+                        throw new Exception(ex.Message);
                     }
                 }
 
@@ -50,8 +58,15 @@ namespace 自动进入钉钉直播间
                 if (f.ToString().ToLower() == "关键字.txt")
                 {
                     StreamReader sr = new StreamReader(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "关键字.txt");
-                    keyword = sr.ReadToEnd();
-                    sr.Close();
+                    try
+                    {
+                        keyword = sr.ReadToEnd();
+                    }
+                    catch (Exception ex)
+                    {
+                        sr.Close();
+                        throw new Exception(ex.Message);
+                    }
                 }
             }
 
@@ -135,6 +150,7 @@ namespace 自动进入钉钉直播间
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 string result = reader.ReadToEnd();
+                reader.Close();
 
                 JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
                 Json.Root list = js.Deserialize<Json.Root>(result);  // 将json数据转化为对象类型并赋值给list
@@ -191,9 +207,6 @@ namespace 自动进入钉钉直播间
         {
             public string error_code { get; set; }
             public string error_msg { get; set; }
-            /// <summary>
-            ///
-            /// </summary>
             public List<Words_resultItem> words_result { get; set; }
         }
     }

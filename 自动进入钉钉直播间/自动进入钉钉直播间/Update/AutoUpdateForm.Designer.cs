@@ -113,10 +113,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(370, 175);
             this.Controls.Add(this.button2_CancelUpdate);
-            this.Controls.Add(this.button1_Update);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2_UpdateVersion);
             this.Controls.Add(this.label1_CurrentVersion);
+            this.Controls.Add(this.button1_Update);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

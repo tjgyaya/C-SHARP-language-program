@@ -51,7 +51,7 @@ namespace 自动进入钉钉直播间
         }
 
         /// <summary>
-        /// 从指定坐标截取指定大小
+        /// 从指定坐标截取指定大小区域
         /// </summary>
         /// <param name="x">左上角横坐标</param>
         /// <param name="y">左上角纵坐标</param>

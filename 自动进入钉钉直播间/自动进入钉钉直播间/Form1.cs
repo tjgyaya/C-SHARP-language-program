@@ -102,6 +102,7 @@ namespace 自动进入钉钉直播间
         // 配置文件路径
         private string iniDir = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间";
         private string iniPath = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间\自动进入钉钉直播间.ini";
+        private string logPath = Application.StartupPath + "\\自动进入钉钉直播间.log"; // 日志文件路径
         // 桌面路径（截图保存到桌面）
         private string DeskPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\自动进入钉钉直播间截图文件";
         // 钉钉窗口类名
@@ -125,16 +126,19 @@ namespace 自动进入钉钉直播间
         public float DpiY { get; set; }
         public float DpiX { get; set; }
 
+        // 配置文件版本
+        public string CurrentVersion { get; set; }
+
         // 自定义截图是否成功
         public bool CustScreenSuccess { get; set; }
 
         private int MouseClickX = 214, MouseClickY = 109;// 默认鼠标点击坐标
         private string DingDingPath;                     // 钉钉安装路径
-        private string identifyType;                      // 图片识别类型
-        private int Element = 0, first = 0;              // 当前使用的自定义时间数组 元素下标
+        private string identifyType;                     // 图片识别类型
+        private int element = 0, first = 0;              // 当前使用的自定义时间数组 元素下标
         private Thread newThread;                        // 新线程
-        private bool start = false;                      // 启动状态（是否启动）
-        private bool saveToDesk = false;                   // 是否将截图保存到桌面
+        private bool start = false;                      // 运行状态（是否启动）
+        private bool saveToDesk = false;                 // 是否将截图保存到桌面
         private bool delScreenFile = false, delConfigFile = false; // 是否点击了“删除自定义截图配置文件”或“删除配置文件”按钮
         private bool FirstUse = false;                   // 是否是第一次使用（配置文件不存在则为第一次）
         private bool noCloseTimer5 = false;              // 不关闭timer5控件
@@ -142,8 +146,9 @@ namespace 自动进入钉钉直播间
         // 钉钉窗口始终显示在最顶层
         private void checkBox11_ShowTop_Click(object sender, EventArgs e)
         {
+            IntPtr hwnd = FindWindow(DingDingWindowClass, null);
             // 查找钉钉窗口句柄
-            if ((FindWindow(DingDingWindowClass, null)) == IntPtr.Zero)
+            if (hwnd == IntPtr.Zero)
             {
                 RefLog("获取钉钉窗口句柄失败");
                 return;
@@ -169,9 +174,9 @@ namespace 自动进入钉钉直播间
                 timer5.Enabled = checkBox11_ShowTop.Checked;
                 RefLog("钉钉显示在最前方设置成功，立即生效");
             }
-            else if(!start && checkBox11_ShowTop.Checked)
+            else if (!start && checkBox11_ShowTop.Checked)
                 RefLog("钉钉显示在最前方设置成功，点击开启按钮后生效");
-            else if(!checkBox11_ShowTop.Checked)
+            else if (!checkBox11_ShowTop.Checked)
                 RefLog("已取消将钉钉窗口显示在最前方");
         }
 
@@ -196,7 +201,7 @@ namespace 自动进入钉钉直播间
                 RefLog("删除自启动成功");
         }
 
-        // 删除自定义截图文件
+        // 删除自定义截图数据
         private void button4_DelCustomScreenshot_Click(object sender, EventArgs e)
         {
             try
@@ -244,7 +249,7 @@ namespace 自动进入钉钉直播间
             {
                 if (!File.Exists(iniPath) || FirstUse)
                 {
-                    MessageBox.Show("请自定义截图区域后退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("请点击“自定义截图区域”按钮设置截图区域后，\n退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
                 delConfigFile = true;
@@ -361,11 +366,11 @@ namespace 自动进入钉钉直播间
             label22.Enabled = val;
         }
 
-        // 直播断开时自动检测直播是否开启，如果直播在检测时间内开启，则自动打开
+        // 直播断开时自动检测直播是否重新开启，如果直播在检测时间内开启，则自动打开
         private void checkBox1_AutoOpenLive_Click(object sender, EventArgs e)
         {
             if (!checkBox1_AutoOpenLive.Checked)
-            {
+            {   // 开启直播断开时自动打开功能
                 checkBox1_AutoOpenLive.Checked = true;
                 if (start)
                 {
@@ -378,7 +383,7 @@ namespace 自动进入钉钉直播间
                 }
             }
             else
-            {
+            {   // 关闭直播断开时自动打开功能
                 // 如果开启了“自动开启下一次直播”功能
                 if (checkBox2_AutoOPenNextLive.Checked)
                 {
@@ -396,7 +401,7 @@ namespace 自动进入钉钉直播间
                     timer1.Enabled = false;
                     timer2.Enabled = false;
                     // 如果打开了 自动开启下一场直播 并且当前时间是最后一个自定义时间
-                    if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && Element + 1 >= Dates.Length))
+                    if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && element + 1 >= Dates.Length))
                     {
                         start = true; // start = true是为了下面调用button5_Start_Click函数时让软件处于停止状态
                         button5_Start_Click(null, null);
@@ -417,7 +422,7 @@ namespace 自动进入钉钉直播间
         // 自动开启下一次直播
         private void checkBox2_AutoOPenNextLive_Click(object sender, EventArgs e)
         {
-            if (start) // 如果修改 checkBox2_AutoOPenNextLive 的值时正好在开启状态（start = true）
+            if (start) // 如果打开或关闭“自动开启下一次直播”功能时，软件正好在开启状态（start = true）
             {
                 RefLog("启动后不能设置自定义时间，请停止后再设置");
                 return;
@@ -610,14 +615,14 @@ namespace 自动进入钉钉直播间
         }
         private void checkBox13_preventSleep_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox13_preventSleep.Checked)
+            if (checkBox13_preventSleep.Checked) // 调用api函数阻止系统休眠
                 SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
             else
                 SetThreadExecutionState(ES_CONTINUOUS);
         }
 
 
-        // 将日志显示到textbox
+        // 将日志显示到textbox控件
         private void RefLog(string log)
         {
             if (log == null)
@@ -628,7 +633,6 @@ namespace 自动进入钉钉直播间
         }
 
         private bool writeLogSuccess = true;
-        private string logPath = Application.StartupPath + "\\自动进入钉钉直播间.log";
         // 将日志写入文件
         private void textBox1_log_TextChanged(object sender, EventArgs e)
         {
@@ -707,7 +711,7 @@ namespace 自动进入钉钉直播间
                       BoolToNum(checkBox9_Time7.Checked), comboBox13.SelectedIndex + "," + comboBox14.SelectedIndex,
                       BoolToNum(checkBox10_Time8.Checked), comboBox15.SelectedIndex + "," + comboBox16.SelectedIndex,
                       BoolToNum(checkBox11_ShowTop.Checked), this.Location.X, this.Location.Y, RelPosX, RelPosY,
-                      ScreenshotH, ScreenshotW, DpiX, DpiY, BoolToNum(checkBox13_preventSleep.Checked), iniPath);
+                      ScreenshotH, ScreenshotW, DpiX, DpiY, BoolToNum(checkBox13_preventSleep.Checked), CurrentVersion, iniPath);
                 if (err != null)
                     throw new Exception(err);
             }
@@ -763,7 +767,7 @@ namespace 自动进入钉钉直播间
                 // 如果当前目录存在NO这个文件，则在19点及19点后启动本软件不会启用深色模式
                 if (!File.Exists(Application.StartupPath + "\\NO") && !File.Exists(Application.StartupPath + "\\no"))
                 {
-                    if (DateTime.Compare(DateTime.Now, DateTime.Parse("19:00:00")) > 0 || DateTime.Compare(DateTime.Now, DateTime.Parse("19:00:00")) == 0)
+                    if (DateTime.Compare(DateTime.Now, DateTime.Parse("19:00:00")) >= 0)
                     {
                         this.BackColor = SystemColors.ControlDark;
                         button5_start.BackColor = SystemColors.ActiveBorder;
@@ -815,9 +819,12 @@ namespace 自动进入钉钉直播间
                     float dx = 0;
                     float dy = 0;
 
+                    // 当前版本号
+                    string cv = null;
+
                     // 读配置文件
                     string err = ConfigFile.ReadFile(ref al, ref cl, ref scl, ref aonl, ref olt, ref t1s, ref t1t, ref t2s, ref t2t, ref t3s, ref t3t, ref t4s, ref t4t, ref t5s, ref t5t, ref t6s, ref t6t,
-                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref sh, ref sw, ref dx, ref dy, ref ps, iniPath);
+                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref sh, ref sw, ref dx, ref dy, ref ps, ref cv, iniPath);
                     // 如果读配置文件出现错误
                     if (err != null)
                     {
@@ -825,24 +832,17 @@ namespace 自动进入钉钉直播间
                         st = t8s = t7s = t6s = t5s = t4s = t3s = t2s = t1s = olt = aonl = scl = cl = al = 0;
                         t8t = t7t = t6t = t5t = t4t = t3t = t2t = t1t = "0,0";
                         dx = dy = 0f;
-                        throw new Exception(err);
+                        MessageBox.Show("数据文件加载错误，\n请以管理员权限运行本软件重试！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                        // throw new Exception(err);
                     }
                     else
                     {
-                        RefLog("加载主窗口配置文件成功");
+                        RefLog("加载配置文件成功");
+                        // 截图高度和宽度
                         ScreenshotH = sh;
                         ScreenshotW = sw;
                     }
-
-                    // 截图相对与钉钉窗口的坐标
-                    RelPosX = sx;
-                    RelPosY = sy;
-                    if (RelPosX == 0 && RelPosY == 0)
-                        FirstUse = true;
-
-                    // 屏幕缩放比
-                    DpiX = dx;
-                    DpiY = dy;
 
                     // 将配置文件中的数据恢复到主窗口
                     checkBox1_AutoOpenLive.Checked = NumToBool(al);
@@ -887,11 +887,30 @@ namespace 自动进入钉钉直播间
                     comboBox15.SelectedIndex = c15;
                     comboBox16.SelectedIndex = c16;
 
+                    // 截图相对与钉钉窗口的坐标
+                    if (sx == 0 && sy == 0)
+                    {
+                        RelPosX = 0;
+                        RelPosY = 0;
+                        FirstUse = true;
+                    }
+                    else
+                    {
+                        RelPosX = sx;
+                        RelPosY = sy;
+                    }
+
+                    // 屏幕缩放比
+                    DpiX = dx;
+                    DpiY = dy;
+
                     // 判断读出来的窗体坐标是否有误
                     if (px >= 0 && py >= 0)
                     {
                         this.Location = new System.Drawing.Point(px, py);
                     }
+                    // 软件版本号
+                    CurrentVersion = cv;
                 }
                 else
                 {
@@ -934,16 +953,29 @@ namespace 自动进入钉钉直播间
         // 窗口加载完成并第一次显示时
         private void Form1_Shown(object sender, EventArgs e)
         {
-            // 判断屏幕缩放比是否改变
-            if (DpiX != 0f && DpiY != 0f)
+            try
             {
-                Graphics g = this.CreateGraphics();
-                if (g.DpiX != DpiX || g.DpiY != DpiY)
+                // 判断屏幕缩放比是否改变
+                if (DpiX != 0 && DpiY != 0)
                 {
-                    MessageBox.Show("检测到屏幕缩放比改变，\n请重新设置自定义截图区域", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    Graphics g = this.CreateGraphics();
+                    if (g.DpiX != DpiX || g.DpiY != DpiY)
+                        throw new Exception("检测到屏幕缩放比改变，\n请点击“自定义截图”按钮重新设置截图区域");
+                }
+                if (!FirstUse)
+                {
+                    // 判断配置文件版本号和当前软件版本号是否相同
+                    if (CurrentVersion == null || CurrentVersion == "" || new Version(CurrentVersion) != new Version(Application.ProductVersion))
+                        throw new Exception("检测到软件版本改变，\n请点击“点击自定义截图”按钮设置截图区域！");
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RefLog(ex.Message);
+                return;
+            }
+
             //开启
             button5_Start_Click(null, null);
         }
@@ -969,7 +1001,7 @@ namespace 自动进入钉钉直播间
             // return;
             if (!File.Exists(iniPath) || FirstUse)
             {
-                MessageBox.Show("请自定义截图区域后退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("请点击“自定义截图区域”按钮设置截图区域后，\n退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -1114,12 +1146,12 @@ namespace 自动进入钉钉直播间
         }
 
 
-        // timer1检测直播是否中断
-        // timer2检测直播是否中断后直播是否开启
+        // timer1检测直播是否断开
+        // timer2检测直播是否断开后直播是否重新开启
         // timer3检测当前时间是否到下一场直播开启时间
         // timer4计时当前直播已开启xx分钟
 
-        // timer1检测直播是否中断
+        // timer1检测直播是否断开
         private int timer1_Num = 1;// 检测直播是否中断次数
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -1131,31 +1163,14 @@ namespace 自动进入钉钉直播间
             if (FindWindow(DingDingLiveWindowClass, null) != IntPtr.Zero)
                 return;
 
-            // 查找钉钉窗口句柄
-            if ((hwnd = FindWindow(DingDingWindowClass, null)) == IntPtr.Zero)
+            // 如果 钉钉直播窗口 不存在，则截图并判断图片中的（rgb或文字）是否含有钉钉正在直播时的（rgb或关键字）
+            if (!JudgeLive())
             {
-                RefLog("获取钉钉窗口句柄失败");
-                Update_Contro_Mode = 6;
-                Update_Control();
-                return;
-            }
-
-            Rect r = new Rect();
-            if (GetWindowRect(hwnd, out r) == 0)
-            {
-                RefLog("获取钉钉窗口坐标失败");
-                Update_Contro_Mode = 6;
-                Update_Control();
-                return;
-            }
-
-            // 截图坐标 = 相对坐标 + 钉钉窗口坐标
-            ScreenshotX = r.Left + RelPosX;
-            ScreenshotY = r.Top + RelPosY;
-
-            // 如果不存在，则判断图片中的rgb是否与钉钉正在直播时的rgb一致（防止权限不足造成查找句柄失败）
-            if (!JudgeLive(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH))
-            {
+                if (judgeLiveErr)
+                {
+                    RefLog("检测直播是否断开错误！");
+                    return;
+                }
                 RefLog("(" + identifyType + ")检测到直播断开");
                 LiveBSTime = DateTime.Now;// 保存直播断开时间
                 timer2.Enabled = true;    // 检测直播断开后直播是否重新开启
@@ -1179,44 +1194,29 @@ namespace 自动进入钉钉直播间
                 timer4.Enabled = false;
 
                 // 如果打开了 自动开启下一场直播 并且当前时间未到达自定义时间
-                if (checkBox2_AutoOPenNextLive.Checked && Element + 1 < Dates.Length)
+                if (checkBox2_AutoOPenNextLive.Checked && element + 1 < Dates.Length)
                 {
                     RefLog("等待下一场直播开启...");
                 }
                 // 如果打开了 自动开启下一场直播 并且当前时间是最后一个自定义时间
-                else if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && Element + 1 >= Dates.Length))
+                else if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && element + 1 >= Dates.Length))
                 {// 停止
                     start = true;
                     button5_Start_Click(null, null);
                     return;
                 }
             }
-
-            // 查找钉钉窗口句柄
-            if ((hwnd = FindWindow(DingDingWindowClass, null)) == IntPtr.Zero)
-            {
-                RefLog("获取钉钉窗口句柄失败");
-                Update_Contro_Mode = 6;
-                Update_Control();
-                return;
-            }
-
-            Rect r = new Rect();
-            if (GetWindowRect(hwnd, out r) == 0)
-            {
-                RefLog("获取钉钉窗口坐标失败");
-                Update_Contro_Mode = 6;
-                Update_Control();
-                return;
-            }
-
-            // 截图坐标 = 相对坐标+钉钉窗口坐标
-            ScreenshotX = r.Left + RelPosX;
-            ScreenshotY = r.Top + RelPosY;
+           
 
             // 截取指定区域图片，判断直播是否恢复
-            if (JudgeLive(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH))
+            if (JudgeLive())
             {
+                if (judgeLiveErr)
+                {
+                    RefLog("检测直播是否恢复错误！");
+                    return;
+                }
+
                 timer2.Enabled = false;
                 RefLog("(" + identifyType + ")已检测到直播重新开启");
 
@@ -1224,9 +1224,7 @@ namespace 自动进入钉钉直播间
                 {
                     // 如果线程还在运行则关闭
                     if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                    {
                         newThread.Abort();
-                    }
                 }
                 newThread = new Thread(OpenDingDing);
                 newThread.Start();
@@ -1237,7 +1235,7 @@ namespace 自动进入钉钉直播间
         private void timer3_Tick(object sender, EventArgs e)
         {
             //到达最后一个自定义时间
-            if (Element + 1 >= Dates.Length)
+            if (element + 1 >= Dates.Length)
             {
                 RefLog("已到达最后一个自定义时间，自动开启下一次直播将不会生效");
 
@@ -1274,14 +1272,14 @@ namespace 自动进入钉钉直播间
             }
 
             // 如果当前时间 大于或等于 直播开启时间 =（直播时间-距离直播还有xx分钟自动开启）
-            if (DateTime.Now >= Dates[Element + 1].AddMinutes(-(double)numericUpDown3.Value))
+            if (DateTime.Now >= Dates[element + 1].AddMinutes(-(double)numericUpDown3.Value))
             {
                 // 下面这段注释的代码有BUG
                 //if (JudgeLive())//如果直播未关闭
                 //	return;
 
                 timer3.Enabled = false;
-                Element += 1;// 数组元素+1，使用下一个自定义时间
+                element += 1;// 数组元素+1，使用下一个自定义时间
 
                 if (newThread != null)
                 {             // 如果线程还在运行，就关闭
@@ -1320,17 +1318,17 @@ namespace 自动进入钉钉直播间
         private void timer5_Tick(object sender, EventArgs e)
         {
             // 查找钉钉窗口句柄
-            if ((hwnd = FindWindow(DingDingWindowClass, null)) == IntPtr.Zero)
+            IntPtr hwnd = FindWindow(DingDingWindowClass, null);
+            if (hwnd == IntPtr.Zero)
             {
-                RefLog("将钉钉窗口显示在最前方错误");
+                RefLog("获取钉钉窗口句柄失败");
                 timer5.Enabled = false;
                 return;
             }
             // 将钉钉窗口显示到最前方
-            int r = SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-            if (r == 0)
+            if (SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE) == 0)
             {
-                RefLog("将钉钉窗口显示在最前方错误");
+                RefLog("将钉钉窗口显示在最前方失败");
                 timer5.Enabled = false;
             }
         }
@@ -1402,7 +1400,6 @@ namespace 自动进入钉钉直播间
         protected delegate void UpdateLog();     // 刷新控件
         protected delegate void UpdateLabel();   // 刷新控件
         private string threadErr;                // 错误提示
-        private IntPtr hwnd;                     // 窗口句柄
 
 
         /// <summary>
@@ -1432,7 +1429,7 @@ namespace 自动进入钉钉直播间
 
                 for (i = 1; i <= 5; i++)
                 {
-                    // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选中断直播时自动进入
+                    // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选断开直播时自动进入
                     Update_Contro_Mode = 1;
                     this.Invoke(ul);
 
@@ -1444,7 +1441,7 @@ namespace 自动进入钉钉直播间
                 //寻找钉钉进程
                 for (i = 0; i <= 120; i++)
                 {
-                    // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选中断直播时自动进入
+                    // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选断开直播时自动进入
                     Update_Contro_Mode = 1;
                     this.Invoke(ul);
 
@@ -1472,23 +1469,21 @@ namespace 自动进入钉钉直播间
                 this.Invoke(update);
 
                 // 查找钉钉窗口句柄
-                hwnd = FindWindow(DingDingWindowClass, null);
+                IntPtr hwnd = FindWindow(DingDingWindowClass, null);
                 if (hwnd == IntPtr.Zero)
-                {
                     throw new Exception("获取钉钉窗口句柄失败"); // 抛出异常
-                }
 
                 threadErr = "已找到钉钉窗口句柄";
                 this.Invoke(update);
 
-                // 将钉钉窗口显示到最顶层
+                // 如果启用将钉钉窗口显示到最顶层
                 if (checkBox11_ShowTop.Checked)
                 {
                     // 启动timer5，将钉钉窗口显示在最前方
                     Update_Contro_Mode = 5;
                     this.Invoke(ul);
                 }
-     
+
                 Thread.Sleep(1000);
 
                 // 如果打开自动开启下一场直播
@@ -1498,20 +1493,13 @@ namespace 自动进入钉钉直播间
                     threadErr = "等待到达直播开启时间...";
                     this.Invoke(update);
 
-                    for (i = Element; i < Dates.Length; i++)
+                    for (i = element; i < Dates.Length; i++)
                     {
                         // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选中断直播时自动进入
                         Update_Contro_Mode = 1;
                         this.Invoke(ul);
 
-                        if (GetWindowRect(hwnd, out r) == 0)
-                            throw new Exception("获取钉钉窗口坐标失败");
-
-                        // 截图坐标 = 相对坐标 + 钉钉窗口坐标
-                        ScreenshotX = r.Left + RelPosX;
-                        ScreenshotY = r.Top + RelPosY;
-
-                        // 如果当前时间大于数组时间则跳过，直到当前时间小于数组时间为止
+                        // 如果当前时间 大于 数组当前元素中的时间 则跳过，直到当前时间 小于 数组下一个元素中的时间为止
                         if (DateTime.Compare(DateTime.Now, Dates[i]) > 0)
                         {
                             if (i == Dates.Length - 1) // 如果数组里的 自定义时间全部小于 当前时间
@@ -1520,7 +1508,7 @@ namespace 自动进入钉钉直播间
                                 continue;
                         }
                         // 如果当前时间大于上一次直播开启时间，小于下一次直播开启时间
-                        else if (JudgeLive(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH))// 判断直播是否开启
+                        else if (JudgeLive())// 判断直播是否开启
                         {
                             if (first++ == 0)
                                 i -= 1;           // 直播开启则使用前一个元素（上一次直播开启时间）
@@ -1540,7 +1528,7 @@ namespace 自动进入钉钉直播间
                             this.Invoke(ul);
                             Thread.Sleep(1000);        // 休眠一秒判断
 
-                            // 如果当前时间 小于 直播开启时间 =（直播时间-距离直播还有xx分钟自动开启）
+                            // 如果当前时间 小于 直播开启时间 =（直播时间-距离直播还有xx分钟自动开启的时间）
                             if (DateTime.Now >= Dates[i].AddMinutes(-(double)numericUpDown3.Value))
                             {
                                 i = Dates.Length + 1; // 跳出外层for循环 
@@ -1550,7 +1538,7 @@ namespace 自动进入钉钉直播间
                     }
                 }
 
-                Element = i;  // 保存当前直播开启时间的数组元素下标
+                element = i;  // 保存当前直播开启时间的数组元素下标
                 // 刷新日志
                 threadErr = "正在检测当前是否正在直播...";
                 this.Invoke(update);
@@ -1585,20 +1573,13 @@ namespace 自动进入钉钉直播间
                     threadErr = "第" + i.ToString() + "次检测当前是否正在直播...";
                     this.Invoke(update);
 
-                    if (GetWindowRect(hwnd, out r) == 0)
-                        throw new Exception("获取钉钉窗口坐标失败");
-
-                    // 截图坐标=相对坐标+钉钉窗口坐标
-                    ScreenshotX = r.Left + RelPosX;
-                    ScreenshotY = r.Top + RelPosY;
-
-                    if (JudgeLive(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH))// 判断是否在直播
+                    if (JudgeLive())// 判断是否在直播
                     {
                         threadErr = "(" + identifyType + ")检测到当前正在直播";
                         this.Invoke(update);
                         break;
                     }
-                    Thread.Sleep(3000);// 如未找到则等待3秒再查找
+                    Thread.Sleep(3000);// 如检测到 则等待3秒后 再检测
 
                     // 如果循环1800次（60分钟）都还未直播就退出
                     if (i == 1800)
@@ -1619,6 +1600,7 @@ namespace 自动进入钉钉直播间
                     if (GetWindowRect(hwnd, out r) == 0)
                         throw new Exception("获取钉钉窗口坐标失败");
 
+                    // 鼠标点击坐标
                     MouseClickX = r.Left + RelPosX + i * 2;
                     MouseClickY = r.Top + RelPosY + i;
 
@@ -1626,7 +1608,7 @@ namespace 自动进入钉钉直播间
                     SetCursorPos(MouseClickX, MouseClickY);
                     mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 
-                    // 查找直播窗口类名，如果找到，则已打开直播
+                    // 查找钉钉直播窗口类名，如果找到，则已打开直播
                     if (FindWindow("StandardFrame", null) != IntPtr.Zero)
                     {
                         threadErr = "已打开直播";
@@ -1750,15 +1732,31 @@ namespace 自动进入钉钉直播间
         }
 
         private string picturePath;
+        private bool judgeLiveErr = false;
         private Bitmap bit;
         // 判断直播是否打开（也就是判断截图保存的图片中的rgb是否含有钉钉正在直播时的rgb）
-        private bool JudgeLive(int x, int y, int width, int height)
+        private bool JudgeLive()
         {
             UpdateLog update = new UpdateLog(Update_Log);// 刷新日志
             try
             {
+                judgeLiveErr = false;
+
+                IntPtr hwnd = FindWindow(DingDingWindowClass, null);
+                // 查找钉钉窗口句柄
+                if (hwnd == IntPtr.Zero)
+                    throw new Exception("获取钉钉窗口句柄失败");
+
+                Rect r = new Rect();
+                if (GetWindowRect(hwnd, out r) == 0)
+                    throw new Exception("获取钉钉窗口坐标失败");
+
+                // 截图坐标 = 相对坐标 + 钉钉窗口坐标
+                ScreenshotX = r.Left + RelPosX;
+                ScreenshotY = r.Top + RelPosY;
+
                 // 截取指定坐标图片，通过rgb判断钉钉是否在直播
-                bit = ScreenCapture.Screenshot(x, y, width, height);
+                bit = ScreenCapture.Screenshot(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH);
 
                 // 如果打开截图保存到桌面
                 if (saveToDesk)
@@ -1792,14 +1790,15 @@ namespace 自动进入钉钉直播间
                 }
                 else
                 {
-                    MouseClickX = 214;
-                    MouseClickY = 109;
+                    MouseClickX = 0;
+                    MouseClickY = 0;
                     return false;
                 }
 
             }
             catch (Exception ex)
             {
+                judgeLiveErr = true;
                 threadErr = ex.Message;
                 this.Invoke(update);
                 return false;
