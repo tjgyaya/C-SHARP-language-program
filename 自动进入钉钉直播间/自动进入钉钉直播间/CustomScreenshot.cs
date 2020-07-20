@@ -12,14 +12,15 @@ namespace 自动进入钉钉直播间
     public partial class CustomScreenshot : Form
     {
         private bool saveToDesktop;
-        private string desktopPath, savePath, dingDingClass;
+        private string desktopPath, savePath, dingDingClass, dingDingPath;
         private int pictureX, pictureY, temp_Height, screenNum = -1;
 
-        public CustomScreenshot(bool save_to_desk, string desk_path, string ding_ding_class)
+        public CustomScreenshot(bool save_to_desk, string desk_path, string ding_ding_class,string ding_ding_path)
         {
             saveToDesktop = save_to_desk;
             desktopPath = desk_path;
             dingDingClass = ding_ding_class;
+            dingDingPath = ding_ding_path;
             InitializeComponent();
             //label2.Visible = false;
             label2.Text = "";
@@ -64,8 +65,7 @@ namespace 自动进入钉钉直播间
 
             try
             {
-                string DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
-                Process.Start(DingDingPath);// 打开钉钉
+                Process.Start(dingDingPath);// 打开钉钉
 
                 for (int i = 1; i <= 20; i++)// 寻找钉钉进程
                 {
@@ -115,7 +115,7 @@ namespace 自动进入钉钉直播间
                     throw new Exception("获取钉钉窗口坐标失败！");
 
                 // 如果是“button1”控件触发
-                if (((System.Windows.Forms.Control)sender).Name == "button1")
+                if (((Control)sender).Name == "button1")
                 {
                     // 将pictureBox1控件相对于窗体的坐标 转为 相对于屏幕的坐标
                     Point point = PointToScreen(pictureBox1.Location);
@@ -167,15 +167,15 @@ namespace 自动进入钉钉直播间
                 label2.Text = "坐标微调前将本窗口移到其它区域";
 
                 // 获取屏幕缩放比并设置窗口高度，以便完全显示所有内容
-                Graphics g = this.CreateGraphics();
-                int h = temp_Height + 63 + (int)(g.DpiX - 96f) / 24 * 18;
-                if (h != this.Height)
-                    this.Height = h;
+                using (Graphics g = this.CreateGraphics())
+                {
+                    int h = temp_Height + 63 + (int)(g.DpiX - 96f) / 24 * 18;
+                    if (h != this.Height)
+                        this.Height = h;
 
-                f1.DpiX = g.DpiX;
-                f1.DpiY = g.DpiY;
-
-                g.Dispose();
+                    f1.DpiX = g.DpiX;
+                    f1.DpiY = g.DpiY;
+                }
 
 
                 //label2.Text = string.Format($"截图坐标：{pictureX}x{pictureY}\n\n截图高x宽：{pictureBox1.Height}x{pictureBox1.Width}" +

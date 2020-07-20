@@ -267,13 +267,7 @@ namespace 自动进入钉钉直播间
         {
             // 停止
             start = false;
-            if (newThread != null)
-            {
-                // 如果线程还在运行
-                if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                    newThread.Abort(); // 关闭线程
-
-            }
+            CloseThread();
             button5_start.Text = "开启";
             // 关闭所有计时器
             Update_Contro_Mode = 0;
@@ -283,7 +277,11 @@ namespace 自动进入钉钉直播间
             SaveCheckboxEnable(2);// 恢复checkBox中Enabled属性的值
 
             CustScreenSuccess = false;
-            CustomScreenshot cs = new CustomScreenshot(checkBox12_SaveToDesk.Checked, DeskPath, DingDingWindowClass);
+
+            if (!File.Exists(DingDingPath))
+                DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
+
+            CustomScreenshot cs = new CustomScreenshot(checkBox12_SaveToDesk.Checked, DeskPath, DingDingWindowClass, DingDingPath);
             cs.ShowDialog(this);
 
             // 如果设置截图区域成功，将截图坐标高宽保存到配置文件
@@ -401,7 +399,7 @@ namespace 自动进入钉钉直播间
                     timer1.Enabled = false;
                     timer2.Enabled = false;
                     // 如果打开了 自动开启下一场直播 并且当前时间是最后一个自定义时间
-                    if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && element + 1 >= Dates.Length))
+                    if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && element + 1 >= Dates.Count))
                     {
                         start = true; // start = true是为了下面调用button5_Start_Click函数时让软件处于停止状态
                         button5_Start_Click(null, null);
@@ -660,11 +658,7 @@ namespace 自动进入钉钉直播间
         {
             Exit_WriteConfigFile(); // 写入配置文件
             notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
-            if (newThread != null)  // 如果线程还在运行
-            {
-                if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                    newThread.Abort(); // 关闭线程
-            }
+            CloseThread();
 
             // 如果设置了阻止系统休眠
             if (checkBox13_preventSleep.Checked)
@@ -711,7 +705,8 @@ namespace 自动进入钉钉直播间
                       BoolToNum(checkBox9_Time7.Checked), comboBox13.SelectedIndex + "," + comboBox14.SelectedIndex,
                       BoolToNum(checkBox10_Time8.Checked), comboBox15.SelectedIndex + "," + comboBox16.SelectedIndex,
                       BoolToNum(checkBox11_ShowTop.Checked), this.Location.X, this.Location.Y, RelPosX, RelPosY,
-                      ScreenshotH, ScreenshotW, DpiX, DpiY, BoolToNum(checkBox13_preventSleep.Checked), CurrentVersion, iniPath);
+                      ScreenshotH, ScreenshotW, DpiX, DpiY, BoolToNum(checkBox13_preventSleep.Checked), CurrentVersion,
+                      DingDingPath, iniPath);
                 if (err != null)
                     throw new Exception(err);
             }
@@ -822,9 +817,12 @@ namespace 自动进入钉钉直播间
                     // 当前版本号
                     string cv = null;
 
+                    // 钉钉路径
+                    string dP = null;
+
                     // 读配置文件
                     string err = ConfigFile.ReadFile(ref al, ref cl, ref scl, ref aonl, ref olt, ref t1s, ref t1t, ref t2s, ref t2t, ref t3s, ref t3t, ref t4s, ref t4t, ref t5s, ref t5t, ref t6s, ref t6t,
-                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref sh, ref sw, ref dx, ref dy, ref ps, ref cv, iniPath);
+                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref sh, ref sw, ref dx, ref dy, ref ps, ref cv, ref dP, iniPath);
                     // 如果读配置文件出现错误
                     if (err != null)
                     {
@@ -911,13 +909,15 @@ namespace 自动进入钉钉直播间
                     }
                     // 软件版本号
                     CurrentVersion = cv;
+
+                    // 钉钉路径
+                    DingDingPath = dP;
                 }
                 else
                 {
                     FirstUse = true; // 未找到配置文件则视为用户第一次使用
                     RefLog("未找到配置文件");
                 }
-
 
                 // 如果未启用 “自动开启下一次直播”功能
                 if (!checkBox2_AutoOPenNextLive.Checked)
@@ -1010,8 +1010,7 @@ namespace 自动进入钉钉直播间
             {// 启动
                 first = 0;
                 start = true;
-                newThread = new Thread(OpenDingDing);
-                newThread.Start();// 启动新线程
+                StartThread();
                 button5_start.Text = "停止";
 
                 SaveCheckboxEnable(1);// 保存checkBox中Enabled属性的值
@@ -1023,13 +1022,7 @@ namespace 自动进入钉钉直播间
             {// 停止
                 start = false;
 
-                if (newThread != null)
-                {
-                    // 如果线程还在运行
-                    if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                        newThread.Abort(); // 关闭线程
-
-                }
+                CloseThread();
                 button5_start.Text = "开启";
 
                 if (noCloseTimer5)
@@ -1089,60 +1082,29 @@ namespace 自动进入钉钉直播间
         }
 
         // 将所有启用的comboBox列表的值保存到时间数组
-        private DateTime[] Dates;
+        private List<DateTime> Dates;
         private void DateTimeArray()
         {
-            Dates = new DateTime[8];
+            Dates = new List<DateTime>();
 
             if (checkBox3_Time1.Checked)
-                Dates[0] = DateTime.Parse(comboBox1.SelectedItem.ToString() + ":" + comboBox2.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox1.SelectedItem.ToString() + ":" + comboBox2.SelectedItem.ToString()));
             if (checkBox4_Time2.Checked)
-                Dates[1] = DateTime.Parse(comboBox3.SelectedItem.ToString() + ":" + comboBox4.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox3.SelectedItem.ToString() + ":" + comboBox4.SelectedItem.ToString()));
             if (checkBox5_Time3.Checked)
-                Dates[2] = DateTime.Parse(comboBox5.SelectedItem.ToString() + ":" + comboBox6.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox5.SelectedItem.ToString() + ":" + comboBox6.SelectedItem.ToString()));
             if (checkBox6_Time4.Checked)
-                Dates[3] = DateTime.Parse(comboBox7.SelectedItem.ToString() + ":" + comboBox8.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox7.SelectedItem.ToString() + ":" + comboBox8.SelectedItem.ToString()));
             if (checkBox7_Time5.Checked)
-                Dates[4] = DateTime.Parse(comboBox9.SelectedItem.ToString() + ":" + comboBox10.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox9.SelectedItem.ToString() + ":" + comboBox10.SelectedItem.ToString()));
             if (checkBox8_Time6.Checked)
-                Dates[5] = DateTime.Parse(comboBox11.SelectedItem.ToString() + ":" + comboBox12.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox11.SelectedItem.ToString() + ":" + comboBox12.SelectedItem.ToString()));
             if (checkBox9_Time7.Checked)
-                Dates[6] = DateTime.Parse(comboBox13.SelectedItem.ToString() + ":" + comboBox14.SelectedItem.ToString());
+                Dates.Add(DateTime.Parse(comboBox13.SelectedItem.ToString() + ":" + comboBox14.SelectedItem.ToString()));
             if (checkBox10_Time8.Checked)
-                Dates[7] = DateTime.Parse(comboBox15.SelectedItem.ToString() + ":" + comboBox16.SelectedItem.ToString());
-            BubbleSorting(ref Dates);
-        }
-        // 将时间数组进行冒泡排序
-        private void BubbleSorting(ref DateTime[] dates)
-        {
-            DateTime tmp = DateTime.Parse("0001/1/1 00:00:00");
-            List<DateTime> list = dates.ToList();
+                Dates.Add(DateTime.Parse(comboBox15.SelectedItem.ToString() + ":" + comboBox16.SelectedItem.ToString()));
 
-            for (int k = 0; k < list.Count; k++)
-            {
-                if (DateTime.Compare(list[k], tmp) == 0)
-                {
-                    list.RemoveAt(k);// 移除未赋值的元素（0001/1/1 00:00:00）
-                    k--;
-                }
-            }
-
-            dates = list.ToArray();
-
-            // 冒泡排序，把较早的时间的排到前面
-            for (int i = 0; i < dates.Length - 1; i++)
-            {
-                for (int j = 0; j < dates.Length - 1 - i; j++)
-                {
-                    if (DateTime.Compare(dates[i], dates[j]) > 0)// 进行比较
-                    {
-                        tmp = dates[i];
-                        dates[i] = dates[j];
-                        dates[j] = tmp;
-                    }
-                }
-            }
-
+            Dates.Sort();
         }
 
 
@@ -1194,19 +1156,19 @@ namespace 自动进入钉钉直播间
                 timer4.Enabled = false;
 
                 // 如果打开了 自动开启下一场直播 并且当前时间未到达自定义时间
-                if (checkBox2_AutoOPenNextLive.Checked && element + 1 < Dates.Length)
+                if (checkBox2_AutoOPenNextLive.Checked && element + 1 < Dates.Count)
                 {
                     RefLog("等待下一场直播开启...");
                 }
                 // 如果打开了 自动开启下一场直播 并且当前时间是最后一个自定义时间
-                else if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && element + 1 >= Dates.Length))
+                else if (!checkBox2_AutoOPenNextLive.Checked || (checkBox2_AutoOPenNextLive.Checked && element + 1 >= Dates.Count))
                 {// 停止
                     start = true;
                     button5_Start_Click(null, null);
                     return;
                 }
             }
-           
+
 
             // 截取指定区域图片，判断直播是否恢复
             if (JudgeLive())
@@ -1220,14 +1182,8 @@ namespace 自动进入钉钉直播间
                 timer2.Enabled = false;
                 RefLog("(" + identifyType + ")已检测到直播重新开启");
 
-                if (newThread != null)
-                {
-                    // 如果线程还在运行则关闭
-                    if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                        newThread.Abort();
-                }
-                newThread = new Thread(OpenDingDing);
-                newThread.Start();
+                CloseThread();
+                StartThread();
             }
         }
 
@@ -1235,7 +1191,7 @@ namespace 自动进入钉钉直播间
         private void timer3_Tick(object sender, EventArgs e)
         {
             //到达最后一个自定义时间
-            if (element + 1 >= Dates.Length)
+            if (element + 1 >= Dates.Count)
             {
                 RefLog("已到达最后一个自定义时间，自动开启下一次直播将不会生效");
 
@@ -1259,11 +1215,7 @@ namespace 自动进入钉钉直播间
                  + "还   00\n"
                  + "有   秒";
 
-                    if (newThread != null)
-                    {                     // 关闭线程
-                        if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                            newThread.Abort();
-                    }
+                    CloseThread();
                 }
 
                 // 关闭定时器
@@ -1281,14 +1233,8 @@ namespace 自动进入钉钉直播间
                 timer3.Enabled = false;
                 element += 1;// 数组元素+1，使用下一个自定义时间
 
-                if (newThread != null)
-                {             // 如果线程还在运行，就关闭
-                    if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                        newThread.Abort();
-                }
-
-                newThread = new Thread(OpenDingDing);
-                newThread.Start(); // 启动新线程
+                CloseThread();
+                StartThread();
             }
         }
 
@@ -1402,13 +1348,30 @@ namespace 自动进入钉钉直播间
         private string threadErr;                // 错误提示
 
 
+        private void CloseThread()
+        {
+            if (newThread != null)
+            {             // 如果线程还在运行，就关闭
+                if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
+                    newThread.Abort();
+            }
+        }
+
+
+        private void StartThread()
+        {
+            newThread = new Thread(OpenDingDing);
+            newThread.SetApartmentState(ApartmentState.STA);
+            newThread.Start(); // 启动新线程
+        }
+
         /// <summary>
         /// 打开钉钉并检测是否正在直播
         /// </summary>
         private void OpenDingDing()
         {
-            UpdateLog update = new UpdateLog(Update_Log);//刷新日志
-            UpdateLabel ul = new UpdateLabel(Update_Control);//杂七杂八（刷新控件）
+            UpdateLog update = new UpdateLog(Update_Log);    // 刷新日志
+            UpdateLabel ul = new UpdateLabel(Update_Control);// 杂七杂八（刷新控件）
             Rect r = new Rect();
             int i = 1;
             // 关闭所有timer控件
@@ -1417,12 +1380,16 @@ namespace 自动进入钉钉直播间
 
             try
             {
-                DingDingPath = Reg.GetDingDingPath();//获取钉钉路径
+                if (!File.Exists(DingDingPath))
+                    DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
+
+                if (DingDingPath == null)
+                    throw new Exception("钉钉路径无效！");
 
                 threadErr = "获取钉钉路径成功";
-                this.Invoke(update);//调用窗体Invoke方法
+                this.Invoke(update);// 调用窗体Invoke方法
 
-                Process.Start(DingDingPath);//打开钉钉
+                Process.Start(DingDingPath);// 打开钉钉
 
                 threadErr = "正在打开钉钉...";
                 this.Invoke(update);
@@ -1435,10 +1402,10 @@ namespace 自动进入钉钉直播间
 
                     threadErr = "            " + i.ToString() + "...";
                     this.Invoke(update);
-                    Thread.Sleep(1000);//休眠3秒等待打开钉钉
+                    Thread.Sleep(1000);// 休眠3秒等待打开钉钉
                 }
 
-                //寻找钉钉进程
+                // 寻找钉钉进程
                 for (i = 0; i <= 120; i++)
                 {
                     // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选断开直播时自动进入
@@ -1493,7 +1460,7 @@ namespace 自动进入钉钉直播间
                     threadErr = "等待到达直播开启时间...";
                     this.Invoke(update);
 
-                    for (i = element; i < Dates.Length; i++)
+                    for (i = element; i < Dates.Count; i++)
                     {
                         // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选中断直播时自动进入
                         Update_Contro_Mode = 1;
@@ -1502,7 +1469,7 @@ namespace 自动进入钉钉直播间
                         // 如果当前时间 大于 数组当前元素中的时间 则跳过，直到当前时间 小于 数组下一个元素中的时间为止
                         if (DateTime.Compare(DateTime.Now, Dates[i]) > 0)
                         {
-                            if (i == Dates.Length - 1) // 如果数组里的 自定义时间全部小于 当前时间
+                            if (i == Dates.Count - 1) // 如果数组里的 自定义时间全部小于 当前时间
                                 break;
                             else
                                 continue;
@@ -1531,7 +1498,7 @@ namespace 自动进入钉钉直播间
                             // 如果当前时间 小于 直播开启时间 =（直播时间-距离直播还有xx分钟自动开启的时间）
                             if (DateTime.Now >= Dates[i].AddMinutes(-(double)numericUpDown3.Value))
                             {
-                                i = Dates.Length + 1; // 跳出外层for循环 
+                                i = Dates.Count + 1; // 跳出外层for循环 
                                 break;                // 跳出内层while循环
                             }
                         }

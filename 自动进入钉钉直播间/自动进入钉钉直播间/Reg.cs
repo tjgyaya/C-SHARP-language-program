@@ -19,7 +19,7 @@ namespace 自动进入钉钉直播间
         public static string GetDingDingPath()
         {
             // 64位系统注册表路径
-            string Key = "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
+            string Key = "1 SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
             string DingDingPath;
 
             // 如果是32位系统
@@ -53,7 +53,24 @@ namespace 自动进入钉钉直播间
             }
             else
             {
-                throw new Exception("无法从注册表和桌面获取钉钉路径！");
+                // throw new Exception("无法从注册表和桌面获取钉钉路径！");
+                MessageBox.Show("无法从注册表和桌面获取钉钉路径，\n请手动选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）。", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                using (OpenFileDialog dialog = new OpenFileDialog())
+                {
+                    dialog.Filter = "DingtalkLauncher.exe (*.exe)| DingtalkLauncher.exe";
+                    dialog.Title = "请选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）";
+                    dialog.DefaultExt = "exe";
+                    dialog.AddExtension = true;
+                    dialog.CheckFileExists = true;
+                    dialog.CheckPathExists = true;
+                    dialog.Multiselect = false;
+
+                    DialogResult result = dialog.ShowDialog();
+                    if (result == DialogResult.OK)
+                        return dialog.FileName;
+                    else
+                        return null;
+                }
             }
         }
 

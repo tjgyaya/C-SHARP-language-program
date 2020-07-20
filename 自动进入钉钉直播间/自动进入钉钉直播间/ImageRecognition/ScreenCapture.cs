@@ -64,24 +64,24 @@ namespace 自动进入钉钉直播间
             float scaleX = ScaleX();
 
             Bitmap bit = new Bitmap((int)(width * scaleY), (int)(height * scaleY));
-            Graphics g = Graphics.FromImage(bit);
-            g.CompositingQuality = CompositingQuality.HighQuality;// 质量设为最高
-            g.CopyFromScreen((int)(x * scaleX), (int)(y * scaleY), 0, 0, new Size((int)(width * scaleX), (int)(height * scaleY)));
+            using (Graphics g = Graphics.FromImage(bit))
+            {
+                g.CompositingQuality = CompositingQuality.HighQuality;// 质量设为最高
+                g.CopyFromScreen((int)(x * scaleX), (int)(y * scaleY), 0, 0, new Size((int)(width * scaleX), (int)(height * scaleY)));
+            }
             return bit;
         }
 
-
-
         // 令人丧心病狂的RGB数据
-        private static int[] Argbs = {
-            Color.FromArgb(255, 148, 62).ToArgb(), Color.FromArgb(255, 148, 99).ToArgb(),
-            Color.FromArgb(255, 185, 132).ToArgb(), Color.FromArgb(255, 167, 62).ToArgb(),
-            Color.FromArgb(255, 201, 158).ToArgb(), Color.FromArgb(255, 162, 103).ToArgb(),
-            Color.FromArgb(255, 184, 145).ToArgb(), Color.FromArgb(255, 203, 162).ToArgb(),
-            Color.FromArgb(255, 179, 121).ToArgb(), Color.FromArgb(255, 175, 123).ToArgb(),
-            Color.FromArgb(255, 201, 144).ToArgb() , Color.FromArgb(255, 175, 128).ToArgb(),
-            Color.FromArgb(255, 211, 162).ToArgb(), Color.FromArgb(255, 193, 177).ToArgb(),
-            Color.FromArgb(255, 202, 177).ToArgb(), Color.FromArgb(255, 203, 99).ToArgb()
+        private static readonly Color[] Argbs = {
+            Color.FromArgb(255, 148, 62), Color.FromArgb(255, 148, 99),
+            Color.FromArgb(255, 185, 132), Color.FromArgb(255, 167, 62),
+            Color.FromArgb(255, 201, 158), Color.FromArgb(255, 162, 103),
+            Color.FromArgb(255, 184, 145), Color.FromArgb(255, 203, 162),
+            Color.FromArgb(255, 179, 121), Color.FromArgb(255, 175, 123),
+            Color.FromArgb(255, 201, 144) , Color.FromArgb(255, 175, 128),
+            Color.FromArgb(255, 211, 162), Color.FromArgb(255, 193, 177),
+            Color.FromArgb(255, 202, 177), Color.FromArgb(255, 203, 99)
         };
 
 
@@ -94,7 +94,8 @@ namespace 自动进入钉钉直播间
         /// <returns></returns>
         public static bool Is_LiveRgb(Bitmap bit, out int X, out int Y)
         {
-            int x = 0, y = 0, c;
+            int x = 0, y = 0;
+            Color c;
 
             // 判断是否有自定义颜色文件
             DirectoryInfo dir = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
@@ -117,7 +118,7 @@ namespace 自动进入钉钉直播间
             {
                 for (y = 0; y < bit.Height; y++)
                 {
-                    c = bit.GetPixel(x, y).ToArgb();// 获取一个像素点的颜色
+                    c = bit.GetPixel(x, y);// 获取一个像素点的颜色
                     if (Array.IndexOf(Argbs, c) != -1)
                     {
                         X = x;
@@ -148,7 +149,7 @@ namespace 自动进入钉钉直播间
                         for (x = 0; x < bit.Width; x++)
                         {
                             // 获取一个像素点的RGB
-                            if (bit.GetPixel(x, y).ToArgb() == ColorTranslator.FromHtml(str).ToArgb())
+                            if (bit.GetPixel(x, y) == ColorTranslator.FromHtml(str))
                             {
                                 X = x;
                                 Y = y;

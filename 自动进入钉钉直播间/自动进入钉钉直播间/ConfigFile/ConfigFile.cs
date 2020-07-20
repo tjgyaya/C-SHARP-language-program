@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,7 +17,7 @@ namespace 自动进入钉钉直播间
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
 int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int ScreenshotH, int ScreenshotW, float DpiX, float DpiY,
-int PreventSleep, string CurrentVersion, string config_file_path)
+int PreventSleep, string CurrentVersion, string DingDingPath, string config_file_path)
         {
             try
             {
@@ -51,7 +52,8 @@ int PreventSleep, string CurrentVersion, string config_file_path)
                         $"横向缩放 = {DpiX};\n" +
                         $"纵向缩放 = {DpiY};\n" +
                         $"阻止系统休眠 = {PreventSleep};\n" +
-                        $"当前软件版本 = {CurrentVersion};\n");
+                        $"当前软件版本 = {CurrentVersion};\n" +
+                        $"钉钉路径 = {DingDingPath};\n");
 
                 File.WriteAllText(config_file_path, buff);
                 return null;
@@ -70,16 +72,15 @@ int PreventSleep, string CurrentVersion, string config_file_path)
             ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time,
             ref int Time8Start, ref string Time8Time, ref int ShowTop, ref int PositionX, ref int PositionY, ref int RelPosX,
             ref int RelPosY, ref int ScreenshotH, ref int ScreenshotW, ref float DpiX, ref float DpiY,
-            ref int PreventSleep, ref string CurrentVersion, string config_file_path)
+            ref int PreventSleep, ref string CurrentVersion, ref string DingDingPath, string config_file_path)
         {
+            const int MAXSIZE = 260;
+            int ch, i = 0, j = 0;
+            char[] config = new char[MAXSIZE]; // 储存从文件读取的参数
+            FileStream fs = new FileStream(config_file_path, FileMode.Open, FileAccess.Read, FileShare.None);
             try
             {
-                const int MAXSIZE = 50;
-                int ch, i = 0, j = 0;
-                FileStream fs = new FileStream(config_file_path, FileMode.Open, FileAccess.Read, FileShare.None);
-                char[] config = new char[MAXSIZE];     //储存从文件读取的参数
-
-                //判断文件是否为空
+                // 判断文件是否为空
                 if (fs.Length == 0)
                     throw new Exception("文件为空！");
 
@@ -89,7 +90,7 @@ int PreventSleep, string CurrentVersion, string config_file_path)
                     {
                         while ((ch = fs.ReadByte()) != ';')//读取“=”到“;”内的参数
                         {
-                            if (ch == ' ')//判断ch是否为空格
+                            if (ch == ' ' && ArrayLen(config) == 0)//判断ch是否为空格
                             {
                                 i = 0;
                                 continue;//跳过此次循环，丢弃读取的空格
@@ -166,6 +167,8 @@ int PreventSleep, string CurrentVersion, string config_file_path)
                         else if (j == 31)
                             CurrentVersion = new string(config);//第三一行的内容是 当前软件版本号
                         else if (j == 32)
+                            DingDingPath = new string(config);//第三二行的内容是 钉钉路径
+                        else if (j == 33)
                             break;
 
                         j++;
@@ -208,15 +211,34 @@ int PreventSleep, string CurrentVersion, string config_file_path)
                 if (index != -1)
                     Time8Time = Time8Time.Substring(0, index);
 
-                fs.Close();
+                index = CurrentVersion.IndexOf('\0');
+                if (index != -1)
+                    CurrentVersion = CurrentVersion.Substring(0, index);
+
+                index = DingDingPath.IndexOf('\0');
+                if (index != -1)
+                    DingDingPath = DingDingPath.Substring(0, index);
                 return null;
             }
             catch (Exception ex)
             {
                 return ex.Message;
             }
+            finally
+            {
+                fs.Close();
+            }
         }
 
+
+        private static int ArrayLen(char[] arr)
+        {
+            int i = 0;
+            for (; i < arr.Length && arr[i] != '\0'; i++)
+                ;
+
+            return i;
+        }
 
         #region 以下两个函数不再使用
 
