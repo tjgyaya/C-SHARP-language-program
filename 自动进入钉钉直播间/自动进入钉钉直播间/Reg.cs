@@ -19,7 +19,7 @@ namespace 自动进入钉钉直播间
         public static string GetDingDingPath()
         {
             // 64位系统注册表路径
-            string Key = "1 SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
+            string Key = "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
             string DingDingPath;
 
             // 如果是32位系统
