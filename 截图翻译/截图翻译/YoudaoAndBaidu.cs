@@ -14,6 +14,7 @@ namespace 截图翻译
 {
     class Youdao
     {
+        // 有道翻译Key，可以去https://ai.youdao.com/申请
         private static string appKey = "66e159162802383b";
         private static string appSecret = "2tnhsI5eYnOZPdMG9lzCfwPORgg8oCdM";
 
@@ -134,11 +135,12 @@ namespace 截图翻译
 
     class Baidu
     {
-        // 通用文字识别
+        // 百度通用文字识别Key，可以去http://ai.baidu.com/申请
         private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
         private static string API_KEY = "ABHVET3G06m8RAmvE7lHCpkn";
         private static string SECRET_KEY = "3vv0bG0P9MkAI0SRgabEgS3Hac8vHQPC";
-        // 翻译
+
+        // 百度翻译Key，可以去https://api.fanyi.baidu.com/申请
         private static string appId = "20200424000429104";
         private static string password = "5mzyraBsLRk2yfGQMhXJ";
 

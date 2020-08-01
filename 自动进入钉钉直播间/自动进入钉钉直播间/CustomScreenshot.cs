@@ -22,13 +22,17 @@ namespace 自动进入钉钉直播间
             dingDingClass = ding_ding_class;
             dingDingPath = ding_ding_path;
             InitializeComponent();
-            //label2.Visible = false;
+
             label2.Text = "";
         }
 
 
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("User32.dll", EntryPoint = "FindWindowEx")]
+        private static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpClassName, string lpWindowName);
+
         [DllImport("user32.dll")]
         private extern static int GetWindowRect(IntPtr hwnd, out Rect lpRect);
 
@@ -81,9 +85,8 @@ namespace 自动进入钉钉直播间
                     if (i > 20)
                         break;
                     else if (i == 20)
-                    {
                         throw new Exception("未找到钉钉进程，请手动打开钉钉后重试！");
-                    }
+
                     System.Threading.Thread.Sleep(3000);// 如未找到则等待3秒再查找
                 }
             }

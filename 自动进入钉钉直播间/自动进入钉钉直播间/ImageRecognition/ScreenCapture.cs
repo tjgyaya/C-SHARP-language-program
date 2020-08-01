@@ -26,6 +26,7 @@ namespace 自动进入钉钉直播间
         const int VERTRES = 10;
         const int DESKTOPVERTRES = 117;
         const int DESKTOPHORZRES = 118;
+        const int LOGPIXELSX = 88;
 
 
         /// <summary>  
@@ -35,6 +36,8 @@ namespace 自动进入钉钉直播间
         {
             IntPtr hdc = GetDC(IntPtr.Zero);
             float scaleX = GetDeviceCaps(hdc, DESKTOPHORZRES) / GetDeviceCaps(hdc, HORZRES);
+            if (scaleX == 1.0f)
+                scaleX = GetDeviceCaps(hdc, LOGPIXELSX) / 96f;
             ReleaseDC(IntPtr.Zero, hdc);
             return scaleX;
         }
@@ -45,9 +48,11 @@ namespace 自动进入钉钉直播间
         public static float ScaleY()
         {
             IntPtr hdc = GetDC(IntPtr.Zero);
-            float ScaleY = GetDeviceCaps(hdc, DESKTOPVERTRES) / GetDeviceCaps(hdc, VERTRES);
+            float scaleY = GetDeviceCaps(hdc, DESKTOPVERTRES) / GetDeviceCaps(hdc, VERTRES);
+            if (scaleY == 1.0f)
+                scaleY = GetDeviceCaps(hdc, LOGPIXELSX) / 96f;
             ReleaseDC(IntPtr.Zero, hdc);
-            return ScaleY;
+            return scaleY;
         }
 
         /// <summary>

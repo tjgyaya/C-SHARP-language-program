@@ -21,6 +21,7 @@ using System.Windows.Forms;
 
 namespace 自动进入钉钉直播间
 {
+
     public partial class Form1 : Form
     {
         public Form1()
@@ -131,6 +132,7 @@ namespace 自动进入钉钉直播间
 
         // 自定义截图是否成功
         public bool CustScreenSuccess { get; set; }
+
 
         private int MouseClickX = 214, MouseClickY = 109;// 默认鼠标点击坐标
         private string DingDingPath;                     // 钉钉安装路径
@@ -280,6 +282,11 @@ namespace 自动进入钉钉直播间
 
             if (!File.Exists(DingDingPath))
                 DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
+            if (DingDingPath == null)
+            {
+                //MessageBox.Show("钉钉路径无效！", "自动进入钉钉直播间",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return;
+            }
 
             CustomScreenshot cs = new CustomScreenshot(checkBox12_SaveToDesk.Checked, DeskPath, DingDingWindowClass, DingDingPath);
             cs.ShowDialog(this);
@@ -743,7 +750,7 @@ namespace 自动进入钉钉直播间
             {
                 // 获取屏幕分辨率
                 if (Screen.PrimaryScreen.Bounds.Height > 1080 || Screen.PrimaryScreen.Bounds.Width > 1920)
-                    MessageBox.Show("本软件仅对缩放比为100%、125%、150%的1920x1080分辨率的屏幕进行适配\n其它缩放比或分辨率可能会卡在“”", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("本软件仅对1920x1080分辨率的屏幕进行适配\n其它分辨率可能会卡在“正在检测钉钉是否在直播...”", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 try
                 {
@@ -1384,7 +1391,8 @@ namespace 自动进入钉钉直播间
                     DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
 
                 if (DingDingPath == null)
-                    throw new Exception("钉钉路径无效！");
+                    return;
+                //throw new Exception("钉钉路径无效！");
 
                 threadErr = "获取钉钉路径成功";
                 this.Invoke(update);// 调用窗体Invoke方法

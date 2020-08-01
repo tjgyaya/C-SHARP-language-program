@@ -19,7 +19,14 @@ namespace 截图翻译
         // 配置文件节点名称
         private static string Section = "截图翻译";
         // 配置文件路径
-        public static string ConfigPath = @"C:\Users\Administrator\AppData\Roaming\截图翻译\截图翻译.ini";
+        private static readonly string _configPath = @"C:\Users\Administrator\AppData\Roaming\截图翻译\截图翻译.ini";
+        public static string ConfigPath
+        {
+            get
+            {
+                return _configPath;
+            }
+        }
         const int SIZE = 20;
 
 

@@ -31,7 +31,7 @@ namespace 截图翻译
             this.ShowInTaskbar = false;
 
             // 将窗体显示在最顶层
-             this.TopMost = true;
+            this.TopMost = true;
             label_init_point = label1.Location;
         }
 
@@ -51,7 +51,7 @@ namespace 截图翻译
             ScreenBmp = CaptureFullScreen();
             // 将截取的屏幕内容显示到pictureBox
             pictureBox1.Image = (Bitmap)ScreenBmp.Clone();
-
+           
             //Graphics g = Graphics.FromImage(pictureBox1.Image);
             //// 创建一个画笔
             //SolidBrush brush = new SolidBrush(Color.FromArgb(80, 0, 0, 0));
@@ -132,6 +132,7 @@ namespace 截图翻译
                 // 清空画布
                 pictureBox1.Refresh();
 
+
                 // 获取矩形的长度（鼠标拖动时的坐标 - 鼠标左键按下时的坐标）
                 w = Math.Abs(MousePosition.X - mouse_down_point.X);
                 h = Math.Abs(MousePosition.Y - mouse_down_point.Y);
@@ -139,17 +140,8 @@ namespace 截图翻译
                 // 如果是从右往左拖动或从下往上拖动
                 screen_point.X = Math.Min(MousePosition.X, mouse_down_point.X);
                 screen_point.Y = Math.Min(MousePosition.Y, mouse_down_point.Y);
-                //if (MousePosition.X < mouse_down_point.X)
-                //    screen_point.X = MousePosition.X;
-                //else
-                //    screen_point.X = mouse_down_point.X;
 
-                //if (MousePosition.Y < mouse_down_point.Y)
-                //    screen_point.Y = MousePosition.Y;
-                //else
-                //    screen_point.Y = mouse_down_point.Y;
 
-                // 绘制矩形
                 g.DrawRectangle(p, screen_point.X, screen_point.Y, w, h);
                 g.Dispose();
                 // 从当前窗体创建新的画板，防止闪烁（闪瞎眼的那种）
@@ -209,10 +201,10 @@ namespace 截图翻译
             try
             {
                 // 质量设为最高
-                //g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 g.DrawImage(ScreenBmp, destRect, srcRect, GraphicsUnit.Pixel);                 // 把选取的矩形区域绘制到空白位图上   
                 bmp.Save(SavePath, System.Drawing.Imaging.ImageFormat.Bmp);                    // 保存
             }
@@ -222,13 +214,12 @@ namespace 截图翻译
                 // 释放资源
                 pictureBox1.Image.Dispose();
                 ScreenBmp.Dispose();
-                this.Close();
                 g.Dispose();
                 bmp.Dispose();
+                this.Close();
             }
             mouse_down = false;
             this.Close();
-            // Environment.Exit(0);
         }
 
 

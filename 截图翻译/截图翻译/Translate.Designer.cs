@@ -71,7 +71,7 @@
             this.comboBox2.Items.AddRange(new object[] {
             "英语",
             "俄语",
-            "日语"});
+            "不翻译"});
             this.comboBox2.Location = new System.Drawing.Point(228, 185);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(70, 25);
@@ -94,8 +94,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "T键",
-            "Y键",
-            "回车键"});
+            "Y键"});
             this.comboBox1.Location = new System.Drawing.Point(72, 185);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(70, 25);
@@ -129,6 +128,8 @@
             this.Name = "Translate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "翻译窗口-输入文字回车即可";
+            this.TopMost = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
