@@ -45,14 +45,14 @@ namespace 截图翻译
         private bool CopySourceTextToClip, CopyDestTextToClip;     // 翻译后是否复制到剪切板（源语言、目标语言）
         private bool Speak;                          // 翻译后是否朗读译文
         private int ShowTime = 5;                    // 翻译后延迟显示翻译后内容的时间
-        private string SourceOfTran = "百度翻译";      // 翻译源
+        private string SourceOfTran = "百度翻译";    // 翻译源
         private DateTime Time = DateTime.Now;
-        private Thread newThread;                    // 新线程              
+        private Thread newThread;                  // 新线程              
         private string Show_cont;                  // 要在ShowCont窗口显示的内容
         private TranMode tranMode;
         private bool[] ShowWindow = { false, false };
-        HomePage hp = new HomePage();
-        Setting setting = new Setting();
+        FrmHomePage hp = new FrmHomePage();
+        FrmSetting setting = new FrmSetting();
 
 
         // 翻译模式（tran：截图翻译并显示，show：不截图翻译只显示）
@@ -67,10 +67,14 @@ namespace 截图翻译
             this.Show();
             this.WindowState = FormWindowState.Normal; // 窗体恢复正常大小
         }
+
+
         private void HideWin(object sender, EventArgs e)
         {
             this.Hide();
         }
+
+
         private void Exit(object sender, EventArgs e)
         {
             for (int i = 0; i < 4; i++)
@@ -121,7 +125,7 @@ namespace 截图翻译
             try
             {
                 // 读取配置文件
-                ConfigFile.ReadFile(Setting.Names, ref Setting.ReadValues);
+                ConfigFile.ReadFile(FrmSetting.Names, ref FrmSetting.ReadValues);
 
                 // 注册热键
                 for (int i = 0; i < 4; i++)
@@ -129,7 +133,11 @@ namespace 截图翻译
                     Keys key;
                     uint fun1 = 0, fun2 = 0;
 
-                    string[] arr = Setting.ReadValues[i].Split(',');
+                    if (string.IsNullOrEmpty(FrmSetting.ReadValues[i]))
+                        continue;
+
+                    // 如果热键为空
+                    string[] arr = FrmSetting.ReadValues[i].Split(',');
 
                     // 前一个键为单键（a-z）
                     key = (Keys)Enum.Parse(typeof(Keys), arr[0], true);
@@ -149,14 +157,14 @@ namespace 截图翻译
                 }
 
                 // 翻译后延迟显示的时间（秒）
-                ShowTime = Convert.ToInt32(Setting.ReadValues[4]);
+                ShowTime = Convert.ToInt32(FrmSetting.ReadValues[4]);
                 // 翻译后是否复制到剪切板
-                CopySourceTextToClip = Convert.ToBoolean(Setting.ReadValues[5]);
-                CopyDestTextToClip = Convert.ToBoolean(Setting.ReadValues[6]);
+                CopySourceTextToClip = Convert.ToBoolean(FrmSetting.ReadValues[5]);
+                CopyDestTextToClip = Convert.ToBoolean(FrmSetting.ReadValues[6]);
                 // 翻译后是否朗读译文
-                Speak = Convert.ToBoolean(Setting.ReadValues[7]);
+                Speak = Convert.ToBoolean(FrmSetting.ReadValues[7]);
                 // 翻译源
-                SourceOfTran = Setting.ReadValues[8];
+                SourceOfTran = FrmSetting.ReadValues[8];
             }
             catch (Exception ex)
             {
@@ -258,7 +266,7 @@ namespace 截图翻译
             string savePath = DateTime.Now.ToString("yyyy-dd-MM_HH_mm_ss") + ".bmp";
             string from = "en", src, dst = null;
 
-            ScreenShot shot = new ScreenShot(savePath, true);
+            FrmScreenShot shot = new FrmScreenShot(savePath, true);
 
             try
             {   // 截图翻译并显示
@@ -298,7 +306,7 @@ namespace 截图翻译
 
                 if (dst != null && dst != "")
                 {
-                    using (ShowCont sc = new ShowCont(ShowTime))
+                    using (FrmShowCont sc = new FrmShowCont(ShowTime))
                     {
                         sc.ContText(dst);
                         sc.ShowDialog();
@@ -312,7 +320,7 @@ namespace 截图翻译
 
                 dst = "错误：" + ex.Message;
 
-                using (ShowCont sc = new ShowCont(ShowTime))
+                using (FrmShowCont sc = new FrmShowCont(ShowTime))
                 {
                     sc.ContText(dst);
                     sc.ShowDialog();
@@ -386,7 +394,7 @@ namespace 截图翻译
         {
             try
             {
-                Translate ts = new Translate(SourceOfTran);
+                FrmTranslate ts = new FrmTranslate(SourceOfTran);
                 ts.Show();
             }
             catch

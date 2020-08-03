@@ -79,44 +79,44 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="HomePage.cs">
+    <Compile Include="FrmHomePage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HomePage.Designer.cs">
-      <DependentUpon>HomePage.cs</DependentUpon>
+    <Compile Include="FrmHomePage.Designer.cs">
+      <DependentUpon>FrmHomePage.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScreenShot.cs">
+    <Compile Include="FrmScreenShot.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ScreenShot.Designer.cs">
-      <DependentUpon>ScreenShot.cs</DependentUpon>
+    <Compile Include="FrmScreenShot.Designer.cs">
+      <DependentUpon>FrmScreenShot.cs</DependentUpon>
     </Compile>
-    <Compile Include="Setting.cs">
+    <Compile Include="FrmSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Setting.Designer.cs">
-      <DependentUpon>Setting.cs</DependentUpon>
+    <Compile Include="FrmSetting.Designer.cs">
+      <DependentUpon>FrmSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="ShowCont.cs">
+    <Compile Include="FrmShowCont.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ShowCont.Designer.cs">
-      <DependentUpon>ShowCont.cs</DependentUpon>
+    <Compile Include="FrmShowCont.Designer.cs">
+      <DependentUpon>FrmShowCont.cs</DependentUpon>
     </Compile>
-    <Compile Include="Translate.cs">
+    <Compile Include="FrmTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Translate.Designer.cs">
-      <DependentUpon>Translate.cs</DependentUpon>
+    <Compile Include="FrmTranslate.Designer.cs">
+      <DependentUpon>FrmTranslate.cs</DependentUpon>
     </Compile>
     <Compile Include="YoudaoAndBaidu.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HomePage.resx">
-      <DependentUpon>HomePage.cs</DependentUpon>
+    <EmbeddedResource Include="FrmHomePage.resx">
+      <DependentUpon>FrmHomePage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -128,17 +128,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ScreenShot.resx">
-      <DependentUpon>ScreenShot.cs</DependentUpon>
+    <EmbeddedResource Include="FrmScreenShot.resx">
+      <DependentUpon>FrmScreenShot.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Setting.resx">
-      <DependentUpon>Setting.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSetting.resx">
+      <DependentUpon>FrmSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ShowCont.resx">
-      <DependentUpon>ShowCont.cs</DependentUpon>
+    <EmbeddedResource Include="FrmShowCont.resx">
+      <DependentUpon>FrmShowCont.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Translate.resx">
-      <DependentUpon>Translate.cs</DependentUpon>
+    <EmbeddedResource Include="FrmTranslate.resx">
+      <DependentUpon>FrmTranslate.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />

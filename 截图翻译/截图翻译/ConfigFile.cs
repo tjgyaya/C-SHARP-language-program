@@ -18,15 +18,13 @@ namespace 截图翻译
 
         // 配置文件节点名称
         private static string Section = "截图翻译";
+
         // 配置文件路径
-        private static readonly string _configPath = @"C:\Users\Administrator\AppData\Roaming\截图翻译\截图翻译.ini";
         public static string ConfigPath
         {
-            get
-            {
-                return _configPath;
-            }
-        }
+            get;
+        } = @"C:\Users\Administrator\AppData\Roaming\截图翻译\截图翻译.ini";
+
         const int SIZE = 20;
 
 
@@ -72,21 +70,16 @@ namespace 截图翻译
 
             // 存放读取的数据
             StringBuilder[] sb = new StringBuilder[Values.Length];
-            // 存放错误
-            int[] ret = new int[Values.Length];
-            // 初始化数组
+            
             for (int i = 0; i < Values.Length; i++)
-            {
+            {   // 初始化数组
                 sb[i] = new StringBuilder(SIZE);
-                ret[i] = 1;
-            }
+                // 读取配置文件
+                GetPrivateProfileString(Section, names[i], "Error", sb[i], SIZE, ConfigPath);
+            } 
 
-            // 读取配置文件
-            for (int i = 0; i < Values.Length; i++)
-                ret[i] = GetPrivateProfileString(Section, names[i], "Error", sb[i], SIZE, ConfigPath);
-
-            // 如果数组中有0出现，则读取文件错误
-            if (Array.IndexOf(ret, 0) != -1 || Array.IndexOf(sb, "Error") != -1)
+            // 如果数组中有Error出现，则读取文件错误
+            if (Array.IndexOf(sb, "Error") != -1)
             {
                 if (File.Exists(ConfigPath))
                     File.Delete(ConfigPath);
