@@ -14,8 +14,6 @@ namespace 鼠连点
 {
     public partial class Form1 : Form
     {
-        protected delegate void UpdateControlText1();
-
         [DllImport("user32")]
         private static extern int mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);//模拟鼠标消息
 
@@ -28,40 +26,39 @@ namespace 鼠连点
         const int MOUSEEVENTF_WHEEL = 0x0800;      //模拟鼠标滚轮滚动
 
         [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, Keys vk);//注册热键
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, Keys vk);// 注册热键
 
         [DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);//释放注册的的热键
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);                         // 释放注册的的热键
 
 
 
         public Form1()
         {
             InitializeComponent();
-            if (!RegisterHotKey(this.Handle, 100, 0, Keys.F8)) //注册热键f8
+            if (!RegisterHotKey(this.Handle, HOT_KEY_ID, 0, Keys.F8)) // 注册热键f8
             {
                 DialogResult result = MessageBox.Show("注册热键失败，是否继续运行？", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 if (result == DialogResult.No)
                 {
                     exit_Click(null, null);
                 }
-                else
-                {
-                    button1.Text = "点击此处开始连点";
-                    label5.Text = "使用方法：\n1、点击上面按钮开始\n2、把鼠标移动到需要点击的地方";
-                }
             }
 
-            comboBox1.SelectedIndex = 0;
+            comboBox1_ClickMode.SelectedIndex = 0;
+            comboBox2_HotKey.SelectedItem = "F8";
+            updateDele = new UpdateControlText1(updateControlText);
         }
 
 
-
-
+        protected delegate void UpdateControlText1();
+        private UpdateControlText1 updateDele;// 定义委托
         private Thread newThread;
-        private int number, roll;
-        private double sec;
-        private bool start = false, infiniteNumber;
+        private long totalClick = 0;// 鼠标总共点击次数
+        private bool start = false; // 是否启动，是否为无限次数点击
+        private bool firstStart = true; // 第一次启动
+        const int HOT_KEY_ID = 568; // 热键id
+
 
         /// <summary>
         /// 点击按钮或按F8开启
@@ -70,166 +67,142 @@ namespace 鼠连点
         /// <param name="e"></param>
         private void button1_Start_Click(object sender, EventArgs e)
         {
-            total = 0;//将按钮2显示的点击次数清零
-
-            number = (int)numericUpDown1.Value;//获取要点击的次数，如果为0则为无限次数点击
-
-            if (!double.TryParse(textBox1.Text, out sec))
+            try
             {
-                MessageBox.Show("间隔时间输入错误", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                textBox1.Text = "1";
-                return;
+                // 判断当前状态（启动|停止）
+                if (start == false)
+                {
+                    start = true;
+                    label8.Text = "已开启";
+                    button2_ClickTest.Enabled = true;
+
+                    totalClick = 0;// 将按钮2显示的点击次数清零
+                    double sec;
+                    int distance = 0, clickNum;
+
+                    if (!double.TryParse(textBox1_IntervalTime.Text, out sec))
+                    {
+                        textBox1_IntervalTime.Text = "1";
+                        throw new Exception("间隔时间输入错误");
+                    }
+                    if (sec < 0.001)
+                    {
+                        textBox1_IntervalTime.Text = "0.001";
+                        throw new Exception("间隔时间最小不能超过0.001秒");
+                    }
+
+                    // 滚动距离
+                    if (numericUpDown2_RollDistance.Enabled)
+                        distance = Convert.ToInt32(numericUpDown2_RollDistance.Value);
+
+                    // 点击次数
+                    clickNum = Convert.ToInt32(numericUpDown1_NumberOfClick.Value);
+
+                    sec *= 1000;// 把秒化成毫秒
+                    Run(clickNum, (int)sec, distance);// 启动
+                }
+                else
+                {
+                    start = false;
+                    label8.Text = "已关闭";
+                    button2_ClickTest.Enabled = false;
+                    CloseThread(); // 关闭线程
+                }
             }
-            if (sec < 0.001)
+            catch (Exception ex)
             {
-                MessageBox.Show("间隔时间最小不能超过0.001秒", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                textBox1.Text = "0.001";
-                return;
-            }
-            if (numericUpDown2.Enabled)
-            {
-                roll = int.Parse(numericUpDown2.Value.ToString());
-            }
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            sec *= 1000;//把秒化成毫秒
-
-
-            //判断当前状态（启动|停止）
-            if (start == false)
-            {
-                start = true;
-                label8.Text = "已开启";
-                button2.Enabled = true;
-                Run();//启动
-            }
-            else
-            {
                 start = false;
                 label8.Text = "已关闭";
-                button2.Enabled = false;
-
-                if (newThread != null)
-                    newThread.Abort();//关闭线程
+                button2_ClickTest.Enabled = false;
+                CloseThread(); // 关闭线程
             }
-
         }
 
-        private void Run()
+
+        private void CloseThread()
         {
-            //判断是否为无限次数点击
-            if ((int)numericUpDown1.Value == 0)
-                infiniteNumber = true;
-            else
-                infiniteNumber = false;
-
-
-            if (comboBox1.Text == "鼠标左键")
-                newThread = new Thread(LeftMouseButton);
-            else if (comboBox1.Text == "鼠标右键")
-                newThread = new Thread(RightMouseButton);
-            else if(comboBox1.Text=="鼠标中键")
-                newThread = new Thread(MiddleMouseButton);
-            else if(comboBox1.Text=="向上滚动")
-                newThread = new Thread(ScrollUp);
-            else if(comboBox1.Text=="向下滚动")
-                newThread = new Thread(ScrollDown);
-
-            Thread.Sleep(500);//延时500ms启动
-            newThread.Start();//启动新线程
+            if (newThread != null)
+            {
+                // 如果线程还在运行
+                if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
+                    newThread.Abort(); // 关闭线程
+            }
         }
 
 
-        private void LeftMouseButton()
+        /// <summary>
+        /// 启动鼠标点击
+        /// </summary>
+        /// <param name="clickNumber">点击次数，0为无限点击</param>
+        /// <param name="intervalTime">间隔时间（单位：毫秒）</param>
+        /// <param name="rollDistance">滚动距离</param>
+        private void Run(int clickNumber, int intervalTime, int rollDistance)
         {
-            while (infiniteNumber == true)
+            int flag = 0;
+            bool doubleClick = false, down = true; // 是否双击，是否向下滚动
+
+            switch (comboBox1_ClickMode.Text)
             {
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-                Thread.Sleep((int)sec);//延时
+                case "左键单击":
+                    flag = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+                    break;
+                case "右键单击":
+                    flag = MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP;
+                    break;
+                case "中键单击":
+                    flag = MOUSEEVENTF_MIDDLEDOWN | MOUSEEVENTF_MIDDLEUP;
+                    break;
+                case "左键双击":
+                    flag = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+                    doubleClick = true;
+                    break;
+                case "右键双击":
+                    flag = MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP;
+                    doubleClick = true;
+                    break;
+                case "中键双击":
+                    flag = MOUSEEVENTF_MIDDLEDOWN | MOUSEEVENTF_MIDDLEUP;
+                    doubleClick = true;
+                    break;
+                case "向上滚动":
+                    flag = MOUSEEVENTF_WHEEL;
+                    down = false;
+                    break;
+                case "向下滚动":
+                    flag = MOUSEEVENTF_WHEEL;
+                    break;
             }
 
-            for (int i = 1; i <= number; i++)
-            {
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-
-            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
-            this.Invoke(update);//调用窗体Invoke方法
+            newThread = new Thread(() => MouseEvent(doubleClick, intervalTime, clickNumber, flag, rollDistance, down));
+            Thread.Sleep(500);// 延时500ms启动
+            newThread.Start();// 启动新线程
         }
 
-        private void MiddleMouseButton()
+
+        private void MouseEvent(bool doubleClick, int intervalTime, int clickNumber, int flags, int rollDistance, bool down)
         {
-            while (infiniteNumber == true)
-            {
-                mouse_event(MOUSEEVENTF_MIDDLEDOWN | MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);
-                Thread.Sleep((int)sec);//延时
-            }
+            int i = 1;
 
+            if (flags != MOUSEEVENTF_WHEEL)
+                rollDistance = 0;
+            else if (down)  // 向下滚动
+                rollDistance *= -1;
 
-            for (int i = 1; i <= number; i++)
+            do
             {
-                mouse_event(MOUSEEVENTF_MIDDLEDOWN | MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
-            this.Invoke(update);//调用窗体Invoke方法
+                mouse_event(flags, 0, 0, rollDistance, 0);
+                if (doubleClick)
+                    mouse_event(flags, 0, 0, rollDistance, 0);
+
+                if (clickNumber == 0) // 如果点击次数为0，则每次循环后将i设为0，无限循环点击，永远不会跳出
+                    i = 0;
+
+                Thread.Sleep(intervalTime);// 延时
+            } while (i <= clickNumber);
         }
 
-        private void RightMouseButton()
-        {
-            while (infiniteNumber == true)
-            {
-                mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-
-
-            for (int i = 1; i <= number; i++)
-            {
-                mouse_event(MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
-            this.Invoke(update);//调用窗体Invoke方法
-        }
-
-        private void ScrollUp()
-        {
-            while (infiniteNumber == true)
-            {
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-
-
-            for (int i = 1; i <= number; i++)
-            {
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
-            this.Invoke(update);//调用窗体Invoke方法
-        }
-
-        private void ScrollDown()
-        {
-            roll *= -1;
-
-            while (infiniteNumber == true)
-            {
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-
-
-            for (int i = 1; i <= number; i++)
-            {
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, roll, 0);
-                Thread.Sleep((int)sec);//延时
-            }
-            UpdateControlText1 update = new UpdateControlText1(updateControlText);//定义委托
-            this.Invoke(update);//调用窗体Invoke方法
-        }
 
         /// <summary>
         /// 在多线程中刷新控件
@@ -238,31 +211,25 @@ namespace 鼠连点
         {
             label8.Text = "已关闭";
             start = false;
-            button2.Enabled = false;
+            button2_ClickTest.Enabled = false;
         }
 
 
-
-        //通过监视系统消息，判断是否按下热键
-        protected override void WndProc(ref Message m)//监视Windows消息
+        // 通过监视系统消息，判断是否按下热键
+        protected override void WndProc(ref Message m)// 监视Windows消息
         {
-            if (m.Msg == 0x0312)//如果m.Msg的值为0x0312那么表示用户按下了热键
+            if (m.Msg == 0x0312)                // 如果m.Msg的值为0x0312那么表示用户按下了热键
             {
-                button1_Start_Click(null, null);//调用button1_Start_Click()函数
+                button1_Start_Click(null, null);// 调用button1_Start_Click()函数
             }
-
             base.WndProc(ref m);
         }
 
 
-
-
-        long total = 0;
-
-        //点击“启动后点击此处测试效果”按钮时计数
+        // 点击“启动后点击此处测试效果”按钮时计数
         private void button2_MouseDown(object sender, MouseEventArgs e)
         {
-            total++;
+            totalClick++;
             string str = null;
 
             if (e.Button == MouseButtons.Left)
@@ -272,45 +239,41 @@ namespace 鼠连点
             else if (e.Button == MouseButtons.Middle)
                 str = "鼠标中键按下，";
 
-            button2.Text = str + "已点击：" + total.ToString() + "次";
+            button2_ClickTest.Text = str + "已点击：" + totalClick.ToString() + "次";
         }
 
 
-
-        //当窗体大小改变时，任务栏图标出现或隐藏
+        // 当窗体大小改变时，任务栏图标出现或隐藏
         private void Form1_Resize(object sender, EventArgs e)
         {
-            //关于选项  
+            // 关于选项  
             MenuItem about = new MenuItem("关于");
             about.Click += new EventHandler(new_about);
 
-            //退出菜单项  
+            // 退出菜单项  
             MenuItem exit = new MenuItem("退出");
             exit.Click += new EventHandler(exit_Click);
 
-            //关联托盘控件  
+            // 关联托盘控件  
             MenuItem[] childen = new MenuItem[] { about, exit };
             notifyIcon1.ContextMenu = new ContextMenu(childen);
 
-            //判断当前窗口是否最小化
+            // 判断当前窗口是否最小化
             if (this.WindowState == FormWindowState.Minimized)
             {
-                this.Hide();//隐藏当前窗口
-                notifyIcon1.Visible = true;//任务栏显示图标
+                this.Hide();                // 隐藏当前窗口
+                notifyIcon1.Visible = true; // 任务栏显示图标
                 //托盘图标显示的内容  
                 notifyIcon1.Text = "鼠连点，双击此图标显示窗口";
                 //气泡显示的内容和时间（从 Windows Vista 开始，否决此参数。 现在通知显示时间是基于系统辅助功能设置。）  
                 notifyIcon1.ShowBalloonTip(1, "鼠连点", "鼠连点正在后台运行...", ToolTipIcon.None);
             }
             else
-            {
                 notifyIcon1.Visible = false;
-            }
         }
 
 
-
-        //当用鼠标双击任务栏图标时显示窗口
+        // 当用鼠标双击任务栏图标时显示窗口
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show(); //显示窗体
@@ -318,16 +281,14 @@ namespace 鼠连点
         }
 
 
-
-        //显示关于窗口
+        // 显示关于窗口
         private void About_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new_about(null, null);
         }
 
 
-
-        //显示关于窗口
+        // 显示关于窗口
         private void new_about(object sender, EventArgs e)
         {
             About ab = new About();
@@ -335,37 +296,60 @@ namespace 鼠连点
         }
 
 
-
-        //当窗口关闭时
+        // 当窗口关闭时
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             exit_Click(null, null);
         }
 
 
-        //退出程序
+        // 退出程序
         private void exit_Click(object sender, EventArgs e)
         {
-            UnregisterHotKey(this.Handle, 100);//卸载快捷键
-            notifyIcon1.Dispose();//释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
-            Environment.Exit(0);//退出程序 
+            UnregisterHotKey(this.Handle, HOT_KEY_ID); // 卸载快捷键
+            notifyIcon1.Dispose();              // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
+            Environment.Exit(0);                // 退出程序 
         }
 
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedIndex == 3 || comboBox1.SelectedIndex == 4)
-                numericUpDown2.Enabled = true;
+            if (comboBox1_ClickMode.SelectedItem.ToString() == "向上滚动" || comboBox1_ClickMode.SelectedItem.ToString() == "向下滚动")
+                numericUpDown2_RollDistance.Enabled = true;
             else
-                numericUpDown2.Enabled = false;
+                numericUpDown2_RollDistance.Enabled = false;
         }
 
 
-        //当用户按下ESC时最小化窗口
+        // 切换热键
+        private void comboBox2_HotKey_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(firstStart)
+                {
+                    firstStart = false;
+                    return;
+                }
+                UnregisterHotKey(this.Handle, HOT_KEY_ID); // 卸载热键
+                  //  throw new Exception("卸载热键失败！");
+
+                Keys key = (Keys)Enum.Parse(typeof(Keys), comboBox2_HotKey.SelectedItem.ToString());
+                if (!RegisterHotKey(this.Handle, HOT_KEY_ID, 0, key)) // 注册热键
+                    throw new Exception("注册热键失败！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "鼠连点", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        // 当用户按下ESC时最小化窗口
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\u001b')
-                this.WindowState = FormWindowState.Minimized;//最小化当前窗口
+                this.WindowState = FormWindowState.Minimized;// 最小化当前窗口
         }
     }
 }

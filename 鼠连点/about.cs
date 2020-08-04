@@ -30,7 +30,7 @@ namespace 鼠连点
 
         private void linkLabel1_WebSite(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/fuhohua");
+            System.Diagnostics.Process.Start("https://github.com/cdmxz/C-SHARP-language-language-program");
         }
     }
 }
