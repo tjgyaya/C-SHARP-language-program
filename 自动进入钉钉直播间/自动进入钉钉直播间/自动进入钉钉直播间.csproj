@@ -102,11 +102,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigFile\ConfigFile.cs" />
-    <Compile Include="CustomScreenshot.cs">
+    <Compile Include="FrmCustomScreenshot.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CustomScreenshot.Designer.cs">
-      <DependentUpon>CustomScreenshot.cs</DependentUpon>
+    <Compile Include="FrmCustomScreenshot.Designer.cs">
+      <DependentUpon>FrmCustomScreenshot.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -119,14 +119,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reg.cs" />
     <Compile Include="ImageRecognition\ScreenCapture.cs" />
-    <Compile Include="Update\AutoUpdateForm.cs">
+    <Compile Include="AutoUpdate\FrmAutoUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Update\AutoUpdateForm.Designer.cs">
-      <DependentUpon>AutoUpdateForm.cs</DependentUpon>
+    <Compile Include="AutoUpdate\FrmAutoUpdate.Designer.cs">
+      <DependentUpon>FrmAutoUpdate.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CustomScreenshot.resx">
-      <DependentUpon>CustomScreenshot.cs</DependentUpon>
+    <EmbeddedResource Include="FrmCustomScreenshot.resx">
+      <DependentUpon>FrmCustomScreenshot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -141,8 +141,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Update\AutoUpdateForm.resx">
-      <DependentUpon>AutoUpdateForm.cs</DependentUpon>
+    <EmbeddedResource Include="AutoUpdate\FrmAutoUpdate.resx">
+      <DependentUpon>FrmAutoUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />

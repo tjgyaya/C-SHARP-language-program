@@ -47,10 +47,14 @@ namespace 自动进入钉钉直播间
                                 SECRET_KEY = str;
                         }
                     }
-                    catch (Exception ex)
+                    catch
+                    {
+                        return false;
+                    }
+                    finally
                     {
                         sr.Close();
-                        throw new Exception(ex.Message);
+                        sr.Dispose();
                     }
                 }
 
@@ -62,10 +66,14 @@ namespace 自动进入钉钉直播间
                     {
                         keyword = sr.ReadToEnd();
                     }
-                    catch (Exception ex)
+                    catch
+                    {
+                        return false;
+                    }
+                    finally
                     {
                         sr.Close();
-                        throw new Exception(ex.Message);
+                        sr.Dispose();
                     }
                 }
             }
@@ -118,6 +126,7 @@ namespace 自动进入钉钉直播间
         private static string basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general?access_token=";
         // 通用文字识别（高精度含位置版）
         private static string accurate_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate?access_token=";
+
 
         // 调用百度API文字识别
         private static string GeneralBasic(string path)
@@ -178,14 +187,15 @@ namespace 自动进入钉钉直播间
 
         private static string GetFileBase64(string fileName)
         {
-            FileStream filestream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.None);
-            byte[] arr = new byte[filestream.Length];
-            filestream.Read(arr, 0, (int)filestream.Length);
-            string baser64 = Convert.ToBase64String(arr);
-            filestream.Close();
-            return baser64;
+            using (FileStream filestream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                byte[] arr = new byte[filestream.Length];
+                filestream.Read(arr, 0, (int)filestream.Length);
+                string baser64 = Convert.ToBase64String(arr);
+                filestream.Close();
+                return baser64;
+            }
         }
-
     }
 
     class Token
@@ -197,7 +207,6 @@ namespace 自动进入钉钉直播间
 
     class Json
     {
-
         public class Words_resultItem
         {
             public string words { get; set; }

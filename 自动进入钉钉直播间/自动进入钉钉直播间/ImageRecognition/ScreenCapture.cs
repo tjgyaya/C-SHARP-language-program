@@ -94,12 +94,9 @@ namespace 自动进入钉钉直播间
         /// 判断图片中的rgb是否含有钉钉正在直播时的rgb
         /// </summary>
         /// <param name="bit"></param>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
         /// <returns></returns>
-        public static bool Is_LiveRgb(Bitmap bit, out int X, out int Y)
+        public static bool Is_LiveRgb(Bitmap bit)
         {
-            int x = 0, y = 0;
             Color c;
 
             // 判断是否有自定义颜色文件
@@ -109,68 +106,45 @@ namespace 自动进入钉钉直播间
             {
                 if (f.ToString().ToLower() == "color.txt")
                 {
-                    if (File_Is_LiveRgb(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "color.txt", bit, out x, out y) == true)
-                    {
-                        X = x;
-                        Y = y;
+                    if (File_Is_LiveRgb(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "color.txt", bit) == true)
                         return true;
-                    }
                 }
             }
 
             // 遍历图片像素点，判断颜色是否正确
-            for (x = 0; x < bit.Width; x++)
+            for (int x = 0; x < bit.Width; x++)
             {
-                for (y = 0; y < bit.Height; y++)
+                for (int y = 0; y < bit.Height; y++)
                 {
                     c = bit.GetPixel(x, y);// 获取一个像素点的颜色
                     if (Array.IndexOf(Argbs, c) != -1)
                     {
-                        X = x;
-                        Y = y;
                         return true;
                     }
                 }
             }
-            X = x;
-            Y = y;
             return false;
         }
 
-        private static bool File_Is_LiveRgb(string path, Bitmap bit, out int X, out int Y)
+        private static bool File_Is_LiveRgb(string path, Bitmap bit)
         {
-            int x = 0, y = 0;
-
-            StreamReader sr = new StreamReader(path);
             string str;
 
-            try
+            using (StreamReader sr = new StreamReader(path))
             {
                 while ((str = sr.ReadLine()) != null)// 读取一行
                 {
                     // 遍历图片像素点，判断是否有与之匹配的RGB数据
-                    for (y = 0; y < bit.Height; y++)
+                    for (int y = 0; y < bit.Height; y++)
                     {
-                        for (x = 0; x < bit.Width; x++)
+                        for (int x = 0; x < bit.Width; x++)
                         {
                             // 获取一个像素点的RGB
                             if (bit.GetPixel(x, y) == ColorTranslator.FromHtml(str))
-                            {
-                                X = x;
-                                Y = y;
                                 return true;
-                            }
                         }
                     }
                 }
-                X = x;
-                Y = y;
-                return false;
-            }
-            catch
-            {
-                X = x;
-                Y = y;
                 return false;
             }
         }
