@@ -19,7 +19,7 @@ namespace 截图翻译
             if (!IsScreen)
                 return;
 
-            SavePath = save_path;
+            savePath = save_path;
 
             // 设置窗体为无边框模式
             this.FormBorderStyle = FormBorderStyle.None;
@@ -35,23 +35,23 @@ namespace 截图翻译
             label_init_point = label1.Location;
         }
 
-        private Bitmap ScreenBmp;      // 保存截取的全屏图像
+        private Bitmap screenBmp;      // 保存截取的全屏图像
         private Point mouse_down_point;// 鼠标按下时的坐标
         private Point screen_point;    // 鼠标左键松开时截图的坐标
         private Point label_init_point;// 保存label控件初始的坐标
         private int w, h;              // 选区的矩形高宽
-        private string SavePath;       // 截图后保存图片的路径
+        private string savePath;       // 截图后保存图片的路径
         private bool mouse_down;       // 鼠标是否按下
         private bool left = true;      // label控件显示在屏幕上的位置（true显示在左边，false显示在右边）
-
+        private List<object> objectList = new List<object>();// 保存被释放的对象
 
         private void ScreenShot_Load(object sender, EventArgs e)
         {
             // 截取屏幕内容
-            ScreenBmp = CaptureFullScreen();
+            screenBmp = CaptureFullScreen();
             // 将截取的屏幕内容显示到pictureBox
-            pictureBox1.Image = (Bitmap)ScreenBmp.Clone();
-           
+            pictureBox1.Image = (Bitmap)screenBmp.Clone();
+
             //Graphics g = Graphics.FromImage(pictureBox1.Image);
             //// 创建一个画笔
             //SolidBrush brush = new SolidBrush(Color.FromArgb(80, 0, 0, 0));
@@ -72,9 +72,7 @@ namespace 截图翻译
         {
             // 鼠标右键点击，退出截图
             if (e.Button == MouseButtons.Right)
-            {
                 Exit();
-            }
         }
 
 
@@ -89,8 +87,8 @@ namespace 截图翻译
         {
             try
             {
-                if (File.Exists(SavePath))
-                    File.Delete(SavePath);
+                if (File.Exists(savePath))
+                    File.Delete(savePath);
             }
             finally
             {
@@ -102,8 +100,8 @@ namespace 截图翻译
 
         private void CloseForm()
         {
-            pictureBox1.Image.Dispose();
-            ScreenBmp.Dispose();
+            MyDispose(pictureBox1.Image);
+            MyDispose(screenBmp);
             this.Close();
         }
 
@@ -131,7 +129,7 @@ namespace 截图翻译
             if (!mouse_down)
                 return;
 
-            Bitmap newBmp = (Bitmap)ScreenBmp.Clone();
+            Bitmap newBmp = (Bitmap)screenBmp.Clone();
             // 新建画板和笔
             Graphics g = pictureBox1.CreateGraphics();
             Pen p = new Pen(Color.DeepSkyBlue, 2);
@@ -215,18 +213,32 @@ namespace 截图翻译
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(ScreenBmp, destRect, srcRect, GraphicsUnit.Pixel);                 // 把选取的矩形区域绘制到空白位图上   
-                bmp.Save(SavePath, System.Drawing.Imaging.ImageFormat.Bmp);                    // 保存
+                g.DrawImage(screenBmp, destRect, srcRect, GraphicsUnit.Pixel);                 // 把选取的矩形区域绘制到空白位图上   
+                bmp.Save(savePath, System.Drawing.Imaging.ImageFormat.Bmp);                    // 保存
             }
             finally
             {
                 this.DialogResult = DialogResult.OK;
                 // 释放资源
-                g.Dispose();
-                bmp.Dispose();
+                MyDispose(g);
+                MyDispose(bmp);
                 CloseForm();
             }
             mouse_down = false;
+        }
+
+
+
+        private void MyDispose<T>(T target) where T : IDisposable
+        {
+            if (target != null)
+            {
+                if (!objectList.Contains(target))// 确保要释放的对象不在列表中，避免释放多次
+                {
+                    target.Dispose();
+                    objectList.Add(target);// 将每一个释放了资源的对象存到列表中
+                }
+            }
         }
 
 

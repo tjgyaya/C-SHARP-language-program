@@ -304,7 +304,8 @@ namespace 截图翻译
                     dst = Show_cont;
                 }
 
-                if (dst != null && dst != "")
+                // 不为空
+                if (!string.IsNullOrEmpty(dst))
                 {
                     using (FrmShowCont sc = new FrmShowCont(ShowTime))
                     {
@@ -331,7 +332,8 @@ namespace 截图翻译
                 if (File.Exists(savePath))
                     File.Delete(savePath);
 
-                shot.Dispose();
+                if (shot != null && !shot.IsDisposed)
+                    shot.Dispose();
             }
         }
 

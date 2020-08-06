@@ -26,7 +26,7 @@ namespace 截图翻译
         /// <returns></returns>
         public static void YoudaoTran(string path, string from, string to, out string src_text, out string dst_text)
         {
-            Dictionary<String, String> dic = new Dictionary<String, String>();
+            Dictionary<string, string> dic = new Dictionary<string, string>();
 
             string url = "https://openapi.youdao.com/ocrtransapi";
             string q = LoadAsBase64(path);
@@ -69,8 +69,8 @@ namespace 截图翻译
 
         private static string ComputeHash(string input, HashAlgorithm algorithm)
         {
-            Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-            Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
             return BitConverter.ToString(hashedBytes).Replace("-", "");
         }
 
@@ -81,12 +81,11 @@ namespace 截图翻译
                 byte[] arr = new byte[filestream.Length];
                 filestream.Position = 0;
                 filestream.Read(arr, 0, (int)filestream.Length);
-                filestream.Close();
                 return Convert.ToBase64String(arr);
             }
         }
 
-        private static string Post(string url, Dictionary<String, String> dic)
+        private static string Post(string url, Dictionary<string, string> dic)
         {
             string result = "";
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
@@ -155,6 +154,9 @@ namespace 截图翻译
         {
             // 调用百度文字识别
             string srcText = GeneralBasic(path);
+            if (string.IsNullOrEmpty(srcText))
+                throw new Exception("识别内容为空");
+
             // 调用翻译
             Translate(srcText, from, to, out src_text, out dst_text);
         }
@@ -219,7 +221,7 @@ namespace 截图翻译
             string result = response.Content.ReadAsStringAsync().Result;
 
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
-            Baidu.Token list = js.Deserialize<Baidu.Token>(result);// 将json数据转化为对象并赋值给list
+            Token list = js.Deserialize<Token>(result);// 将json数据转化为对象并赋值给list
             if (list.error != null)
                 throw new Exception("获取AccessToken失败！" + "\n原因：" + list.error_description);
 
@@ -262,7 +264,7 @@ namespace 截图翻译
 
             // 查找最后一个换行符的位置
             int len = builder.ToString().LastIndexOf('\r');
-            return builder.ToString().Remove(len);
+            return len < 0 ? "" : builder.ToString().Remove(len);
         }
 
         private static string GetFileBase64(string fileName)
