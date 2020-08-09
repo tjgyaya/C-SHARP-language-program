@@ -13,7 +13,8 @@ namespace 截图翻译
 {
     public partial class FrmShowCont : Form
     {
-        private int ShowTime;
+        // **************************************显示翻译结果窗口**************************************
+        private int showTime;
         public FrmShowCont(int show_time)
         {
             InitializeComponent();
@@ -21,7 +22,7 @@ namespace 截图翻译
             this.ShowInTaskbar = false;
             this.TopMost = true;
 
-            ShowTime = show_time * 1000;
+            showTime = show_time * 1000;
         }
 
         public void ContText(string cont)
@@ -119,14 +120,14 @@ namespace 截图翻译
 
 
         private delegate void MyInvoke();
-        // 休眠ShowTime秒后关闭窗口
+        // 休眠showTime秒后关闭窗口
         private async void SleepAsync()
         {
             MyInvoke mi = new MyInvoke(CloseWindow);
 
             await Task.Run(() =>
             {
-                Thread.Sleep(ShowTime);
+                Thread.Sleep(showTime);
                 if (this.IsHandleCreated) //判断窗口句柄是否存在
                     this.BeginInvoke(mi);
             });

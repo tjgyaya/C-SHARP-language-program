@@ -18,7 +18,7 @@ namespace 截图翻译
             
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new FrmMain());
             //Application.Run(new Translate("百度翻译"));
             //ShowCont s = new ShowCont(5);
             //s.ContText(str);

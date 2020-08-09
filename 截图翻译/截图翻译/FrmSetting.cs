@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -11,10 +12,17 @@ namespace 截图翻译
 {
     public partial class FrmSetting : Form
     {
+        // **************************************设置窗口**************************************.
+
         // 要写入配置文件的键名称
-        public static string[] Names = { "截图热键", "切换英中", "翻译热键", "切换俄中", "延迟", "复制翻译原文", "复制翻译译文", "翻译后朗读译文", "翻译来源" };
+        public static string[] Names = { "截图热键", "切换英中", "翻译热键", "切换俄中", "固定翻译",
+            "延迟", "复制翻译原文", "复制翻译译文", "翻译后朗读译文", "翻译来源" ,
+            "固定翻译截图横坐标","固定翻译截图竖坐标","固定翻译截图宽度","固定翻译截图高度"};
+
         // 从文件中读取的键值
         public static string[] ReadValues = new string[Names.Length];
+
+        private Rectangle screenRect = new Rectangle();// 固定截图坐标大小
 
         public FrmSetting()
         {
@@ -34,11 +42,12 @@ namespace 截图翻译
                 textBox2.Text = ReadValues[1];
                 textBox3.Text = ReadValues[2];
                 textBox4.Text = ReadValues[3];
-                numericUpDown1.Value = Convert.ToDecimal(ReadValues[4]);
-                checkBox1.Checked = Convert.ToBoolean(ReadValues[5]);
-                checkBox2.Checked = Convert.ToBoolean(ReadValues[6]);
-                checkBox3.Checked = Convert.ToBoolean(ReadValues[7]);
-                comboBox1.SelectedItem = ReadValues[8];
+                textBox5.Text = ReadValues[4];
+                numericUpDown1.Value = Convert.ToDecimal(ReadValues[5]);
+                checkBox1.Checked = Convert.ToBoolean(ReadValues[6]);
+                checkBox2.Checked = Convert.ToBoolean(ReadValues[7]);
+                checkBox3.Checked = Convert.ToBoolean(ReadValues[8]);
+                comboBox1.SelectedItem = ReadValues[9];
             }
             catch (Exception ex)
             {
@@ -69,30 +78,25 @@ namespace 截图翻译
             foreach (Control ctl in groupBox1.Controls)
             {
                 // 如果控件类型不是TextBox
-                if (!(ctl is TextBox))
+                if (!(ctl is TextBox) || string.IsNullOrEmpty(ctl.Text))
                     continue;
 
-                if (ctl.Text == "")
-                {
-                    //MessageBox.Show("热键为空！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //return;
-                    continue;
-                }
                 if (list.Contains(ctl.Text))
                 {
                     MessageBox.Show("热键存在重复！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                else
-                    list.Add(ctl.Text);
+                list.Add(ctl.Text);
             }
 
             // 创建一个数组，保存要写入配置文件的内容
             string[] writeValues = {
-                textBox1.Text ,textBox2.Text ,textBox3.Text,
-                textBox4.Text,((int)numericUpDown1.Value).ToString() ,
-                checkBox1.Checked.ToString() ,checkBox2.Checked.ToString(),
-                checkBox3.Checked.ToString(),comboBox1.SelectedItem.ToString() };
+                textBox1.Text, textBox2.Text,  textBox3.Text,
+                textBox4.Text, textBox5.Text,  ((int)numericUpDown1.Value).ToString(),
+                checkBox1.Checked.ToString(),  checkBox2.Checked.ToString(),
+                checkBox3.Checked.ToString(),  comboBox1.SelectedItem.ToString(),
+                screenRect.X.ToString(),       screenRect.Y.ToString(),
+                screenRect.Width.ToString(),   screenRect.Height.ToString()};
 
             try
             {
@@ -113,5 +117,38 @@ namespace 截图翻译
         }
 
 
+        // 设置固定翻译坐标
+        private void button2_SetPosition_Click(object sender, EventArgs e)
+        {
+            string savePath = DateTime.Now.ToString("yyyy-dd-MM_HH_mm_ss") + ".bmp";
+
+            FrmScreenShot shot = new FrmScreenShot(savePath, true);
+            try
+            {
+                // 显示截图窗口
+                DialogResult result = shot.ShowDialog();
+                if (result == DialogResult.Cancel)
+                    throw new Exception("用户取消截图！");
+
+                // 保存截图坐标高宽
+                screenRect = new Rectangle(shot.MouseDownPoint.X, shot.MouseDownPoint.Y, shot.ScreenWidth, shot.ScreenHeight);
+                if (shot.ScreenWidth > 0 && shot.ScreenHeight > 0)
+                    MessageBox.Show("设置成功，请点击“保存配置”按钮。", "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    throw new Exception("设置失败，请重试！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("设置固定翻译坐标失败！\n原因：" + ex.Message, "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (File.Exists(savePath))
+                    File.Delete(savePath);
+
+                if (shot != null && !shot.IsDisposed)
+                    shot.Dispose();
+            }
+        }
     }
 }

@@ -15,11 +15,13 @@ namespace 截图翻译
 {
     public partial class FrmTranslate : Form
     {
+        // **************************************翻译窗口**************************************
+
         private string sourceOfTran, from, src, dst;
-        private string[] Youdao_to = { "en", "ru", "ja" };
-        private string[] Baidu_to = { "en", "ru", "jp" };
+        private string[] Youdao_to = { "en", "ru", "ja" };  // 目标语言名称
+        private string[] Baidu_to = { "en", "ru", "jp" };   // 目标语言名称
         private Keys[] Key = { Keys.T, Keys.Y };
-        private string GtaWindowName = "Grand Theft Auto V";
+        private string GtaWindowName = "Grand Theft Auto V";// 窗口名称
 
 
         [DllImport("user32.dll")]
@@ -42,9 +44,9 @@ namespace 截图翻译
             InitializeComponent();
 
             this.sourceOfTran = sourceOfTran;
-            comboBox1_SourceLang.SelectedIndex = Form1.AutoPressKey;
-            comboBox2_DestLang.SelectedIndex = Form1.TranDestLang;
-            checkBox1_AutoSend.Checked = Form1.AutoSend;
+            comboBox1_SourceLang.SelectedIndex = FrmMain.AutoPressKey;
+            comboBox2_DestLang.SelectedIndex = FrmMain.TranDestLang;
+            checkBox1_AutoSend.Checked = FrmMain.AutoSend;
 
             textBox2_Dest.ReadOnly = true;
         }
@@ -178,9 +180,9 @@ namespace 截图翻译
                     dst = textBox1_Source.Text;
 
                 // 保存当前选项
-                Form1.TranDestLang = comboBox2_DestLang.SelectedIndex;
-                Form1.AutoPressKey = comboBox1_SourceLang.SelectedIndex;
-                Form1.AutoSend = checkBox1_AutoSend.Checked;
+                FrmMain.TranDestLang = comboBox2_DestLang.SelectedIndex;
+                FrmMain.AutoPressKey = comboBox1_SourceLang.SelectedIndex;
+                FrmMain.AutoSend = checkBox1_AutoSend.Checked;
 
                 if (!sendToWindow) // 不将译文发送到窗口
                     return dst;

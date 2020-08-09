@@ -12,11 +12,12 @@ namespace 截图翻译
 {
     public partial class FrmScreenShot : Form
     {
-        public FrmScreenShot(string save_path, bool IsScreen)
+        // **************************************截图窗口**************************************
+        public FrmScreenShot(string save_path, bool isScreen)
         {
             InitializeComponent();
 
-            if (!IsScreen)
+            if (!isScreen)
                 return;
 
             savePath = save_path;
@@ -35,11 +36,20 @@ namespace 截图翻译
             label_init_point = label1.Location;
         }
 
+
+        // 鼠标按下左键时的坐标
+        public Point MouseDownPoint { get; private set; }
+
+        // 选取的矩形高度（截图高度）
+        public int ScreenHeight { get; private set; }
+
+        // 选取的矩形宽度
+        public int ScreenWidth { get; private set; }
+
+
         private Bitmap screenBmp;      // 保存截取的全屏图像
-        private Point mouse_down_point;// 鼠标按下时的坐标
         private Point screen_point;    // 鼠标左键松开时截图的坐标
-        private Point label_init_point;// 保存label控件初始的坐标
-        private int w, h;              // 选区的矩形高宽
+        private Point label_init_point;// 保存label控件初始的坐标 
         private string savePath;       // 截图后保存图片的路径
         private bool mouse_down;       // 鼠标是否按下
         private bool left = true;      // label控件显示在屏幕上的位置（true显示在左边，false显示在右边）
@@ -115,7 +125,7 @@ namespace 截图翻译
             if (!mouse_down)
             {
                 mouse_down = true;
-                mouse_down_point = new Point(e.X, e.Y);
+                MouseDownPoint = new Point(e.X, e.Y);// 记录鼠标按下时的坐标
             }
         }
 
@@ -140,15 +150,15 @@ namespace 截图翻译
 
 
                 // 获取矩形的长度（鼠标拖动时的坐标 - 鼠标左键按下时的坐标）
-                w = Math.Abs(MousePosition.X - mouse_down_point.X);
-                h = Math.Abs(MousePosition.Y - mouse_down_point.Y);
+                ScreenWidth = Math.Abs(MousePosition.X - MouseDownPoint.X);
+                ScreenHeight = Math.Abs(MousePosition.Y - MouseDownPoint.Y);
 
                 // 如果是从右往左拖动或从下往上拖动
-                screen_point.X = Math.Min(MousePosition.X, mouse_down_point.X);
-                screen_point.Y = Math.Min(MousePosition.Y, mouse_down_point.Y);
+                screen_point.X = Math.Min(MousePosition.X, MouseDownPoint.X);
+                screen_point.Y = Math.Min(MousePosition.Y, MouseDownPoint.Y);
 
 
-                g.DrawRectangle(p, screen_point.X, screen_point.Y, w, h);
+                g.DrawRectangle(p, screen_point.X, screen_point.Y, ScreenWidth, ScreenHeight);
                 g.Dispose();
                 // 从当前窗体创建新的画板，防止闪烁（闪瞎眼的那种）
                 g = this.CreateGraphics();
@@ -201,10 +211,10 @@ namespace 截图翻译
             if (e.Button != MouseButtons.Left || !mouse_down)
                 return;
 
-            Bitmap bmp = new Bitmap(w, h);
+            Bitmap bmp = new Bitmap(ScreenWidth, ScreenHeight);
             Graphics g = Graphics.FromImage(bmp);
-            Rectangle srcRect = new Rectangle(screen_point.X, screen_point.Y, w + 1, h + 1);
-            Rectangle destRect = new Rectangle(0, 0, w + 1, h + 1);
+            Rectangle srcRect = new Rectangle(screen_point.X, screen_point.Y, ScreenWidth + 1, ScreenHeight + 1);
+            Rectangle destRect = new Rectangle(0, 0, ScreenWidth + 1, ScreenHeight + 1);
 
             try
             {
@@ -226,7 +236,6 @@ namespace 截图翻译
             }
             mouse_down = false;
         }
-
 
 
         private void MyDispose<T>(T target) where T : IDisposable

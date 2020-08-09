@@ -23,7 +23,7 @@ namespace 截图翻译
         public static string ConfigPath
         {
             get;
-        } = @"C:\Users\Administrator\AppData\Roaming\截图翻译\截图翻译.ini";
+        } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\截图翻译\截图翻译.ini";
 
         const int SIZE = 20;
 
@@ -70,13 +70,13 @@ namespace 截图翻译
 
             // 存放读取的数据
             StringBuilder[] sb = new StringBuilder[Values.Length];
-            
+
             for (int i = 0; i < Values.Length; i++)
             {   // 初始化数组
                 sb[i] = new StringBuilder(SIZE);
                 // 读取配置文件
                 GetPrivateProfileString(Section, names[i], "Error", sb[i], SIZE, ConfigPath);
-            } 
+            }
 
             // 如果数组中有Error出现，则读取文件错误
             if (Array.IndexOf(sb, "Error") != -1)

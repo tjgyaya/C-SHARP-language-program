@@ -65,7 +65,7 @@
             this.label1.Text = "\r\n按住鼠标左键选取要截取的区域\r\n按鼠标右键或ESC取消\r\n\r\n";
             this.label1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.label1_MouseMove);
             // 
-            // ScreenShot
+            // FrmScreenShot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -74,9 +74,10 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Cursor = System.Windows.Forms.Cursors.Default;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ScreenShot";
-            this.Text = "ScreenShot";
+            this.Name = "FrmScreenShot";
+            this.Text = "截图";
             this.Load += new System.EventHandler(this.ScreenShot_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

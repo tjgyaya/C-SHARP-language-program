@@ -11,6 +11,8 @@ namespace 截图翻译
 {
     public partial class FrmHomePage : Form
     {
+        // **************************************主页**************************************
+
         public FrmHomePage()
         {
             InitializeComponent();
