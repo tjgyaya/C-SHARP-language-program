@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
 
 
@@ -24,6 +19,45 @@ namespace 自动进入钉钉直播间
 
     public partial class Form1 : Form
     {
+        #region Api
+        [DllImport("user32.dll", EntryPoint = "FindWindow", CharSet = CharSet.Auto)]// 查找窗口句柄
+        public extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos", CharSet = CharSet.Auto)]
+        private static extern int SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int Width, int Height, uint flags);// 始终保持窗口在最前端
+        const int HWND_TOPMOST = -1;
+        const int SWP_SHOWWINDOW = 0x0040;
+        const int SWP_NOMOVE = 0x0002;
+        const int SWP_NOSIZE = 0x0001;
+
+        [DllImport("user32.dll", EntryPoint = "SetCursorPos", CharSet = CharSet.Auto)]
+        public extern static void SetCursorPos(int x, int y);// 设置鼠标光标位置
+
+        [DllImport("user32.dll", EntryPoint = "GetCursorPos", CharSet = CharSet.Auto)]
+        public extern static bool GetCursorPos(out POINT p);// 获取鼠标光标位置
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+        }
+
+        [DllImport("user32", EntryPoint = "mouse_event", CharSet = CharSet.Auto)]
+        private static extern int mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);// 模拟鼠标左键按下 
+        const int MOUSEEVENTF_LEFTDOWN = 0x0002; // 模拟鼠标左键按下      
+        const int MOUSEEVENTF_LEFTUP = 0x0004;   // 模拟鼠标左键抬起 
+
+        [DllImport("kernel32.dll")]
+        static extern uint SetThreadExecutionState(uint esFlags);// 阻止休眠
+        const uint ES_SYSTEM_REQUIRED = 0x00000001;
+        const uint ES_DISPLAY_REQUIRED = 0x00000002;
+        const uint ES_CONTINUOUS = 0x80000000;
+        #endregion
+
         public Form1()
         {
             InitializeComponent();
@@ -35,20 +69,21 @@ namespace 自动进入钉钉直播间
             label23.Enabled = false;
             toolTip1.ShowAlways = true;
 
-            for (int i = 0; i < 24; i++)
-            {
-                comboBox1.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox3.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox5.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox7.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox9.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox11.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox13.Items.Add(i.ToString().PadLeft(2, '0'));
-                comboBox15.Items.Add(i.ToString().PadLeft(2, '0'));
-            }
-
             for (int i = 0; i < 60; i++)
             {
+                if (i < 24)
+                {
+                    // 时
+                    comboBox1.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox3.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox5.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox7.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox9.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox11.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox13.Items.Add(i.ToString().PadLeft(2, '0'));
+                    comboBox15.Items.Add(i.ToString().PadLeft(2, '0'));
+                }
+                // 分
                 comboBox2.Items.Add(i.ToString().PadLeft(2, '0'));
                 comboBox4.Items.Add(i.ToString().PadLeft(2, '0'));
                 comboBox6.Items.Add(i.ToString().PadLeft(2, '0'));
@@ -83,53 +118,38 @@ namespace 自动进入钉钉直播间
             // 日志框只读属性
             textBox1_log.ReadOnly = true;
             textBox1_log.Text = "日志...    " + DateTime.Now.ToString("yyyy-MM-dd") + Environment.NewLine;
+
+            pictureBox1.Enabled = false;
+            pictureBox1.Visible = false;
         }
 
         // 配置文件路径
-        private string iniDir = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间";
-        private string iniPath = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间\自动进入钉钉直播间.ini";
-        private string logPath = Application.StartupPath + "\\自动进入钉钉直播间.log"; // 日志文件路径
+        private string iniPath = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), @"自动进入钉钉直播间\自动进入钉钉直播间.ini");
+        private string logPath = Path.Combine(Application.StartupPath + "自动进入钉钉直播间.log"); // 日志文件路径
         // 桌面路径（截图保存到桌面）
-        private string DeskPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\自动进入钉钉直播间截图文件";
+        private string DeskPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "自动进入钉钉直播间截图文件");
+
         // 钉钉窗口类名
         private string DingDingWindowClass = "StandardFrame_DingTalk";
         // 钉钉直播窗口类名
         private string DingDingLiveWindowClass = "StandardFrame";
+        // 钉钉子窗口类名（显示XX群正在直播的那个窗口）
+        private string DingDingChildWindowClass = "DingChatWnd";
+        // 钉钉进程名
+        private string DingDingProcessName = "DingTalk";
 
-        // 截图相对坐标
-        public int RelPosX { get; set; }
-        public int RelPosY { get; set; }
-
-        // 默认截图坐标
-        public int ScreenshotX { get; set; }
-        public int ScreenshotY { get; set; }
-
-        // 截图宽度和高度
-        public int ScreenshotW { get; set; }
-        public int ScreenshotH { get; set; }
-
-        // 当前缩放比
-        public float DpiY { get; set; }
-        public float DpiX { get; set; }
-
-        // 配置文件版本
-        public string CurrentVersion { get; set; }
-
-        // 自定义截图是否成功
-        public bool CustScreenSuccess { get; set; }
-
-
-        private int MouseClickX = 214, MouseClickY = 109;// 默认鼠标点击坐标
+        private int ScreenshotX, ScreenshotY;            // 截图坐标
+        private int ScreenshotW, ScreenshotH;            // 截图宽度和高度
+        private int MouseClickX, MouseClickY;            // 鼠标点击坐标
         private string DingDingPath;                     // 钉钉安装路径
         private string identifyType;                     // 图片识别类型
         private int element = 0, first = 0;              // 当前使用的自定义时间数组 元素下标
         private Thread newThread;                        // 新线程
         private bool start = false;                      // 运行状态（是否启动）
         private bool saveToDesk = false;                 // 是否将截图保存到桌面
-        private bool delScreenFile = false, delConfigFile = false; // 是否点击了“删除自定义截图配置文件”或“删除配置文件”按钮
-        private bool FirstUse = false;                   // 是否是第一次使用（配置文件不存在则为第一次）
+        private bool delConfigFile = false;              // 是否点击了“删除配置文件”按钮
         private bool noCloseTimer5 = false;              // 不关闭timer5控件
-
+        private bool writeLogSuccess = true;             // 向文件写入日志是否成功
 
         // 钉钉窗口始终显示在最顶层
         private void checkBox11_ShowTop_Click(object sender, EventArgs e)
@@ -137,8 +157,6 @@ namespace 自动进入钉钉直播间
             if (!checkBox11_ShowTop.Checked)
             {
                 checkBox11_ShowTop.Checked = true;
-                // SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-                // RefLog("设置成功，可能需要退出钉钉并重启本软件后才会生效");
             }
             else
             {
@@ -162,12 +180,16 @@ namespace 自动进入钉钉直播间
                 // 查找钉钉窗口句柄
                 if (hwnd == IntPtr.Zero)
                 {
-                    RefLog("获取钉钉窗口句柄失败");
+                    RefLog("获取钉钉窗口句柄 失败");
                     return;
                 }
-                SetWindowPos(hwnd, -2, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+
+                // 将钉钉窗口显示到最前方
+                if (SetWindowPos(hwnd, -2, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE) == 0)
+                    RefLog("将钉钉窗口显示在最前方 失败");
+                else
+                    RefLog("已取消将钉钉窗口显示在最前方");
                 timer5.Enabled = checkBox11_ShowTop.Checked;
-                RefLog("已取消将钉钉窗口显示在最前方");
             }
         }
 
@@ -192,28 +214,7 @@ namespace 自动进入钉钉直播间
                 RefLog("删除自启动成功");
         }
 
-        // 删除自定义截图数据
-        private void button4_DelCustomScreenshot_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!File.Exists(iniPath))
-                {
-                    RefLog("未找到自定义截图区域信息");
-                    return;
-                }
-
-                Exit_WriteConfigFile();
-
-                RefLog("删除自定义截图区域信息成功，重启软件后生效");
-            }
-            catch (Exception ex)
-            {
-                RefLog(ex.Message);
-            }
-        }
-
-        // 删除主窗口配置文件
+        // 删除配置文件
         private void button6_delConfigFile_Click(object sender, EventArgs e)
         {
             try
@@ -238,11 +239,6 @@ namespace 自动进入钉钉直播间
         {
             try
             {
-                if (!File.Exists(iniPath) || FirstUse)
-                {
-                    MessageBox.Show("请点击“自定义截图区域”按钮设置截图区域后，\n退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
                 delConfigFile = true;
                 Exit_WriteConfigFile();
                 RefLog("保存主窗口配置文件成功");
@@ -250,43 +246,6 @@ namespace 自动进入钉钉直播间
             catch (Exception ex)
             {
                 RefLog(ex.Message);
-            }
-        }
-
-        // 自定义截图区域
-        private void button1_CustomScreenshot_Click(object sender, EventArgs e)
-        {
-            // 停止
-            start = false;
-            CloseThread();
-            button5_start.Text = "开启";
-            // 关闭所有计时器
-            Update_Control_Mode = 0;
-            Update_Control();
-            CheckBoxEnable(true); // 将所有CheckBox复选框设置为启用
-            ComboBoxEnable(true); // 将所有ComboBox列表设置为启用
-            SaveCheckboxEnable(2);// 恢复checkBox中Enabled属性的值
-
-            CustScreenSuccess = false;
-
-            if (!File.Exists(DingDingPath))
-                DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
-            if (DingDingPath == null)
-            {
-                //MessageBox.Show("钉钉路径无效！", "自动进入钉钉直播间",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                return;
-            }
-
-            FrmCustomScreenshot cs = new FrmCustomScreenshot(checkBox12_SaveToDesk.Checked, DeskPath, DingDingWindowClass, DingDingPath);
-            cs.ShowDialog(this);
-            if (!cs.IsDisposed)
-                cs.Dispose();
-
-            // 如果设置截图区域成功，将截图坐标高宽保存到配置文件
-            if (CustScreenSuccess == true)
-            {
-                delConfigFile = false;
-                Exit_WriteConfigFile();
             }
         }
 
@@ -425,12 +384,6 @@ namespace 自动进入钉钉直播间
             else
             {
                 checkBox2_AutoOPenNextLive.Checked = false;
-                label23_DistanceTime.Text = "距   00\n"
-                                          + "离   时\n"
-                                          + "开   00\n"
-                                          + "启   分\n"
-                                          + "还   00\n"
-                                          + "有   秒";
                 ComboBoxEnable(false);// 所有列表取消启用
                 CheckBoxCheck(false); // 所有复选框取消打勾
                 LabelEnable(false);   // 所有label控件取消启用
@@ -589,14 +542,6 @@ namespace 自动进入钉钉直播间
             saveToDesk = checkBox12_SaveToDesk.Checked;
         }
 
-
-        [DllImport("kernel32.dll")]
-        static extern uint SetThreadExecutionState(uint esFlags);
-        const uint ES_SYSTEM_REQUIRED = 0x00000001;
-        const uint ES_DISPLAY_REQUIRED = 0x00000002;
-        const uint ES_CONTINUOUS = 0x80000000;
-
-
         // 阻止系统休眠
         private void checkBox13_preventSleep_Click(object sender, EventArgs e)
         {
@@ -608,9 +553,19 @@ namespace 自动进入钉钉直播间
         private void checkBox13_preventSleep_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox13_preventSleep.Checked) // 调用api函数阻止系统休眠
-                SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
+            {
+                if (SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED) == 0)
+                    RefLog("阻止系统休眠 失败");
+                else
+                    RefLog("阻止系统休眠已生效");
+            }
             else
-                SetThreadExecutionState(ES_CONTINUOUS);
+            {
+                if (SetThreadExecutionState(ES_CONTINUOUS) == 0)
+                    RefLog("取消阻止系统休眠 失败");
+                else
+                    RefLog("已取消阻止系统休眠");
+            }
         }
 
         // 将日志显示到textbox控件
@@ -623,7 +578,6 @@ namespace 自动进入钉钉直播间
             textBox1_log.AppendText(DateTime.Now.ToString("HH:mm:ss") + "  " + log + Environment.NewLine);
         }
 
-        private bool writeLogSuccess = true;
         // 将日志写入文件
         private void textBox1_log_TextChanged(object sender, EventArgs e)
         {
@@ -635,7 +589,7 @@ namespace 自动进入钉钉直播间
             }
             catch (Exception ex)
             {
-                RefLog("将日志写入文件失败\r\n原因：" + ex.Message);
+                RefLog("将日志写入文件 失败\r\n原因：" + ex.Message);
                 writeLogSuccess = false;
             }
         }
@@ -651,12 +605,11 @@ namespace 自动进入钉钉直播间
         {
             Exit_WriteConfigFile(); // 写入配置文件
             notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
-            CloseThread();
+            CloseThread();          // 关闭创建的线程
 
             // 如果设置了阻止系统休眠
             if (checkBox13_preventSleep.Checked)
-                // 清除执行状态标志以禁用离开模式并允许系统空闲以正常睡眠
-                SetThreadExecutionState(ES_CONTINUOUS);
+                SetThreadExecutionState(ES_CONTINUOUS);// 清除执行状态标志以禁用离开模式并允许系统空闲以正常睡眠
 
             Environment.Exit(0);    // 退出
         }
@@ -670,21 +623,10 @@ namespace 自动进入钉钉直播间
             if (delConfigFile == true)
                 return;
 
-            // 如果是第一次使用，并且未设置自定义坐标，也不写入文件
-            if (FirstUse == true && CustScreenSuccess == false)
-                return;
-
-            // 如果点击了“删除截图区域”按钮
-            if (delScreenFile == true)
-            {   // 重置相对坐标为0
-                RelPosX = 0;
-                RelPosY = 0;
-            }
-
             try
             {
-                if (!Directory.Exists(iniDir))
-                    Directory.CreateDirectory(iniDir);
+                if (!Directory.Exists(Path.GetDirectoryName(iniPath)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(iniPath));
 
                 string err = ConfigFile.WriteFile(
                       BoolToNum(checkBox1_AutoOpenLive.Checked), (int)numericUpDown1_CheckLiveTime.Value,
@@ -697,9 +639,8 @@ namespace 自动进入钉钉直播间
                       BoolToNum(checkBox8_Time6.Checked), comboBox11.SelectedIndex + "," + comboBox12.SelectedIndex,
                       BoolToNum(checkBox9_Time7.Checked), comboBox13.SelectedIndex + "," + comboBox14.SelectedIndex,
                       BoolToNum(checkBox10_Time8.Checked), comboBox15.SelectedIndex + "," + comboBox16.SelectedIndex,
-                      BoolToNum(checkBox11_ShowTop.Checked), this.Location.X, this.Location.Y, RelPosX, RelPosY,
-                      ScreenshotH, ScreenshotW, DpiX, DpiY, BoolToNum(checkBox13_preventSleep.Checked), CurrentVersion,
-                      DingDingPath, iniPath);
+                      BoolToNum(checkBox11_ShowTop.Checked), this.Location.X, this.Location.Y,
+                      BoolToNum(checkBox13_preventSleep.Checked), DingDingPath, iniPath);
                 if (err != null)
                     throw new Exception(err);
             }
@@ -733,17 +674,17 @@ namespace 自动进入钉钉直播间
         {
             try
             {
-                // 获取屏幕分辨率
-                if (Screen.PrimaryScreen.Bounds.Height > 1080 || Screen.PrimaryScreen.Bounds.Width > 1920)
-                    MessageBox.Show("本软件仅对1920x1080分辨率的屏幕进行适配\n其它分辨率可能会卡在“正在检测钉钉是否在直播...”", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // 截图高度和宽度（pictureBox控件存在的意义就是为了获取不同缩放比下的截图区域大小）
+                ScreenshotH = pictureBox1.Height;
+                ScreenshotW = pictureBox1.Width;
 
                 try
                 {
                     // 自动更新
-                    AutoUpdateForm autoUpdate = new AutoUpdateForm(logPath);
+                    AutoUpdateForm autoUpdate = new AutoUpdateForm();
                     if (autoUpdate.GetUpdate() == true)
                     {
-                        autoUpdate.ShowDialog(this);
+                        autoUpdate.ShowDialog();
                         if (!autoUpdate.IsDisposed)
                             autoUpdate.Dispose();
                     }
@@ -756,15 +697,14 @@ namespace 自动进入钉钉直播间
                 }
 
                 // 如果当前目录存在NO这个文件，则在19点及19点后启动本软件不会启用深色模式
-                if (!File.Exists(Application.StartupPath + "\\NO") && !File.Exists(Application.StartupPath + "\\no"))
+                if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "NO")) && !File.Exists(Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "no")))
                 {
-                    if (DateTime.Compare(DateTime.Now, DateTime.Parse("19:00:00")) >= 0)
+                    if (DateTime.Compare(DateTime.Now, DateTime.Parse("19:00:00")) >= 0 || DateTime.Compare(DateTime.Now, DateTime.Parse("06:00:00")) < 0)
                     {
+                        groupBox1.BackColor = SystemColors.ControlDark;
+                        groupBox2.BackColor = SystemColors.ControlDark;
                         this.BackColor = SystemColors.ControlDark;
                         button5_start.BackColor = SystemColors.ActiveBorder;
-                        label19_Explain.BackColor = SystemColors.WindowFrame;
-                        label23_DistanceTime.BackColor = Color.Silver;
-                        label25.BackColor = SystemColors.WindowFrame;
                     }
                 }
 
@@ -796,29 +736,13 @@ namespace 自动进入钉钉直播间
                     // 主窗体坐标
                     int px = 0;
                     int py = 0;
-                    // 相对截图坐标
-                    int sx = 0;
-                    int sy = 0;
-                    // 截图高度和宽度
-                    int sh = 0;
-                    int sw = 0;
 
                     // 是否阻止系统休眠
                     int ps = 0;
 
-                    // 屏幕缩放比
-                    float dx = 0;
-                    float dy = 0;
-
-                    // 当前版本号
-                    string cv = null;
-
-                    // 钉钉路径
-                    string dP = null;
-
                     // 读配置文件
                     string err = ConfigFile.ReadFile(ref al, ref cl, ref scl, ref aonl, ref olt, ref t1s, ref t1t, ref t2s, ref t2t, ref t3s, ref t3t, ref t4s, ref t4t, ref t5s, ref t5t, ref t6s, ref t6t,
-                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref sx, ref sy, ref sh, ref sw, ref dx, ref dy, ref ps, ref cv, ref dP, iniPath);
+                        ref t7s, ref t7t, ref t8s, ref t8t, ref st, ref px, ref py, ref ps, ref DingDingPath, iniPath);
                     // 如果读配置文件出现错误
                     if (err != null)
                     {
@@ -845,68 +769,46 @@ namespace 自动进入钉钉直播间
                     checkBox11_ShowTop.Checked = NumToBool(st);
                     checkBox13_preventSleep.Checked = NumToBool(ps);
 
-                    int c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16;
-                    SplitStr(t1t, out c1, out c2);
-                    SplitStr(t2t, out c3, out c4);
-                    SplitStr(t3t, out c5, out c6);
-                    SplitStr(t4t, out c7, out c8);
-                    SplitStr(t5t, out c9, out c10);
-                    SplitStr(t6t, out c11, out c12);
-                    SplitStr(t7t, out c13, out c14);
-                    SplitStr(t8t, out c15, out c16);
-                    comboBox1.SelectedIndex = c1;
-                    comboBox2.SelectedIndex = c2;
-                    comboBox3.SelectedIndex = c3;
-                    comboBox4.SelectedIndex = c4;
-                    comboBox5.SelectedIndex = c5;
-                    comboBox6.SelectedIndex = c6;
-                    comboBox7.SelectedIndex = c7;
-                    comboBox8.SelectedIndex = c8;
-                    comboBox9.SelectedIndex = c9;
-                    comboBox10.SelectedIndex = c10;
-                    comboBox11.SelectedIndex = c11;
-                    comboBox12.SelectedIndex = c12;
-                    comboBox13.SelectedIndex = c13;
-                    comboBox14.SelectedIndex = c14;
-                    comboBox15.SelectedIndex = c15;
-                    comboBox16.SelectedIndex = c16;
-
-                    // 截图相对与钉钉窗口的坐标
-                    if (sx == 0 && sy == 0)
-                    {
-                        RelPosX = 0;
-                        RelPosY = 0;
-                        FirstUse = true;
-                    }
-                    else
-                    {
-                        RelPosX = sx;
-                        RelPosY = sy;
-                    }
-
-                    // 屏幕缩放比
-                    DpiX = dx;
-                    DpiY = dy;
+                    Tuple<int, int> tuple = SplitStr(t1t);
+                    comboBox1.SelectedIndex = tuple.Item1;
+                    comboBox2.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t2t);
+                    comboBox3.SelectedIndex = tuple.Item1;
+                    comboBox4.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t3t);
+                    comboBox5.SelectedIndex = tuple.Item1;
+                    comboBox6.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t4t);
+                    comboBox7.SelectedIndex = tuple.Item1;
+                    comboBox8.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t5t);
+                    comboBox9.SelectedIndex = tuple.Item1;
+                    comboBox10.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t6t);
+                    comboBox11.SelectedIndex = tuple.Item1;
+                    comboBox12.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t7t);
+                    comboBox13.SelectedIndex = tuple.Item1;
+                    comboBox14.SelectedIndex = tuple.Item2;
+                    tuple = SplitStr(t8t);
+                    comboBox15.SelectedIndex = tuple.Item1;
+                    comboBox16.SelectedIndex = tuple.Item2;
 
                     // 判断读出来的窗体坐标是否有误
                     if (px >= 0 && py >= 0)
                     {
-                        this.Location = new System.Drawing.Point(px, py);
+                        this.Location = new Point(px, py);
                     }
-
-                    // 软件版本号
-                    CurrentVersion = cv;
-
-                    // 钉钉路径
-                    DingDingPath = dP;
-
-                    // 截图高度和宽度
-                    ScreenshotH = sh;
-                    ScreenshotW = sw;
                 }
                 else
                 {
-                    FirstUse = true; // 未找到配置文件则视为用户第一次使用
+
+                    // 获取屏幕分辨率
+                    if (Screen.PrimaryScreen.Bounds.Height > 1080 || Screen.PrimaryScreen.Bounds.Width > 1920)
+                        MessageBox.Show("本软件仅对1920x1080分辨率的屏幕进行适配\n其它分辨率可能会卡在“正在检测钉钉是否在直播...”。", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (Environment.OSVersion.Version.Major <= 6 && Environment.OSVersion.Version.Minor < 1)
+                        MessageBox.Show("本软件仅在Win7和Win10上测试过，\n在低于Windows7版本上的Windows运行可能会发生BUG。", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
                     RefLog("未找到配置文件");
                 }
 
@@ -918,6 +820,9 @@ namespace 自动进入钉钉直播间
                     CheckBoxCheck(false); // 所有复选框取消打勾
                     LabelEnable(false);   // 所有label控件取消启用
                 }
+
+                //开启
+                button5_Start_Click(null, null);
             }
             catch (Exception ex)
             {
@@ -926,54 +831,22 @@ namespace 自动进入钉钉直播间
         }
 
         // 分割字符串（将“1,2”分割为“1”和“2”）
-        private void SplitStr(string str, out int str1, out int str2)
+        private Tuple<int, int> SplitStr(string str)
         {
+            int item1, item2;
             try
             {
                 string[] Array = str.Split(',');
-                str1 = Convert.ToInt32(Array[0]);
-                str2 = Convert.ToInt32(Array[1]);
+                item1 = Convert.ToInt32(Array[0]);
+                item2 = Convert.ToInt32(Array[1]);
             }
             catch
             {
-                str1 = 0;
-                str2 = 0;
-            }
-        }
-
-        // 窗口加载完成并第一次显示时
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            Graphics g = this.CreateGraphics();
-            try
-            {
-                // 判断屏幕缩放比是否改变
-                if (DpiX != 0 && DpiY != 0)
-                {
-                    if (g.DpiX != DpiX || g.DpiY != DpiY)
-                        throw new Exception("检测到屏幕缩放比改变，\n请点击“自定义截图”按钮重新设置截图区域");
-                }
-
-                if (!FirstUse)
-                {
-                    // 判断配置文件版本号和当前软件版本号是否相同
-                    if (CurrentVersion == null || CurrentVersion == "" || new Version(CurrentVersion) != new Version(Application.ProductVersion))
-                        throw new Exception("检测到软件版本改变，\n请点击“点击自定义截图”按钮设置截图区域！");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                RefLog(ex.Message);
-                return;
-            }
-            finally
-            {
-                g.Dispose();
+                item1 = 0;
+                item2 = 0;
             }
 
-            //开启
-            button5_Start_Click(null, null);
+            return new Tuple<int, int>(item1, item2);
         }
 
         // 点击任务栏托盘图标时显示窗口
@@ -990,15 +863,27 @@ namespace 自动进入钉钉直播间
             this.ShowInTaskbar = true;                 // 在任务栏中显示
         }
 
+        // 自定义文字识别Key
+        private void button1_SetOCRKey_Click(object sender, EventArgs e)
+        {
+            using (FrmSetOCRKey setOCRKey = new FrmSetOCRKey(this.Location.X + this.Width / 2, this.Location.Y + this.Height / 2))
+            {
+                setOCRKey.ShowDialog();
+            }
+        }
+
+        // 自定义文字识别关键字
+        private void button2_SetOCRKeyWord_Click(object sender, EventArgs e)
+        {
+            string keyWordPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "关键字.txt");
+            MessageBox.Show("注意：每一行只能有一个汉字、字母或标点！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            File.WriteAllText(keyWordPath, "注意：每一行只能有一个汉字、字母或标点（编辑文件前请删除本行）。");
+            Process.Start(keyWordPath);
+        }
+
         // 启动
         private void button5_Start_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(iniPath) || FirstUse)
-            {
-                MessageBox.Show("请点击“自定义截图区域”按钮设置截图区域后，\n退出并重新打开本软件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
             // 判断当前状态（启动|停止）
             if (start == false)
             {// 启动
@@ -1025,8 +910,8 @@ namespace 自动进入钉钉直播间
                     Update_Control_Mode = 0;// 关闭所有计时器
                 Update_Control();
 
-                CheckBoxEnable(true); // 将所有CheckBox复选框设置为启用
-                ComboBoxEnable(true); // 将所有ComboBox列表设置为启用
+                CheckBoxEnable(checkBox2_AutoOPenNextLive.Checked); // 将所有CheckBox复选框设置为启用或取消启用
+                ComboBoxEnable(checkBox2_AutoOPenNextLive.Checked); // 将所有ComboBox列表设置为启用或取消启用
                 SaveCheckboxEnable(2);// 恢复checkBox中Enabled属性的值
             }
         }
@@ -1105,7 +990,6 @@ namespace 自动进入钉钉直播间
         // timer1检测直播是否断开
         // timer2检测直播是否断开后直播是否重新开启
         // timer3检测当前时间是否到下一场直播开启时间
-        // timer4计时当前直播已开启xx分钟
 
         // timer1检测直播是否断开
         private int timer1_Num = 1;// 检测直播是否中断次数
@@ -1123,7 +1007,7 @@ namespace 自动进入钉钉直播间
             {
                 if (judgeLiveErr)
                 {
-                    RefLog("检测直播是否断开错误！");
+                    RefLog("检测直播是否断开 错误！");
                     return;
                 }
                 RefLog("(" + identifyType + ")检测到直播断开");
@@ -1146,7 +1030,6 @@ namespace 自动进入钉钉直播间
             {
                 RefLog("(" + identifyType + ")检测直播是否重新开启超时，即将停止检测");
                 timer2.Enabled = false;
-                timer4.Enabled = false;
 
                 // 如果打开了 自动开启下一场直播 并且当前时间未到达自定义时间
                 if (checkBox2_AutoOPenNextLive.Checked && element + 1 < Dates.Count)
@@ -1167,7 +1050,7 @@ namespace 自动进入钉钉直播间
             {
                 if (judgeLiveErr)
                 {
-                    RefLog("检测直播是否恢复错误！");
+                    RefLog("检测直播是否恢复 错误！");
                     return;
                 }
 
@@ -1191,21 +1074,12 @@ namespace 自动进入钉钉直播间
                 if (!checkBox1_AutoOpenLive.Checked)
                 {
                     timer3.Enabled = false;
-                    timer4.Enabled = false;
 
                     start = false;
                     button5_start.Text = "开启";
-                    CheckBoxEnable(true); // 将所有CheckBox复选框设置为启用
-                    ComboBoxEnable(true); // 将所有ComboBox列表设置为启用
+                    CheckBoxEnable(checkBox2_AutoOPenNextLive.Checked); // 将所有CheckBox复选框设置为启用或取消启用
+                    ComboBoxEnable(checkBox2_AutoOPenNextLive.Checked); // 将所有ComboBox列表设置为启用或取消启用
                     SaveCheckboxEnable(2);// 恢复checkBox中Enabled属性的值
-
-                    label23_DistanceTime.Text =
-                   "距   00\n"
-                 + "离   时\n"
-                 + "开   00\n"
-                 + "启   分\n"
-                 + "还   00\n"
-                 + "有   秒";
                     CloseThread();
                 }
                 // 关闭定时器
@@ -1227,28 +1101,6 @@ namespace 自动进入钉钉直播间
             }
         }
 
-        // timer4计时当前直播已开启xx分钟
-        private DateTime timer4_Time;
-        private TimeSpan diff; // 时间差
-        private void timer4_Tick(object sender, EventArgs e)
-        {
-            diff = DateTime.Now - timer4_Time;
-            int h, m, s;
-
-            h = diff.Hours < 0 ? 0 : diff.Hours;
-            m = diff.Minutes < 0 ? 0 : diff.Minutes;
-            s = diff.Seconds < 0 ? 0 : diff.Seconds;
-
-            label23_DistanceTime.Text =
-                    "当   " + h.ToString().PadLeft(2, '0') + "\n"
-                  + "前   时\n"
-                  + "直   " + m.ToString().PadLeft(2, '0') + "\n"
-                  + "播   分\n"
-                  + "开   " + s.ToString().PadLeft(2, '0') + "\n"
-                  + "启   秒";
-        }
-
-
         // timer5将钉钉窗口显示到最前方
         private void timer5_Tick(object sender, EventArgs e)
         {
@@ -1263,52 +1115,10 @@ namespace 自动进入钉钉直播间
             // 将钉钉窗口显示到最前方
             if (SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE) == 0)
             {
-                RefLog("将钉钉窗口显示在最前方失败");
+                RefLog("将钉钉窗口显示在最前方 失败");
                 timer5.Enabled = false;
             }
         }
-
-
-        [DllImport("user32.dll", EntryPoint = "FindWindow", CharSet = CharSet.Auto)]// 查找窗口句柄
-        public extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowPos", CharSet = CharSet.Auto)]
-        private static extern int SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int Width, int Height, uint flags);// 始终保持窗口在最前端
-        const int HWND_TOPMOST = -1;
-        const int SWP_SHOWWINDOW = 0x0040;
-        const int SWP_NOMOVE = 0x0002;
-        const int SWP_NOSIZE = 0x0001;
-
-        [DllImport("user32.dll", EntryPoint = "MoveWindow", CharSet = CharSet.Auto)]
-        public static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool BRePaint);// 移动窗口
-
-        [DllImport("user32.dll", EntryPoint = "SetCursorPos", CharSet = CharSet.Auto)]
-        public extern static void SetCursorPos(int x, int y);// 设置鼠标光标位置
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowRect(IntPtr hwnd, out Rect lpRect);// 获取窗口坐标
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Rect
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
-
-        [DllImport("user32.dll", EntryPoint = "GetCursorPos", CharSet = CharSet.Auto)]
-        public extern static bool GetCursorPos(out POINT p);// 获取鼠标光标位置
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            public int X;
-            public int Y;
-        }
-
-        [DllImport("user32", EntryPoint = "mouse_event", CharSet = CharSet.Auto)]
-        private static extern int mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);// 模拟鼠标左键按下 
-
 
         //打开网址
         private void label20_Click(object sender, EventArgs e)
@@ -1329,12 +1139,9 @@ namespace 自动进入钉钉直播间
             Process.Start("https://shimo.im/docs/b8467ba8b9db4e29/");
         }
 
-
-        const int MOUSEEVENTF_LEFTDOWN = 0x0002; // 模拟鼠标左键按下      
-        const int MOUSEEVENTF_LEFTUP = 0x0004;   // 模拟鼠标左键抬起 
         protected delegate void UpdateLog();     // 刷新控件
         protected delegate void UpdateLabel();   // 刷新控件
-        private string threadErr;                // 错误提示
+        private string threadLog;                // 日志
 
 
         private void CloseThread()
@@ -1353,6 +1160,8 @@ namespace 自动进入钉钉直播间
             newThread.Start(); // 启动新线程
         }
 
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ClientToScreen(IntPtr hWnd, ref POINT pt);
         /// <summary>
         /// 打开钉钉并检测是否正在直播
         /// </summary>
@@ -1360,7 +1169,6 @@ namespace 自动进入钉钉直播间
         {
             UpdateLog update = new UpdateLog(Update_Log);    // 刷新日志
             UpdateLabel ul = new UpdateLabel(Update_Control);// 杂七杂八（刷新控件）
-            Rect r = new Rect();
             int i = 1;
             // 关闭所有timer控件
             Update_Control_Mode = 0;
@@ -1370,66 +1178,43 @@ namespace 自动进入钉钉直播间
             {
                 if (!File.Exists(DingDingPath))
                     DingDingPath = Reg.GetDingDingPath();// 获取钉钉路径
-
                 if (DingDingPath == null)
                     return;
-                //throw new Exception("钉钉路径无效！");
 
-                threadErr = "获取钉钉路径成功";
-                this.Invoke(update);// 调用窗体Invoke方法
+                threadLog = "获取钉钉路径成功";
+                this.Invoke(update);
 
                 Process.Start(DingDingPath);// 打开钉钉
 
-                threadErr = "正在打开钉钉...";
+                threadLog = "正在打开钉钉...";
                 this.Invoke(update);
 
-                for (i = 1; i <= 5; i++)
+                for (i = 1; i <= 5; i++)// 休眠5秒等待钉钉启动
                 {
                     // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选断开直播时自动进入
                     Update_Control_Mode = 1;
                     this.Invoke(ul);
 
-                    threadErr = "            " + i.ToString() + "...";
+                    threadLog = "            " + i.ToString() + "...";
                     this.Invoke(update);
-                    Thread.Sleep(1000);// 休眠3秒等待打开钉钉
+                    Thread.Sleep(1000);
                 }
 
                 // 寻找钉钉进程
-                for (i = 0; i <= 120; i++)
+                for (i = 1; i <= 100; i++)
                 {
                     // 关闭除了timer5之外的所有timer控件，避免在打开钉钉时 勾选断开直播时自动进入
                     Update_Control_Mode = 1;
                     this.Invoke(ul);
 
-                    foreach (Process pro in Process.GetProcesses())
-                    {
-                        if (pro.ProcessName.ToLower() == "DingTalk".ToLower())
-                        {
-                            i = 999; // 跳出外层for循环
-                            break;   // 跳出foreach循环
-                        }
-                    }
-
-                    if (i > 120)       // 跳出for循环
-                    {
+                    if (DingDingIsRun())
                         break;
-                    }
-                    else if (i == 120) // 如果循环20次都未找到
-                    {
+                    else if (i == 100)                         // 如果循环100次（300秒）都未找到
                         throw new Exception("未找到钉钉进程"); // 抛出异常
-                    }
-                    Thread.Sleep(1000);    // 如未找到则等待5秒再查找
+                    Thread.Sleep(3000);                        // 如未找到则等待3秒再查找
                 }
 
-                threadErr = "已找到钉钉进程";
-                this.Invoke(update);
-
-                // 查找钉钉窗口句柄
-                IntPtr hwnd = FindWindow(DingDingWindowClass, null);
-                if (hwnd == IntPtr.Zero)
-                    throw new Exception("获取钉钉窗口句柄失败"); // 抛出异常
-
-                threadErr = "已找到钉钉窗口句柄";
+                threadLog = "已找到钉钉进程";
                 this.Invoke(update);
 
                 // 如果启用将钉钉窗口显示到最顶层
@@ -1446,7 +1231,7 @@ namespace 自动进入钉钉直播间
                 if (checkBox2_AutoOPenNextLive.Checked)
                 {
                     // 判断当前时间是否到达直播时间
-                    threadErr = "等待到达直播开启时间...";
+                    threadLog = "等待到达直播开启时间...";
                     this.Invoke(update);
 
                     for (i = element; i < Dates.Count; i++)
@@ -1482,41 +1267,28 @@ namespace 自动进入钉钉直播间
                             timeDiffer = Dates[i].AddMinutes(-(double)numericUpDown3.Value) - DateTime.Now;
                             Update_Control_Mode = 999;  // 刷新距离直播开启还有xx时xx分xx秒
                             this.Invoke(ul);
-                            Thread.Sleep(1000);        // 休眠一秒判断
+                            Thread.Sleep(1000);         // 休眠一秒判断
 
                             // 如果当前时间 小于 直播开启时间 =（直播时间-距离直播还有xx分钟自动开启的时间）
                             if (DateTime.Now >= Dates[i].AddMinutes(-(double)numericUpDown3.Value))
                             {
-                                i = Dates.Count + 1; // 跳出外层for循环 
+                                i = Dates.Count + 1;  // 跳出外层for循环 
                                 break;                // 跳出内层while循环
                             }
                         }
                     }
                 }
 
-                element = i;  // 保存当前直播开启时间的数组元素下标
-                // 刷新日志
-                threadErr = "正在检测当前是否正在直播...";
-                this.Invoke(update);
-                threadErr = "请不要移动或遮挡钉钉窗口，否则会造成检测失败";
-                this.Invoke(update);
-
-                bool find = false;
                 // 再寻找一次钉钉进程，避免等待到达直播开启时间过程中钉钉意外关闭
-                foreach (Process pro in Process.GetProcesses())
-                {
-                    if (pro.ProcessName.ToLower() == "DingTalk".ToLower())
-                    {
-                        find = true;
-                        break;
-                    }
-                }
-                // 如果未找到钉钉进程
-                if (!find)
+                if (!DingDingIsRun())
                 {
                     OpenDingDing();
                     return;
                 }
+
+                element = i;  // 保存当前直播开启时间的数组元素下标
+                threadLog = "正在检测当前是否正在直播" + Environment.NewLine + "请不要移动或遮挡钉钉窗口，否则会造成检测失败";
+                this.Invoke(update);
 
                 // 判断当前是否在直播
                 for (i = 1; i <= 1800; i++)
@@ -1525,12 +1297,12 @@ namespace 自动进入钉钉直播间
                     Update_Control_Mode = 1;
                     this.Invoke(ul);
 
-                    threadErr = "第" + i.ToString() + "次检测当前是否正在直播...";
+                    threadLog = "第" + i.ToString() + "次检测当前是否正在直播...";
                     this.Invoke(update);
 
                     if (JudgeLive())// 判断是否在直播
                     {
-                        threadErr = "(" + identifyType + ")检测到当前正在直播";
+                        threadLog = "(" + identifyType + ")检测到当前正在直播";
                         this.Invoke(update);
                         break;
                     }
@@ -1541,7 +1313,15 @@ namespace 自动进入钉钉直播间
                         throw new Exception("检测当前正在直播超时，将停止检测..."); // 抛出异常
                 }
 
-                threadErr = "打开直播中...";
+
+                // 再再寻找一次钉钉进程，避免在检测直播是否开启的过程中钉钉意外关闭
+                if (!DingDingIsRun())
+                {
+                    OpenDingDing();
+                    return;
+                }
+
+                threadLog = "打开直播中...";
                 this.Invoke(update);
 
                 // 获取鼠标光标位置
@@ -1552,12 +1332,10 @@ namespace 自动进入钉钉直播间
                 for (i = 0; i < 30; i++)
                 {
                     // 第N次点击
-                    if (GetWindowRect(hwnd, out r) == 0)
-                        throw new Exception("获取钉钉窗口坐标失败");
-
-                    // 鼠标点击坐标 = 钉钉窗口坐标+相对坐标+ i（加i为了提高准确率）
-                    MouseClickX = r.Left + RelPosX + i * 2;
-                    MouseClickY = r.Top + RelPosY + i;
+                    // 鼠标点击坐标 = 钉钉子窗口坐标 + i（加i为了提高准确率）
+                    GetScreenPos(out MouseClickX, out MouseClickY);
+                    MouseClickX += i * 2;
+                    MouseClickY += i;
 
                     // 设置鼠标光标位置
                     SetCursorPos(MouseClickX, MouseClickY);
@@ -1566,13 +1344,13 @@ namespace 自动进入钉钉直播间
                     // 查找钉钉直播窗口类名，如果找到，则已打开直播
                     if (FindWindow("StandardFrame", null) != IntPtr.Zero)
                     {
-                        threadErr = "已打开直播";
+                        threadLog = "已打开直播";
                         break;
                     }
 
                     Thread.Sleep(300);
                     if (i == 30)
-                        threadErr = "可能 已打开直播";
+                        threadLog = "可能 已打开直播";
                 }
 
                 this.Invoke(update);
@@ -1588,15 +1366,10 @@ namespace 自动进入钉钉直播间
                 // 启动timer3，检测是否到达下一场直播时间
                 Update_Control_Mode = 3;
                 this.Invoke(ul);
-
-                // 启动timer4，刷新 直播已开启 xx分... 控件
-                Update_Control_Mode = 4;
-                this.Invoke(ul);
-
             }
             catch (Exception ex)
             {
-                threadErr = ex.Message;
+                threadLog = ex.Message;
                 this.Invoke(update);
 
                 // 通过button按钮关闭时（会引发异常，造成线程退出），以下语句在button5_Start_Click()中已执行，并且start = false
@@ -1613,7 +1386,7 @@ namespace 自动进入钉钉直播间
         // 在多线程中刷新日志
         private void Update_Log()
         {
-            RefLog(threadErr);
+            RefLog(threadLog);
         }
 
         //在多线程中刷新控件
@@ -1626,7 +1399,6 @@ namespace 自动进入钉钉直播间
                 timer1.Enabled = false;
                 timer2.Enabled = false;
                 timer3.Enabled = false;
-                timer4.Enabled = false;
                 timer5.Enabled = false;
             }
             else if (Update_Control_Mode == 1)
@@ -1634,7 +1406,6 @@ namespace 自动进入钉钉直播间
                 timer1.Enabled = false;
                 timer2.Enabled = false;
                 timer3.Enabled = false;
-                timer4.Enabled = false;
             }
             else if (Update_Control_Mode == 2)
             {// 启动定时器1，检测直播是否中断
@@ -1645,26 +1416,13 @@ namespace 自动进入钉钉直播间
             {// 启动定时器3，检测是否到达下一次直播时间
                 timer3.Enabled = checkBox2_AutoOPenNextLive.Checked;
             }
-            else if (Update_Control_Mode == 4)
-            {// 启动定时器4，直播开启后计时
-                if (checkBox1_AutoOpenLive.Checked || checkBox2_AutoOPenNextLive.Checked)
-                {
-                    timer4.Enabled = true;
-                    timer4_Time = DateTime.Now;
-                }
-                else
-                {// 如果没有开启“直播中断时自动打开”和“自动开启下一次直播”功能
-                    noCloseTimer5 = timer5.Enabled;
-                    start = true; // 设置为停止状态
-                    button5_Start_Click(null, null);
-                }
-            }
             else if (Update_Control_Mode == 5)
             {// 启动定时器5，将钉钉窗口显示在最前方
                 timer5.Enabled = true;
             }
             else if (Update_Control_Mode == 6)
             {
+                noCloseTimer5 = timer5.Enabled;
                 // 设置为停止状态
                 start = true;
                 button5_Start_Click(null, null);
@@ -1676,39 +1434,22 @@ namespace 自动进入钉钉直播间
                 m = timeDiffer.Minutes < 0 ? 0 : timeDiffer.Minutes;
                 s = timeDiffer.Seconds < 0 ? 0 : timeDiffer.Seconds;
 
-                label23_DistanceTime.Text =
-                    "距   " + h.ToString().PadLeft(2, '0') + "\n"
-                  + "离   时\n"
-                  + "开   " + m.ToString().PadLeft(2, '0') + "\n"
-                  + "启   分\n"
-                  + "还   " + s.ToString().PadLeft(2, '0') + "\n"
-                  + "有   秒";
+                RefLog($"距离开启还有：{h.ToString().PadLeft(2, '0')}时{m.ToString().PadLeft(2, '0')}分{s.ToString().PadLeft(2, '0')}秒");
             }
         }
 
-        private string picturePath;
         private bool judgeLiveErr = false;
-        private Bitmap bit;
         // 判断直播是否打开（也就是判断截图保存的图片中的rgb是否含有钉钉正在直播时的rgb）
         private bool JudgeLive()
         {
+            Bitmap bit = new Bitmap(ScreenshotW, ScreenshotH);
+            string picturePath;
             UpdateLog update = new UpdateLog(Update_Log);// 刷新日志
             try
             {
                 judgeLiveErr = false;
-
-                IntPtr hwnd = FindWindow(DingDingWindowClass, null);
-                // 查找钉钉窗口句柄
-                if (hwnd == IntPtr.Zero)
-                    throw new Exception("获取钉钉窗口句柄失败");
-
-                Rect r = new Rect();
-                if (GetWindowRect(hwnd, out r) == 0)
-                    throw new Exception("获取钉钉窗口坐标失败");
-
-                // 截图坐标 = 相对坐标 + 钉钉窗口坐标
-                ScreenshotX = r.Left + RelPosX;
-                ScreenshotY = r.Top + RelPosY;
+                // 获取截图坐标
+                GetScreenPos(out ScreenshotX, out ScreenshotY);
 
                 // 截取指定坐标图片，通过rgb判断钉钉是否在直播
                 bit = ScreenCapture.Screenshot(ScreenshotX, ScreenshotY, ScreenshotW, ScreenshotH);
@@ -1720,7 +1461,7 @@ namespace 自动进入钉钉直播间
                     if (!File.Exists(DeskPath))
                         Directory.CreateDirectory(DeskPath);
 
-                    picturePath = DeskPath + "\\" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".bmp";
+                    picturePath = DeskPath + "\\自动进入钉钉直播间截图_" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + ".bmp";
                     bit.Save(picturePath, System.Drawing.Imaging.ImageFormat.Bmp);
                 }
                 else
@@ -1738,7 +1479,7 @@ namespace 自动进入钉钉直播间
                     identifyType = "RGB";
                     return true;
                 } // 如果RGB判断未成功则通过OCR文字识别判断关键字
-                else if (OCR.Live(picturePath) == true)
+                else if (OCR.Is_Live(picturePath) == true)
                 {
                     if (!saveToDesk && File.Exists(picturePath))
                         File.Delete(picturePath);
@@ -1754,11 +1495,54 @@ namespace 自动进入钉钉直播间
             catch (Exception ex)
             {
                 judgeLiveErr = true;
-                threadErr = ex.Message;
+                threadLog = ex.Message;
                 this.Invoke(update);
                 return false;
             }
+            finally
+            {
+                if (bit != null)
+                    bit.Dispose();
+            }
 
+        }
+
+
+        // 获取钉钉子窗口坐标（钉钉子窗口坐标=鼠标点击坐标=截图坐标）
+        private void GetScreenPos(out int x, out int y)
+        {
+            IntPtr hwnd = FindWindow(DingDingWindowClass, null);
+            // 查找钉钉窗口句柄
+            if (hwnd == IntPtr.Zero)
+                throw new Exception("获取钉钉窗口句柄失败");
+
+            // 查找子窗口句柄（显示XX群正在直播的那个窗口）
+            IntPtr childHandle = FindWindowEx(hwnd, IntPtr.Zero, DingDingChildWindowClass, string.Empty);
+            if (childHandle == IntPtr.Zero)
+                throw new Exception("获取截图区域句柄失败");
+
+            // 查找子窗口坐标相对于屏幕的坐标
+            POINT p = new POINT();
+            if (!ClientToScreen(childHandle, ref p))
+                throw new Exception("获取截图区域坐标失败");
+
+            x = p.X;
+            y = p.Y;
+        }
+
+        private bool DingDingIsRun()
+        {
+            bool find = false;
+            // 寻找钉钉进程，判断钉钉是否在运行
+            foreach (Process pro in Process.GetProcesses())
+            {
+                if (pro.ProcessName.ToLower() == DingDingProcessName.ToLower())
+                {
+                    find = true;
+                    break;
+                }
+            }
+            return find;
         }
     }
 }

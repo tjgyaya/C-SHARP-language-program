@@ -102,17 +102,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigFile\ConfigFile.cs" />
-    <Compile Include="FrmCustomScreenshot.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmCustomScreenshot.Designer.cs">
-      <DependentUpon>FrmCustomScreenshot.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSetOCRKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSetOCRKey.Designer.cs">
+      <DependentUpon>FrmSetOCRKey.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageRecognition\OCR.cs" />
     <Compile Include="Program.cs" />
@@ -125,11 +125,11 @@
     <Compile Include="AutoUpdate\FrmAutoUpdate.Designer.cs">
       <DependentUpon>FrmAutoUpdate.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FrmCustomScreenshot.resx">
-      <DependentUpon>FrmCustomScreenshot.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSetOCRKey.resx">
+      <DependentUpon>FrmSetOCRKey.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

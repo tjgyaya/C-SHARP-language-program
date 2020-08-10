@@ -15,78 +15,45 @@ namespace 自动进入钉钉直播间
 {
     class OCR
     {
+        // OCR API_KEY
         private static string API_KEY = "ABHVET3G06m8RAmvE7lHCpkn";
         private static string SECRET_KEY = "3vv0bG0P9MkAI0SRgabEgS3Hac8vHQPC";
 
 
         // 通过关键字判断钉钉是否在直播
-        public static bool Live(string picturePath)
+        public static bool Is_Live(string picturePath)
         {
+            string apikeyPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "apikey.txt");
+            string keyWordPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "关键字.txt");
+
             string word, keyword = null;
             // 关键字
             char[] key_words = { '小', '初', '高', '大', '班', '中', '学', '群', '正', '在', '直', '播' };
 
-            // 判断是否有自定义关键字文件
-            DirectoryInfo dir = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
-            FileInfo[] files = dir.GetFiles("*.txt");// 查找目录下时txt的文件
-            foreach (var f in files)
+            // 读取自定义apikey文件
+            if (File.Exists(apikeyPath))
             {
-                // 读取自定义apikey文件
-                if (f.ToString().ToLower() == "apikey.txt")
-                {
-                    StreamReader sr = new StreamReader(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "apikey.txt");
-                    try
-                    {
-                        string str;
-                        int i = 0;
-                        while ((str = sr.ReadLine()) != null && i++ <= 2)
-                        {
-                            if (i == 1 && str != "\n")
-                                API_KEY = str;
-                            else if (i == 2 && str != "\n")
-                                SECRET_KEY = str;
-                        }
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                    finally
-                    {
-                        sr.Close();
-                        sr.Dispose();
-                    }
-                }
+                ReadApiKeyFile(apikeyPath, out API_KEY, out SECRET_KEY);
+            }
 
-                // 读取自定义关键字文件
-                if (f.ToString().ToLower() == "关键字.txt")
+            // 读取自定义关键字文件
+            if (File.Exists(keyWordPath))
+            {
+                using (StreamReader sr = new StreamReader(keyWordPath))
                 {
-                    StreamReader sr = new StreamReader(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "关键字.txt");
-                    try
-                    {
-                        keyword = sr.ReadToEnd();
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                    finally
-                    {
-                        sr.Close();
-                        sr.Dispose();
-                    }
+                    keyword = sr.ReadToEnd();
                 }
             }
 
             // 识别图片文字
             word = GeneralBasic(picturePath);
-            if (word == null)
+            if (word == null)// 如果返回结果为空
                 return false;
 
             foreach (char c in word)
             {
                 // 如果自定义关键字文件存在且不为空，则从文件查找
-                if (keyword != null || keyword != "")
+                if (string.IsNullOrEmpty(keyword))
                 {
                     if (keyword.IndexOf(c) != -1)
                         return true;
@@ -99,22 +66,49 @@ namespace 自动进入钉钉直播间
         }
 
 
-        // 获取AccessToken
-        private static void GetAccessToken(out string key)
+        public static void ReadApiKeyFile(string path, out string ak, out string sk)
         {
-            string authHost = "https://aip.baidubce.com/oauth/2.0/token";
+            ak = "";
+            sk = "";
+            using (StreamReader sr = new StreamReader(path))
+            {
+                string str;
+                for (int i = 1; (str = sr.ReadLine()) != null && i <= 2; i++)
+                {
+                    if (i == 1 && str != "\n")
+                        ak = str;
+                    else if (i == 2 && str != "\n")
+                        sk = str;
+                }
+            }
+        }
+
+
+        // 获取AccessToken
+        public static void GetAccessToken(out string token, string APIKey = null, string SecreTKey = null)
+        {
+            if (APIKey == null)
+                APIKey = API_KEY;
+            if (SecreTKey == null)
+                SecreTKey = SECRET_KEY;
+
+            string host = "https://aip.baidubce.com/oauth/2.0/token";
+
             HttpClient client = new HttpClient();
             List<KeyValuePair<string, string>> paraList = new List<KeyValuePair<string, string>>();
             paraList.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
-            paraList.Add(new KeyValuePair<string, string>("client_id", API_KEY));
-            paraList.Add(new KeyValuePair<string, string>("client_secret", SECRET_KEY));
+            paraList.Add(new KeyValuePair<string, string>("client_id", APIKey));
+            paraList.Add(new KeyValuePair<string, string>("client_secret", SecreTKey));
 
-            HttpResponseMessage response = client.PostAsync(authHost, new FormUrlEncodedContent(paraList)).Result;
+            HttpResponseMessage response = client.PostAsync(host, new FormUrlEncodedContent(paraList)).Result;
             string result = response.Content.ReadAsStringAsync().Result;
+
+            response.Dispose();
+            client.Dispose();
 
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
             Token list = js.Deserialize<Token>(result);          // 将json数据转化为对象并赋值给list
-            key = list.access_token;
+            token = list.access_token;
             if (list.error != null)
                 throw new Exception("获取AccessToken失败！" + "\n原因：" + list.error_description);
         }
@@ -131,13 +125,12 @@ namespace 自动进入钉钉直播间
         // 调用百度API文字识别
         private static string GeneralBasic(string path)
         {
-            string host = null, token;
-            int i = 0;
+            string host = null, token, result;
 
             // 获取文字识别AccessToken
             GetAccessToken(out token);
 
-            while (i++ < 4)
+            for (int i = 1; i < 4; i++)
             {
                 if (i == 1)
                     host = general_basic_host + token;
@@ -157,9 +150,13 @@ namespace 自动进入钉钉直播间
                 request.ContentLength = buffer.Length;
                 request.GetRequestStream().Write(buffer, 0, buffer.Length);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-                string result = reader.ReadToEnd();
-                reader.Close();
+
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
+                    reader.Close();
+                }
+                response.Dispose();
 
                 JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
                 Json.Root list = js.Deserialize<Json.Root>(result);  // 将json数据转化为对象类型并赋值给list
@@ -168,7 +165,6 @@ namespace 自动进入钉钉直播间
                     // 如果3个Api都调用了并且都出现了错误
                     if (i == 3)
                     {
-                        return null;
                         throw new Exception("OCR识别错误！" + "\n原因：" + list.error_msg);
                     }
                     continue; // 否则继续调用下一个Api
@@ -181,20 +177,19 @@ namespace 自动进入钉钉直播间
 
                 return builder.ToString();
             }
-            return null;
             throw new Exception("OCR识别错误！");
         }
 
         private static string GetFileBase64(string fileName)
         {
+            string baser64;
             using (FileStream filestream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 byte[] arr = new byte[filestream.Length];
                 filestream.Read(arr, 0, (int)filestream.Length);
-                string baser64 = Convert.ToBase64String(arr);
-                filestream.Close();
-                return baser64;
+                baser64 = Convert.ToBase64String(arr);
             }
+            return baser64;
         }
     }
 

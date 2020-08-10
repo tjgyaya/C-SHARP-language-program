@@ -19,22 +19,20 @@ namespace 自动进入钉钉直播间
     {
         private static string currentVersion = Application.ProductVersion;                       // 当前程序版本
         private static string xmlUrl = "https://gitee.com/fuhohua/Web/raw/master/DD/Update.xml"; // XML文件下载地址
-        private static string xmlPath = Environment.GetEnvironmentVariable("TEMP") + "\\自动进入钉钉直播间_升级文件.xml"; // XML本地路径
+        private static string xmlPath = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "自动进入钉钉直播间_升级文件.xml"); // XML本地路径
         private static string downloadPath = Process.GetCurrentProcess().MainModule.FileName;    // 当前程序名称
         private static string temp_filename = downloadPath + ".tmp";                             // 临时文件
-        private static string batPath = Application.StartupPath + "\\自动进入钉钉直播间_重命名.bat"; // 脚本文件
-        private static string logPath;
+        private static string batPath = Path.Combine(Application.StartupPath, "自动进入钉钉直播间_重命名.bat"); // 脚本文件
 
         private static string UpdateVersion { get; set; }
-        private static string FileName { get; set; }
+        // private static string FileName { get; set; }
         private static string FileUrl { get; set; }
         private static string FileMd5 { get; set; }
         private static string UpdateCont { get; set; }
 
-        public AutoUpdateForm(string log_path)
+        public AutoUpdateForm()
         {
             InitializeComponent();
-            logPath = log_path;
         }
 
         private void AutoUpdateForm_Load(object sender, EventArgs e)
@@ -49,16 +47,16 @@ namespace 自动进入钉钉直播间
                 if (i == Array.Length - 1)
                     textBox1_UpdateCont.AppendText(Array[i]);
                 else
-                    textBox1_UpdateCont.AppendText(Array[i] + "\r\n");
+                    textBox1_UpdateCont.AppendText(Array[i] + Environment.NewLine);
             }
         }
 
         private void button1_Update_Click(object sender, EventArgs e)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            WebClient client = new WebClient();
             try
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                WebClient client = new WebClient();
                 // 下载更新文件
                 client.DownloadFile(FileUrl, temp_filename);
 
@@ -77,7 +75,7 @@ namespace 自动进入钉钉直播间
                     + "move /y \"" + temp_filename + "\" \"" + downloadPath + "\"\r\n" // 重命名文件
                     + "start \"自动进入钉钉直播间\" " + downloadPath + "\"\r\n"    // 打开新文件                                                
                     + "del /f %0\r\n";
-                  //+ "pause";
+                //+ "pause";
                 File.WriteAllText(batPath, bat, Encoding.GetEncoding("GB2312"));   // 写入bat文件
                 FileInfo fi = new FileInfo(batPath);
                 if (fi.Exists)
@@ -98,6 +96,10 @@ namespace 自动进入钉钉直播间
             {
                 Clipboard.SetText(FileUrl); // 将下载链接复制到剪贴板
                 MessageBox.Show("更新失败，已将下载链接复制到剪切板。\n原因：" + ex.Message, "自动进入钉钉直播间_更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                client.Dispose();
             }
         }
 
@@ -122,6 +124,7 @@ namespace 自动进入钉钉直播间
             // 下载Xml文件
             WebClient client = new WebClient();
             client.DownloadFile(xmlUrl, xmlPath);
+            client.Dispose();
 
             // 判断Xml文件是否存在
             if (!File.Exists(xmlPath))
@@ -142,7 +145,7 @@ namespace 自动进入钉钉直播间
                 UpdateVersion = element.GetAttribute("Version");
                 // 得到Update节点的所有子节点
                 XmlNodeList nodeList = element.ChildNodes;
-                FileName = nodeList.Item(0).InnerText;
+                //FileName = nodeList.Item(0).InnerText;
                 FileMd5 = nodeList.Item(1).InnerText;
                 FileUrl = nodeList.Item(2).InnerText;
                 UpdateCont = nodeList.Item(3).InnerText;

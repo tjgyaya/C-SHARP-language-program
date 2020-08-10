@@ -21,7 +21,7 @@ namespace 自动进入钉钉直播间
             {
                 try
                 {
-                    string configFileDir = Environment.GetEnvironmentVariable("APPDATA") + @"\自动进入钉钉直播间";
+                    string configFileDir = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), "自动进入钉钉直播间");
                     if (Directory.Exists(configFileDir))
                     {
                         Directory.Delete(configFileDir, true);
@@ -34,7 +34,7 @@ namespace 自动进入钉钉直播间
                 catch (Exception ex)
                 {
                     MessageBox.Show("删除配置文件失败！\n原因：" + ex.Message, "删除配置文件失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Environment.Exit(0);// 退出
+                    Environment.Exit(-1);// 退出
                 }
             }
 
@@ -48,7 +48,7 @@ namespace 自动进入钉钉直播间
             {
                 //已经有一个实例在运行      
                 MessageBox.Show("当前程序已经在运行！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Environment.Exit(0);
+                Environment.Exit(-1);
             }
         }
 

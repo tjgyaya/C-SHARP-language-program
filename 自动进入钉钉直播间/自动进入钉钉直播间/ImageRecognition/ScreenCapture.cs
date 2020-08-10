@@ -36,8 +36,6 @@ namespace 自动进入钉钉直播间
         {
             IntPtr hdc = GetDC(IntPtr.Zero);
             float scaleX = GetDeviceCaps(hdc, DESKTOPHORZRES) / GetDeviceCaps(hdc, HORZRES);
-            if (scaleX == 1.0f)
-                scaleX = GetDeviceCaps(hdc, LOGPIXELSX) / 96f;
             ReleaseDC(IntPtr.Zero, hdc);
             return scaleX;
         }
@@ -49,8 +47,6 @@ namespace 自动进入钉钉直播间
         {
             IntPtr hdc = GetDC(IntPtr.Zero);
             float scaleY = GetDeviceCaps(hdc, DESKTOPVERTRES) / GetDeviceCaps(hdc, VERTRES);
-            if (scaleY == 1.0f)
-                scaleY = GetDeviceCaps(hdc, LOGPIXELSX) / 96f;
             ReleaseDC(IntPtr.Zero, hdc);
             return scaleY;
         }
@@ -98,6 +94,7 @@ namespace 自动进入钉钉直播间
         public static bool Is_LiveRgb(Bitmap bit)
         {
             Color c;
+            List<Color> rgbList = new List<Color>();// 从文件读取的rgb数据
 
             // 判断是否有自定义颜色文件
             DirectoryInfo dir = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
@@ -106,8 +103,7 @@ namespace 自动进入钉钉直播间
             {
                 if (f.ToString().ToLower() == "color.txt")
                 {
-                    if (File_Is_LiveRgb(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "color.txt", bit) == true)
-                        return true;
+                    rgbList = GetFileLiveRgb(Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "color.txt"));
                 }
             }
 
@@ -117,36 +113,37 @@ namespace 自动进入钉钉直播间
                 for (int y = 0; y < bit.Height; y++)
                 {
                     c = bit.GetPixel(x, y);// 获取一个像素点的颜色
-                    if (Array.IndexOf(Argbs, c) != -1)
+                    if (Array.IndexOf(Argbs, c) != -1)// 如果这个RGB数据能在“令人丧心病狂的RGB数据”中找到
                     {
                         return true;
+                    }
+                    if (rgbList.Count > 0)// rgbList.Count > 0表示从文件中读取到了自定义rgb数据，查找当前rgb数据是否在文件中
+                    {
+                        if (rgbList.Contains(c))
+                        {
+                            return true;
+                        }
                     }
                 }
             }
             return false;
         }
 
-        private static bool File_Is_LiveRgb(string path, Bitmap bit)
-        {
-            string str;
 
+        // 将文件中的RGB数据读到列表中
+        private static List<Color> GetFileLiveRgb(string path)
+        {
+            List<Color> rgbList = new List<Color>();
             using (StreamReader sr = new StreamReader(path))
             {
+                string str;
                 while ((str = sr.ReadLine()) != null)// 读取一行
                 {
-                    // 遍历图片像素点，判断是否有与之匹配的RGB数据
-                    for (int y = 0; y < bit.Height; y++)
-                    {
-                        for (int x = 0; x < bit.Width; x++)
-                        {
-                            // 获取一个像素点的RGB
-                            if (bit.GetPixel(x, y) == ColorTranslator.FromHtml(str))
-                                return true;
-                        }
-                    }
+                    rgbList.Add(ColorTranslator.FromHtml(str));
                 }
-                return false;
             }
+
+            return rgbList;
         }
     }
 }

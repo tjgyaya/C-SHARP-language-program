@@ -16,8 +16,7 @@ namespace 自动进入钉钉直播间
         public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
-int ShowTop, int PositionX, int PositionY, int RelPosX, int RelPosY, int ScreenshotH, int ScreenshotW, float DpiX, float DpiY,
-int PreventSleep, string CurrentVersion, string DingDingPath, string config_file_path)
+int ShowTop, int PositionX, int PositionY, int PreventSleep, string DingDingPath, string config_file_path)
         {
             try
             {
@@ -45,14 +44,7 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
                         $"钉钉始终显示在最顶层 = {ShowTop};\n" +
                         $"主窗体X坐标 = {PositionX};\n" +
                         $"主窗体Y坐标 = {PositionY};\n" +
-                        $"截图相对X坐标 = {RelPosX};\n" +
-                        $"截图相对Y坐标 = {RelPosY};\n" +
-                        $"截图高度 = {ScreenshotH};\n" +
-                        $"截图宽度 = {ScreenshotW};\n" +
-                        $"横向缩放 = {DpiX};\n" +
-                        $"纵向缩放 = {DpiY};\n" +
                         $"阻止系统休眠 = {PreventSleep};\n" +
-                        $"当前软件版本 = {CurrentVersion};\n" +
                         $"钉钉路径 = {DingDingPath};\n");
 
                 File.WriteAllText(config_file_path, buff);
@@ -70,9 +62,8 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
             ref int OpenLiveTime, ref int Time1Start, ref string Time1Time, ref int Time2Start, ref string Time2Time,
             ref int Time3Start, ref string Time3Time, ref int Time4Start, ref string Time4Time, ref int Time5Start,
             ref string Time5Time, ref int Time6Start, ref string Time6Time, ref int Time7Start, ref string Time7Time,
-            ref int Time8Start, ref string Time8Time, ref int ShowTop, ref int PositionX, ref int PositionY, ref int RelPosX,
-            ref int RelPosY, ref int ScreenshotH, ref int ScreenshotW, ref float DpiX, ref float DpiY,
-            ref int PreventSleep, ref string CurrentVersion, ref string DingDingPath, string config_file_path)
+            ref int Time8Start, ref string Time8Time, ref int ShowTop, ref int PositionX, ref int PositionY, ref int PreventSleep,
+            ref string DingDingPath, string config_file_path)
         {
             const int MAXSIZE = 260;
             int ch, i = 0, j = 0;
@@ -90,7 +81,7 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
                     {
                         while ((ch = fs.ReadByte()) != ';')//读取“=”到“;”内的参数
                         {
-                            if (ch == ' ' && ArrayLen(config) == 0)//判断ch是否为空格
+                            if (ch == ' ' && NumberOfArrayElement(config) == 0)//判断ch是否为空格
                             {
                                 i = 0;
                                 continue;//跳过此次循环，丢弃读取的空格
@@ -141,34 +132,20 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
                         else if (j == 18)
                             Time7Time = new string(config);//第十九行的内容是时间七内容
                         else if (j == 19)
-                            Time8Start = Convert.ToInt32(new string(config));//第二十行的内容是时间八
+                            Time8Start = Convert.ToInt32(new string(config));//第20行的内容是时间八
                         else if (j == 20)
-                            Time8Time = new string(config);//第二一行的内容是时间八内容
+                            Time8Time = new string(config);//第21行的内容是时间八内容
                         else if (j == 21)
-                            ShowTop = Convert.ToInt32(new string(config));//第二一行的内容是钉钉始终显示在最顶层
+                            ShowTop = Convert.ToInt32(new string(config));//第22行的内容是钉钉始终显示在最顶层
                         else if (j == 22)
-                            PositionX = Convert.ToInt32(new string(config)); //第二二行的内容是主窗体x坐标
+                            PositionX = Convert.ToInt32(new string(config)); //第23行的内容是主窗体x坐标
                         else if (j == 23)
-                            PositionY = Convert.ToInt32(new string(config));//第二三行的内容是主窗体y坐标
+                            PositionY = Convert.ToInt32(new string(config));//第24行的内容是主窗体y坐标       
                         else if (j == 24)
-                            RelPosX = Convert.ToInt32(new string(config)); //第二四行的内容是截图相对x坐标
+                            PreventSleep = Convert.ToInt32(new string(config));//第25行的内容是 是否阻止系统休眠
                         else if (j == 25)
-                            RelPosY = Convert.ToInt32(new string(config)); //第二五行的内容是截图相对y坐标
+                            DingDingPath = new string(config);//第26行的内容是 钉钉路径
                         else if (j == 26)
-                            ScreenshotH = Convert.ToInt32(new string(config)); //第二六行的内容是截图高度
-                        else if (j == 27)
-                            ScreenshotW = Convert.ToInt32(new string(config)); //第二七行的内容是截图宽度
-                        else if (j == 28)
-                            DpiX = (float)Convert.ToDouble(new string(config));//第二八行的内容是横向缩放比
-                        else if (j == 29)
-                            DpiY = (float)Convert.ToDouble(new string(config)); //第二九行的内容是纵向缩放比
-                        else if (j == 30)
-                            PreventSleep = Convert.ToInt32(new string(config));//第三十行的内容是 是否阻止系统休眠
-                        else if (j == 31)
-                            CurrentVersion = new string(config);//第三一行的内容是 当前软件版本号
-                        else if (j == 32)
-                            DingDingPath = new string(config);//第三二行的内容是 钉钉路径
-                        else if (j == 33)
                             break;
 
                         j++;
@@ -178,46 +155,15 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
                     }
                 }
 
-                int index;
-                index = Time1Time.IndexOf('\0');
-                if (index != -1)
-                    Time1Time = Time1Time.Substring(0, index);
-
-                index = Time2Time.IndexOf('\0');
-                if (index != -1)
-                    Time2Time = Time2Time.Substring(0, index);
-
-                index = Time3Time.IndexOf('\0');
-                if (index != -1)
-                    Time3Time = Time3Time.Substring(0, index);
-
-                index = Time4Time.IndexOf('\0');
-                if (index != -1)
-                    Time4Time = Time4Time.Substring(0, index);
-
-                index = Time5Time.IndexOf('\0');
-                if (index != -1)
-                    Time5Time = Time5Time.Substring(0, index);
-
-                index = Time6Time.IndexOf('\0');
-                if (index != -1)
-                    Time6Time = Time6Time.Substring(0, index);
-
-                index = Time7Time.IndexOf('\0');
-                if (index != -1)
-                    Time7Time = Time7Time.Substring(0, index);
-
-                index = Time8Time.IndexOf('\0');
-                if (index != -1)
-                    Time8Time = Time8Time.Substring(0, index);
-
-                index = CurrentVersion.IndexOf('\0');
-                if (index != -1)
-                    CurrentVersion = CurrentVersion.Substring(0, index);
-
-                index = DingDingPath.IndexOf('\0');
-                if (index != -1)
-                    DingDingPath = DingDingPath.Substring(0, index);
+                SplitStr(ref Time1Time);
+                SplitStr(ref Time2Time);
+                SplitStr(ref Time3Time);
+                SplitStr(ref Time4Time);
+                SplitStr(ref Time5Time);
+                SplitStr(ref Time6Time);
+                SplitStr(ref Time7Time);
+                SplitStr(ref Time8Time);
+                SplitStr(ref DingDingPath);
                 return null;
             }
             catch (Exception ex)
@@ -231,7 +177,17 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
         }
 
 
-        private static int ArrayLen(char[] arr)
+        // 返回字符串“\0”字符之前的内容
+        private static void SplitStr(ref string str)
+        {
+            int index = str.IndexOf('\0');
+            if (index != -1)
+                str = str.Substring(0, index);
+        }
+
+
+        // 获取数组元素个数
+        private static int NumberOfArrayElement(char[] arr)
         {
             int i = 0;
             for (; i < arr.Length && arr[i] != '\0'; i++)
@@ -239,98 +195,6 @@ int PreventSleep, string CurrentVersion, string DingDingPath, string config_file
 
             return i;
         }
-
-        #region 以下两个函数不再使用
-
-        // 写入 截图配置文件，储存截图的坐标高宽和钉钉窗口的坐标高宽
-        public static string ScreenWriteFile(int DingDingX, int DingDingY, int DingDingWidth, int DingDingHeigth,
-    int ScreenShotX, int ScreenShotY, int ScreenShotWidth, int ScreenShotHeight, string config_file_path)
-        {
-            try
-            {
-                string buff = string.Format(
-                    $"钉钉X坐标 = {DingDingX};\n" +
-                    $"钉钉Y坐标 = {DingDingY};\n" +
-                    $"钉钉宽度 = {DingDingWidth};\n" +
-                    $"钉钉高度 = {DingDingHeigth};\n" +
-                    $"截图X坐标 = {ScreenShotX};\n" +
-                    $"截图Y坐标 = {ScreenShotY};\n" +
-                    $"截图宽度 = {ScreenShotWidth};\n" +
-                    $"截图高度 = {ScreenShotHeight};\n");
-                File.WriteAllText(config_file_path, buff);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-
-
-        // 读取 截图配置文件，储存截图的坐标高宽和钉钉窗口的坐标高宽
-        public static string ScreenReadFile(ref int DingDingX, ref int DingDingY, ref int DingDingWidth, ref int DingDingHeigth, ref int ScreenShotX,
-    ref int ScreenShotY, ref int ScreenShotWidth, ref int ScreenShotHeight, string config_file_path)
-        {
-            try
-            {
-                const int MAXSIZE = 50;
-                int ch, i = 0, j = 0;
-                char[] config = new char[MAXSIZE];   // 储存从文件读取的参数
-                FileStream fs = new FileStream(config_file_path, FileMode.Open, FileAccess.Read, FileShare.None);
-
-                while ((ch = fs.ReadByte()) != -1)
-                {
-                    if (ch == '=')        //判断ch是否为“=”
-                    {
-                        while ((ch = fs.ReadByte()) != ';')//读取“=”到“;”内的参数
-                        {
-                            if (ch == ' ')//判断ch是否为空格
-                            {
-                                i = 0;
-                                continue;//跳过此次循环，丢弃读取的空格
-                            }
-                            config[i] = (char)ch;
-                            i++;
-                        }
-                    }
-
-                    if (ch == '\n')       //判断是否读到下一行
-                    {
-                        if (j == 0)
-                            DingDingX = Convert.ToInt32(new string(config));   //把第一行的内容保存到Dx，第一行的内容是钉钉x坐标
-                        else if (j == 1)
-                            DingDingY = Convert.ToInt32(new string(config));   //把第二行的内容保存到Dy，第二行的内容是钉钉y坐标
-                        else if (j == 2)
-                            DingDingWidth = Convert.ToInt32(new string(config));   //把第三行的内容保存到Dw，第三行的内容是钉钉窗口高度
-                        else if (j == 3)
-                            DingDingHeigth = Convert.ToInt32(new string(config));   //把第四行的内容保存到Dh，第三行的内容是钉钉窗口宽度
-                        else if (j == 4)
-                            ScreenShotX = Convert.ToInt32(new string(config));//把第五行的内容保存到Sx，第三行的内容是截图x坐标
-                        else if (j == 5)
-                            ScreenShotY = Convert.ToInt32(new string(config));//把第六行的内容保存到Sy，第三行的内容是截图y坐标
-                        else if (j == 6)
-                            ScreenShotWidth = Convert.ToInt32(new string(config));//把第七行的内容保存到Sw，第三行的内容是截图宽度
-                        else if (j == 7)
-                            ScreenShotHeight = Convert.ToInt32(new string(config)); //把第八行的内容保存到Sh，第三行的内容是截图高度
-                        else if (j == 8)
-                            break;
-
-                        j++;
-                        i = 0;
-                        Array.Clear(config, 0, config.Length);//数组每次循环前清零
-                    }
-                }
-                fs.Close();
-
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-        #endregion
     }
 }
 

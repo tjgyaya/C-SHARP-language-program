@@ -46,7 +46,7 @@
             this.label1_CurrentVersion.Name = "label1_CurrentVersion";
             this.label1_CurrentVersion.Size = new System.Drawing.Size(105, 17);
             this.label1_CurrentVersion.TabIndex = 6;
-            this.label1_CurrentVersion.Text = "当前版本：2.0.9.0";
+            this.label1_CurrentVersion.Text = "当前版本：2.2.0.0";
             // 
             // label2_UpdateVersion
             // 
@@ -56,7 +56,7 @@
             this.label2_UpdateVersion.Name = "label2_UpdateVersion";
             this.label2_UpdateVersion.Size = new System.Drawing.Size(105, 17);
             this.label2_UpdateVersion.TabIndex = 1;
-            this.label2_UpdateVersion.Text = "最新版本：2.1.0.0";
+            this.label2_UpdateVersion.Text = "最新版本：2.3.0.0";
             // 
             // groupBox1
             // 
