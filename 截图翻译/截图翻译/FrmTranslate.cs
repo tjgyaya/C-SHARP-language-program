@@ -187,6 +187,8 @@ namespace 截图翻译
                 if (!sendToWindow) // 不将译文发送到窗口
                     return dst;
 
+                this.WindowState = FormWindowState.Minimized;
+
                 // 查找窗口句柄
                 IntPtr hwnd = FindWindow(null, GtaWindowName);
                 if (hwnd == IntPtr.Zero)
@@ -196,10 +198,11 @@ namespace 截图翻译
                 if (!SetForegroundWindow(hwnd))
                     throw new Exception("无法激活GTA5窗口！");
 
-                Thread.Sleep(100);
+                Thread.Sleep(500);
                 KeyBoard(Key[comboBox1_SourceLang.SelectedIndex]);
-                Thread.Sleep(300);
-                SendKeys.Send(dst);    // 输入要发送的内容
+                Thread.Sleep(500);
+                SendKeys.SendWait(dst);
+               // SendKeys.Send(dst);    // 输入要发送的内容
                 Thread.Sleep(1000);
                 if (checkBox1_AutoSend.Checked) // 自动发送（按下回车键）
                 {
