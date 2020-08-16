@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace 自动进入钉钉直播
@@ -23,39 +24,46 @@ namespace 自动进入钉钉直播
         // 通过关键字判断钉钉是否在直播
         public static bool Is_Live(string picturePath)
         {
-            string apikeyPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "apikey.txt");
-            string keyWordPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "关键字.txt");
-
-            string word, keyword = null;
+            string apikeyPath, keyWordPath;// 自定义api和关键字文件路径
+            string word;
             // 关键字
             char[] key_words = { '小', '初', '高', '大', '班', '中', '学', '群', '正', '在', '直', '播' };
+            List<char> customKeyWords = new List<char>();
 
-            // 读取自定义apikey文件
-            if (File.Exists(apikeyPath))
+            // 判断是否有自定义apikey文件和关键字文件
+            DirectoryInfo dir = new DirectoryInfo(Application.StartupPath);
+            FileInfo[] files = dir.GetFiles("*.txt");// 查找目录下时txt的文件
+            foreach (var f in files)
             {
-                ReadApiKeyFile(apikeyPath, out API_KEY, out SECRET_KEY);
-            }
-
-            // 读取自定义关键字文件
-            if (File.Exists(keyWordPath))
-            {
-                using (StreamReader sr = new StreamReader(keyWordPath))
+                if (f.ToString().ToLower() == "apikey.txt")
                 {
-                    keyword = sr.ReadToEnd();
+                    apikeyPath = Path.Combine(Application.StartupPath + "\\", f.ToString());
+                    ReadApiKeyFile(apikeyPath, out API_KEY, out SECRET_KEY);
+                }
+                else if (f.ToString().ToLower() == "关键字.txt")
+                {
+                    keyWordPath = Path.Combine(Application.StartupPath + "\\", f.ToString());
+                    using (StreamReader sr = new StreamReader(keyWordPath))
+                    {
+                        string str = sr.ReadToEnd();
+                        customKeyWords = new List<char>(str);
+                        while (customKeyWords.Remove('\r') || customKeyWords.Remove('\n'))
+                            ; // 去掉读取的换行符
+                    }
                 }
             }
 
             // 识别图片文字
             word = GeneralBasic(picturePath);
-            if (word == null)// 如果返回结果为空
+            if (string.IsNullOrEmpty(word)) // 如果返回结果为空
                 return false;
 
             foreach (char c in word)
             {
                 // 如果自定义关键字文件存在且不为空，则从文件查找
-                if (string.IsNullOrEmpty(keyword))
+                if (customKeyWords.Count > 0)
                 {
-                    if (keyword.IndexOf(c) != -1)
+                    if (customKeyWords.Contains(c))
                         return true;
                 }
                 // 从关键字数组中查找
@@ -75,9 +83,9 @@ namespace 自动进入钉钉直播
                 string str;
                 for (int i = 1; (str = sr.ReadLine()) != null && i <= 2; i++)
                 {
-                    if (i == 1 && str != "\n")
+                    if (i == 1)
                         ak = str;
-                    else if (i == 2 && str != "\n")
+                    else if (i == 2)
                         sk = str;
                 }
             }
@@ -85,12 +93,13 @@ namespace 自动进入钉钉直播
 
 
         // 获取AccessToken
-        public static void GetAccessToken(out string token, string APIKey = null, string SecreTKey = null)
+        public static void GetAccessToken(out string token, string APIKey = null, string SecretKey = null)
         {
-            if (APIKey == null)
+            if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(SecretKey))
+            {
                 APIKey = API_KEY;
-            if (SecreTKey == null)
-                SecreTKey = SECRET_KEY;
+                SecretKey = SECRET_KEY;
+            }
 
             string host = "https://aip.baidubce.com/oauth/2.0/token";
 
@@ -98,7 +107,7 @@ namespace 自动进入钉钉直播
             List<KeyValuePair<string, string>> paraList = new List<KeyValuePair<string, string>>();
             paraList.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
             paraList.Add(new KeyValuePair<string, string>("client_id", APIKey));
-            paraList.Add(new KeyValuePair<string, string>("client_secret", SecreTKey));
+            paraList.Add(new KeyValuePair<string, string>("client_secret", SecretKey));
 
             HttpResponseMessage response = client.PostAsync(host, new FormUrlEncodedContent(paraList)).Result;
             string result = response.Content.ReadAsStringAsync().Result;
@@ -150,11 +159,9 @@ namespace 自动进入钉钉直播
                 request.ContentLength = buffer.Length;
                 request.GetRequestStream().Write(buffer, 0, buffer.Length);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
                 using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                 {
                     result = reader.ReadToEnd();
-                    reader.Close();
                 }
                 response.Dispose();
 
@@ -177,7 +184,7 @@ namespace 自动进入钉钉直播
 
                 return builder.ToString();
             }
-            throw new Exception("OCR识别错误！");
+            return null;
         }
 
         private static string GetFileBase64(string fileName)

@@ -19,10 +19,11 @@ namespace 自动进入钉钉直播
     {
         private static string currentVersion = Application.ProductVersion;                       // 当前程序版本
         private static string xmlUrl = "https://gitee.com/fuhohua/Web/raw/master/DD/Update.xml"; // XML文件下载地址
-        private static string xmlPath = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "自动进入钉钉直播间_升级文件.xml"); // XML本地路径
+        private static string xmlPath = Path.Combine(Environment.GetEnvironmentVariable("APPDATA") + "\\", "自动进入钉钉直播_升级文件.xml"); // XML本地路径
         private static string downloadPath = Process.GetCurrentProcess().MainModule.FileName;    // 当前程序名称
         private static string temp_filename = downloadPath + ".tmp";                             // 临时文件
-        private static string batPath = Path.Combine(Application.StartupPath, "自动进入钉钉直播间_重命名.bat"); // 脚本文件
+        private static string batPath = Path.Combine(Application.StartupPath + "\\", "自动进入钉钉直播_重命名.bat"); // 脚本文件
+        private int sec = 15;
 
         private static string UpdateVersion { get; set; }
         // private static string FileName { get; set; }
@@ -37,6 +38,8 @@ namespace 自动进入钉钉直播
 
         private void AutoUpdateForm_Load(object sender, EventArgs e)
         {
+            timer1.Enabled = true;
+
             label1_CurrentVersion.Text = "当前版本：" + currentVersion;
             label2_UpdateVersion.Text = "最新版本：" + UpdateVersion;
 
@@ -96,6 +99,7 @@ namespace 自动进入钉钉直播
             {
                 Clipboard.SetText(FileUrl); // 将下载链接复制到剪贴板
                 MessageBox.Show("更新失败，已将下载链接复制到剪切板。\n原因：" + ex.Message, "自动进入钉钉直播间_更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                button2_CancelUpdate_Click(null, null);
             }
             finally
             {
@@ -105,7 +109,9 @@ namespace 自动进入钉钉直播
 
         private void button2_CancelUpdate_Click(object sender, EventArgs e)
         {
+            timer1.Enabled = false;
             this.Close();
+            this.DialogResult = DialogResult.Cancel;
         }
 
 
@@ -122,9 +128,10 @@ namespace 自动进入钉钉直播
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             // 下载Xml文件
-            WebClient client = new WebClient();
-            client.DownloadFile(xmlUrl, xmlPath);
-            client.Dispose();
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFile(xmlUrl, xmlPath);
+            }
 
             // 判断Xml文件是否存在
             if (!File.Exists(xmlPath))
@@ -164,16 +171,31 @@ namespace 自动进入钉钉直播
         // 获取文件MD5
         private string GetMd5(string path)
         {
-            FileStream fs = new FileStream(path, FileMode.Open);
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] data = md5.ComputeHash(fs);
-            fs.Close();
+            byte[] data = new byte[1];
+            try
+            {
+                data = md5.ComputeHash(fs);
+            }
+            finally
+            {
+                md5.Dispose();
+                fs.Close();
+            }
 
             StringBuilder sb = new StringBuilder(data.Length);
             for (int i = 0; i < data.Length; i++)
                 sb.Append(data[i].ToString("x2"));
 
             return sb.ToString();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (sec <= 0)// 15秒倒计时
+                button2_CancelUpdate_Click(null, null);
+            sec--;
         }
     }
 }

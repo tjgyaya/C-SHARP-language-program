@@ -13,47 +13,39 @@ namespace 自动进入钉钉直播
     class ConfigFile
     {
         // 写入 主窗体配置文件，储存自定义时间，是否自动开启下一次直播等
-        public static string WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
+        public static void WriteFile(int AutoOpenLive, int CheckLive, int StopCheckLive, int AutoOPenNextLive, int OpenLiveTime,
 int Time1Start, string Time1Time, int Time2Start, string Time2Time, int Time3Start, string Time3Time, int Time4Start, string Time4Time,
 int Time5Start, string Time5Time, int Time6Start, string Time6Time, int Time7Start, string Time7Time, int Time8Start, string Time8Time,
 int ShowTop, int PositionX, int PositionY, int PreventSleep, string DingDingPath, string config_file_path)
         {
-            try
-            {
-                string buff = string.Format($"中断直播时自动进入 = {AutoOpenLive};\n" +
-                        $"XX秒钟检测一次直播是否中断 = {CheckLive};\n" +
-                        $"XX分钟后还未检测到直播开启则中断检测 = {StopCheckLive};\n" +
-                        $"自动开启下一次直播 = {AutoOPenNextLive};\n" +
-                        $"距离直播还有xx分钟自动开启 = {OpenLiveTime};\n" +
-                        $"时间一开启 = {Time1Start};\n" +
-                        $"时间一 = {Time1Time};\n" +
-                        $"时间二开启 = {Time2Start};\n" +
-                        $"时间二 = {Time2Time};\n" +
-                        $"时间三开启 = {Time3Start};\n" +
-                        $"时间三 = {Time3Time};\n" +
-                        $"时间四开启 = {Time4Start};\n" +
-                        $"时间四 = {Time4Time};\n" +
-                        $"时间五开启 = {Time5Start};\n" +
-                        $"时间五 = {Time5Time};\n" +
-                        $"时间六开启 = {Time6Start};\n" +
-                        $"时间六 = {Time6Time};\n" +
-                        $"时间七开启 = {Time7Start};\n" +
-                        $"时间七 = {Time7Time};\n" +
-                        $"时间八开启 = {Time8Start};\n" +
-                        $"时间八 = {Time8Time};\n" +
-                        $"钉钉始终显示在最顶层 = {ShowTop};\n" +
-                        $"主窗体X坐标 = {PositionX};\n" +
-                        $"主窗体Y坐标 = {PositionY};\n" +
-                        $"阻止系统休眠 = {PreventSleep};\n" +
-                        $"钉钉路径 = {DingDingPath};\n");
+            string buff = string.Format($"直播断开时自动打开 = {AutoOpenLive};\n" +
+                    $"XX秒钟检测一次直播是否断开 = {CheckLive};\n" +
+                    $"XX分钟后还未检测到直播开启则断开检测 = {StopCheckLive};\n" +
+                    $"自动开启下一次直播 = {AutoOPenNextLive};\n" +
+                    $"距离直播还有xx分钟自动开启 = {OpenLiveTime};\n" +
+                    $"时间一开启 = {Time1Start};\n" +
+                    $"自定义时间一 = {Time1Time};\n" +
+                    $"时间二开启 = {Time2Start};\n" +
+                    $"自定义时间二 = {Time2Time};\n" +
+                    $"时间三开启 = {Time3Start};\n" +
+                    $"自定义时间三 = {Time3Time};\n" +
+                    $"时间四开启 = {Time4Start};\n" +
+                    $"自定义时间四 = {Time4Time};\n" +
+                    $"时间五开启 = {Time5Start};\n" +
+                    $"自定义时间五 = {Time5Time};\n" +
+                    $"时间六开启 = {Time6Start};\n" +
+                    $"自定义时间六 = {Time6Time};\n" +
+                    $"时间七开启 = {Time7Start};\n" +
+                    $"自定义时间七 = {Time7Time};\n" +
+                    $"时间八开启 = {Time8Start};\n" +
+                    $"自定义时间八 = {Time8Time};\n" +
+                    $"钉钉始终显示在最顶层 = {ShowTop};\n" +
+                    $"主窗体X坐标 = {PositionX};\n" +
+                    $"主窗体Y坐标 = {PositionY};\n" +
+                    $"阻止系统休眠 = {PreventSleep};\n" +
+                    $"钉钉路径 = {DingDingPath};\n");
 
-                File.WriteAllText(config_file_path, buff);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
+            File.WriteAllText(config_file_path, buff);
         }
 
 

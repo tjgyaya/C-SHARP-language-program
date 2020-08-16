@@ -58,6 +58,7 @@
             this.label25 = new System.Windows.Forms.Label();
             this.button1_SetOCRKey = new System.Windows.Forms.Button();
             this.button2_SetOCRKeyWord = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer5 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -105,15 +106,14 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1_CheckLiveTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2_StopCheckLiveTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -378,7 +378,7 @@
             this.button7_SaveConfigFile.Size = new System.Drawing.Size(93, 25);
             this.button7_SaveConfigFile.TabIndex = 72;
             this.button7_SaveConfigFile.Text = "保存配置文件";
-            this.toolTip1.SetToolTip(this.button7_SaveConfigFile, "手动保存配置文件，避免软件意外退出不能自动保存");
+            this.toolTip1.SetToolTip(this.button7_SaveConfigFile, "设置后请保存配置文件");
             this.button7_SaveConfigFile.UseVisualStyleBackColor = true;
             this.button7_SaveConfigFile.Click += new System.EventHandler(this.button7_SaveConfigFile_Click);
             // 
@@ -440,7 +440,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label24.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
             this.label24.ForeColor = System.Drawing.Color.OrangeRed;
             this.label24.Location = new System.Drawing.Point(311, 393);
             this.label24.Name = "label24";
@@ -491,6 +491,16 @@
             this.toolTip1.SetToolTip(this.button2_SetOCRKeyWord, "设置RGB识别数据和OCR识别关键字，\r\n提高识别钉钉直播是否开启的准确性。");
             this.button2_SetOCRKeyWord.UseVisualStyleBackColor = true;
             this.button2_SetOCRKeyWord.Click += new System.EventHandler(this.button2_SetOCRKeyWord_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Tomato;
+            this.pictureBox1.Location = new System.Drawing.Point(39, 62);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(171, 30);
+            this.pictureBox1.TabIndex = 75;
+            this.pictureBox1.TabStop = false;
+            this.toolTip1.SetToolTip(this.pictureBox1, "pictureBox控件存在的意义就是为了获取不同缩放比下的截图区域大小");
             // 
             // timer5
             // 
@@ -1152,15 +1162,6 @@
             this.comboBox1.Size = new System.Drawing.Size(48, 25);
             this.comboBox1.TabIndex = 67;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Tomato;
-            this.pictureBox1.Location = new System.Drawing.Point(51, 55);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(171, 30);
-            this.pictureBox1.TabIndex = 75;
-            this.pictureBox1.TabStop = false;
-            // 
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.Color.White;
@@ -1196,18 +1197,18 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动进入钉钉直播V2.3.0";
+            this.Text = "自动进入钉钉直播V2.3.4";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1_CheckLiveTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2_StopCheckLiveTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);

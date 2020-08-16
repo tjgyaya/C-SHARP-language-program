@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AutoUpdateForm));
             this.label1_CurrentVersion = new System.Windows.Forms.Label();
             this.label2_UpdateVersion = new System.Windows.Forms.Label();
@@ -35,6 +36,7 @@
             this.textBox1_UpdateCont = new System.Windows.Forms.TextBox();
             this.button1_Update = new System.Windows.Forms.Button();
             this.button2_CancelUpdate = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +76,7 @@
             this.textBox1_UpdateCont.BackColor = System.Drawing.Color.White;
             this.textBox1_UpdateCont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1_UpdateCont.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1_UpdateCont.Font = new System.Drawing.Font("Arial Narrow", 9F);
+            this.textBox1_UpdateCont.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1_UpdateCont.HideSelection = false;
             this.textBox1_UpdateCont.Location = new System.Drawing.Point(3, 19);
             this.textBox1_UpdateCont.Multiline = true;
@@ -106,6 +108,11 @@
             this.button2_CancelUpdate.Text = "取消";
             this.button2_CancelUpdate.UseVisualStyleBackColor = true;
             this.button2_CancelUpdate.Click += new System.EventHandler(this.button2_CancelUpdate_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // AutoUpdateForm
             // 
@@ -140,5 +147,6 @@
         private System.Windows.Forms.TextBox textBox1_UpdateCont;
         private System.Windows.Forms.Button button1_Update;
         private System.Windows.Forms.Button button2_CancelUpdate;
+        private System.Windows.Forms.Timer timer1;
     }
 }

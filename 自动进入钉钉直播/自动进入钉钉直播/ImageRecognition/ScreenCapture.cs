@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.WebSockets;
 using System.Windows.Forms;
 
 namespace 自动进入钉钉直播
@@ -97,13 +98,15 @@ namespace 自动进入钉钉直播
             List<Color> rgbList = new List<Color>();// 从文件读取的rgb数据
 
             // 判断是否有自定义颜色文件
-            DirectoryInfo dir = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
+            string rgbPath;
+            DirectoryInfo dir = new DirectoryInfo(Application.StartupPath);
             FileInfo[] files = dir.GetFiles("*.txt");// 查找目录下时txt的文件
             foreach (var f in files)
             {
                 if (f.ToString().ToLower() == "color.txt")
                 {
-                    rgbList = GetFileLiveRgb(Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "color.txt"));
+                    rgbPath = Path.Combine(Application.StartupPath + "\\", f.ToString());
+                    rgbList = GetFileLiveRgb(rgbPath);
                 }
             }
 
@@ -134,12 +137,26 @@ namespace 自动进入钉钉直播
         private static List<Color> GetFileLiveRgb(string path)
         {
             List<Color> rgbList = new List<Color>();
-            using (StreamReader sr = new StreamReader(path))
+            StreamReader sr = new StreamReader(path);
+
+            try
             {
                 string str;
                 while ((str = sr.ReadLine()) != null)// 读取一行
                 {
                     rgbList.Add(ColorTranslator.FromHtml(str));
+                }
+            }
+            catch
+            {
+                MessageBox.Show("自定义RGB关键字文件有误！", "自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (sr != null)
+                {
+                    sr.Close();
+                    sr.Dispose();
                 }
             }
 
