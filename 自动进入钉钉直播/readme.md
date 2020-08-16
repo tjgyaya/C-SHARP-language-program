@@ -7,17 +7,7 @@
 
 软件界面介绍： 
 
-1、主界面 
-
-![图片](https://uploader.shimo.im/f/qZhpuHeif4QTA2gi.png!thumbnail)
-
-![图片](https://uploader.shimo.im/f/vYrliboQ8C5PEdl8.png!thumbnail)
-
- 
-
-2、自定义截图界面 
-
-![图片](https://uploader.shimo.im/f/WDbdcXs5Qb0YKGe5.png!thumbnail) ![图片](https://uploader.shimo.im/f/NN8BRrVaCWQsVxUw.png!thumbnail)
+![图片](https://uploader.shimo.im/f/xnL5kzlrxkqKNV2Q.png!thumbnail)
 
 
 
@@ -138,15 +128,12 @@
 
 
 
-**gif教程** 
-
-1、使用教程 
+**gif使用教程** 
 
 ![图片](https://uploader.shimo.im/f/Z2qy6BrtUiwzy9ne.gif)
 
-2、自定义截图教程 
 
-![图片](https://uploader.shimo.im/f/RA81yWEP41oVJeS7.gif) 
+ 
 
 更新： 
 
