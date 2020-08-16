@@ -165,6 +165,7 @@ int ShowTop, int PositionX, int PositionY, int PreventSleep, string DingDingPath
             finally
             {
                 fs.Close();
+                fs.Dispose();
             }
         }
 
@@ -172,6 +173,9 @@ int ShowTop, int PositionX, int PositionY, int PreventSleep, string DingDingPath
         // 返回字符串“\0”字符之前的内容
         private static void SplitStr(ref string str)
         {
+            if (string.IsNullOrEmpty(str))
+                return;
+
             int index = str.IndexOf('\0');
             if (index != -1)
                 str = str.Substring(0, index);

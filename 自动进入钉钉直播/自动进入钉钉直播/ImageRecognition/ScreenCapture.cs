@@ -146,16 +146,21 @@ namespace 自动进入钉钉直播
                 {
                     rgbList.Add(ColorTranslator.FromHtml(str));
                 }
+                sr.Close();
             }
             catch
             {
-                MessageBox.Show("自定义RGB关键字文件有误！", "自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                sr.Close();
+                // 重命名RGB文件
+                string newFileName = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "（重命名）自定义RGB关键字文件有误" + Path.GetExtension(path);
+                FileInfo fi = new FileInfo(path);
+                fi.MoveTo(newFileName);// 重命名文件
+                throw new Exception("自定义RGB关键字文件有误！");
             }
             finally
             {
                 if (sr != null)
                 {
-                    sr.Close();
                     sr.Dispose();
                 }
             }

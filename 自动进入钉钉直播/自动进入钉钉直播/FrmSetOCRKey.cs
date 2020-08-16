@@ -26,7 +26,7 @@ namespace 自动进入钉钉直播
 
         private void button1_ApplicationKey_Click(object sender, EventArgs e)
         {
-            Process.Start("https://ai.baidu.com/tech/ocr/general");
+            Process.Start("https://ai.baidu.com/tech/ocr/general");// 申请api
         }
 
         private void button2_TestKey_Click(object sender, EventArgs e)
@@ -44,11 +44,11 @@ namespace 自动进入钉钉直播
                 if (!string.IsNullOrEmpty(tmp))
                 {
                     File.WriteAllText(apikeyPath, textBox1_APIKey.Text + Environment.NewLine + textBox2_SecretKey.Text);
-                    MessageBox.Show("自定义文字识别Key成功！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("测试成功！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
                 else
-                    throw new Exception("自定义文字识别Key失败！");
+                    throw new Exception("测试失败！");
             }
             catch (Exception ex)
             {
@@ -58,10 +58,20 @@ namespace 自动进入钉钉直播
 
         private void FrmSetOCRKey_Load(object sender, EventArgs e)
         {
-            this.Location = local;
+            if (local.X >= 0 && local.Y >= 0)
+                this.Location = local;
 
             // 加载ApiKey文件
-            apikeyPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "apikey.txt");
+            DirectoryInfo dir = new DirectoryInfo(Application.StartupPath);
+            FileInfo[] files = dir.GetFiles("*.txt");// 查找目录下时txt的文件
+            foreach (var f in files)
+            {
+                if (f.ToString().ToLower() == "apikey.txt")
+                {
+                    apikeyPath = Path.Combine(Application.StartupPath + "\\", "apikey.txt");
+                }
+            }
+
             if (!File.Exists(apikeyPath))
                 return;
 

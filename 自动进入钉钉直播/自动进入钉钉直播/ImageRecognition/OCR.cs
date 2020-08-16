@@ -25,8 +25,9 @@ namespace 自动进入钉钉直播
         public static bool Is_Live(string picturePath)
         {
             string apikeyPath, keyWordPath;// 自定义api和关键字文件路径
-            string word;
-            // 关键字
+            string word;                   // 识别出来的文字
+
+            // 文字识别关键字
             char[] key_words = { '小', '初', '高', '大', '班', '中', '学', '群', '正', '在', '直', '播' };
             List<char> customKeyWords = new List<char>();
 
@@ -103,23 +104,34 @@ namespace 自动进入钉钉直播
 
             string host = "https://aip.baidubce.com/oauth/2.0/token";
 
-            HttpClient client = new HttpClient();
             List<KeyValuePair<string, string>> paraList = new List<KeyValuePair<string, string>>();
             paraList.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
             paraList.Add(new KeyValuePair<string, string>("client_id", APIKey));
             paraList.Add(new KeyValuePair<string, string>("client_secret", SecretKey));
 
-            HttpResponseMessage response = client.PostAsync(host, new FormUrlEncodedContent(paraList)).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-
-            response.Dispose();
-            client.Dispose();
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = new HttpResponseMessage();
+            string result;
+            try
+            {
+                response = client.PostAsync(host, new FormUrlEncodedContent(paraList)).Result;
+                result = response.Content.ReadAsStringAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("(OCR)" + ex.Message);
+            }
+            finally
+            {
+                response.Dispose();
+                client.Dispose();
+            }
 
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
             Token list = js.Deserialize<Token>(result);          // 将json数据转化为对象并赋值给list
             token = list.access_token;
             if (list.error != null)
-                throw new Exception("获取AccessToken失败！" + "\n原因：" + list.error_description);
+                throw new Exception("(OCR)获取AccessToken失败！" + "\n原因：" + list.error_description);
         }
 
 
@@ -158,12 +170,23 @@ namespace 自动进入钉钉直播
                 byte[] buffer = encoding.GetBytes(str);
                 request.ContentLength = buffer.Length;
                 request.GetRequestStream().Write(buffer, 0, buffer.Length);
+
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                try
                 {
                     result = reader.ReadToEnd();
                 }
-                response.Dispose();
+                catch (Exception ex)
+                {
+                    throw new Exception("(OCR)" + ex.Message);
+                }
+                finally
+                {
+                    response.Dispose();
+                    reader.Close();
+                    reader.Dispose();
+                }
 
                 JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
                 Json.Root list = js.Deserialize<Json.Root>(result);  // 将json数据转化为对象类型并赋值给list
