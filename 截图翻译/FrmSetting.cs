@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -118,18 +117,6 @@ namespace 截图翻译
         }
 
 
-        [DllImport("user32.dll", EntryPoint = "FindWindow", CharSet = CharSet.Auto)]// 查找窗口句柄
-        public extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
-        [DllImport("User32.dll", CharSet = CharSet.Auto)]
-        public static extern bool ScreenToClient(IntPtr hWnd, ref POINT pt);
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            public int X;
-            public int Y;
-        }
-
-
         // 设置固定翻译坐标
         private void button2_SetPosition_Click(object sender, EventArgs e)
         {
@@ -143,18 +130,8 @@ namespace 截图翻译
                 if (result == DialogResult.Cancel)
                     throw new Exception("用户取消截图！");
 
-                POINT p = new POINT();
-                p.X = shot.MouseDownPoint.X;
-                p.Y = shot.MouseDownPoint.Y;
-
-                IntPtr hwnd=FindWindow("grcWindow", null);
-                if (IntPtr.Zero == hwnd)
-                    throw new Exception("找不到GTA窗口句柄");
-                // 屏幕坐标转为客户端窗口坐标
-                ScreenToClient(hwnd,ref p);
-
                 // 保存截图坐标高宽
-                screenRect = new Rectangle(p.X, p.Y, shot.ScreenWidth, shot.ScreenHeight);
+                screenRect = new Rectangle(shot.MouseDownPoint.X, shot.MouseDownPoint.Y, shot.ScreenWidth, shot.ScreenHeight);
                 if (shot.ScreenWidth > 0 && shot.ScreenHeight > 0)
                     MessageBox.Show("设置成功，请点击“保存配置”按钮。", "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else

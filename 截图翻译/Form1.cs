@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,19 +14,15 @@ using System.Windows.Forms;
 
 namespace 截图翻译
 {
-    public partial class FrmMain : Form
+    public partial class Form1 : Form
     {
-        // **************************************主窗口**************************************
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, Keys vk);// 注册热键
 
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);// 释放注册的的热键
 
-        const int hotKeyNum = 5;                                         // 要注册的热键个数
-
-
-        public FrmMain()
+        public Form1()
         {
             InitializeComponent();
 
@@ -46,29 +41,18 @@ namespace 截图翻译
             notifyIcon1.Text = "点击此处显示窗口";
         }
 
-
-        ~FrmMain()
-        {
-            for (int i = 0; i < hotKeyNum; i++)
-            {
-                UnregisterHotKey(this.Handle, 1000 + i); // 卸载热键
-            }
-        }
-
-        private Rectangle screenRect = new Rectangle();// 固定截图坐标
-        private bool isEnToZh = true;                // 翻译模式 英译中、俄译中
-        private bool isSpeak;                        // 翻译后是否朗读译文
-        private bool isFixedScreen;                  // 是否为固定截图翻译
-        private bool copySourceTextToClip, copyDestTextToClip;     // 翻译后是否复制到剪切板（源语言、目标语言）
-        private int showTime = 5;                    // 翻译后延迟显示翻译后内容的时间（单位：秒）
-        private string sourceOfTran = "百度翻译";    // 翻译来源（可选 百度 或 有道）
-        private DateTime lastTime = DateTime.Now;    // 记录上次热键按下时间，避免多次按下热键造成卡死闪退
-        private Thread newThread;                    // 新线程              
-        private string showCont;                    // 要在ShowCont窗口显示的内容
-        private TranMode tranMode;                   // 翻译模式（截图翻译并显示 或 不截图翻译只显示）
-        private bool[] showWindow = { false, false };// 当前显示的窗口
-        FrmHomePage homePage = new FrmHomePage();    // 主页窗口
-        FrmSetting setting = new FrmSetting();       // 设置窗口
+        private bool EnToZh = true;                  // 翻译模式 英译中、俄译中
+        private bool CopySourceTextToClip, CopyDestTextToClip;     // 翻译后是否复制到剪切板（源语言、目标语言）
+        private bool Speak;                          // 翻译后是否朗读译文
+        private int ShowTime = 5;                    // 翻译后延迟显示翻译后内容的时间
+        private string SourceOfTran = "百度翻译";    // 翻译源
+        private DateTime Time = DateTime.Now;
+        private Thread newThread;                  // 新线程              
+        private string Show_cont;                  // 要在ShowCont窗口显示的内容
+        private TranMode tranMode;
+        private bool[] ShowWindow = { false, false };
+        FrmHomePage hp = new FrmHomePage();
+        FrmSetting setting = new FrmSetting();
 
 
         // 翻译模式（tran：截图翻译并显示，show：不截图翻译只显示）
@@ -93,6 +77,10 @@ namespace 截图翻译
 
         private void Exit(object sender, EventArgs e)
         {
+            for (int i = 0; i < 4; i++)
+            {
+                UnregisterHotKey(this.Handle, 1000 + i); // 卸载热键
+            }
             CloseThread(false);     // 关闭线程
             notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
             this.Dispose();
@@ -105,11 +93,11 @@ namespace 截图翻译
         {
             if (form == "首页")
             {
-                homePage.TopLevel = false;//取消顶级窗口
+                hp.TopLevel = false;//取消顶级窗口
                 // 设置要显示窗口的父容器为当前的选项卡页
-                homePage.Parent = ((TabControl)sender).SelectedTab;
-                homePage.Dock = DockStyle.Fill;
-                homePage.Show();//显示窗口
+                hp.Parent = ((TabControl)sender).SelectedTab;
+                hp.Dock = DockStyle.Fill;
+                hp.Show();//显示窗口
             }
             else
             {
@@ -119,7 +107,7 @@ namespace 截图翻译
                 setting.Dock = DockStyle.Fill;
                 setting.Show();//显示窗口
             }
-            showWindow[((TabControl)sender).SelectedIndex] = true;
+            ShowWindow[((TabControl)sender).SelectedIndex] = true;
         }
 
 
@@ -140,7 +128,7 @@ namespace 截图翻译
                 ConfigFile.ReadFile(FrmSetting.Names, ref FrmSetting.ReadValues);
 
                 // 注册热键
-                for (int i = 0; i < hotKeyNum; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     Keys key;
                     uint fun1 = 0, fun2 = 0;
@@ -169,28 +157,22 @@ namespace 截图翻译
                 }
 
                 // 翻译后延迟显示的时间（秒）
-                showTime = Convert.ToInt32(FrmSetting.ReadValues[5]);
+                ShowTime = Convert.ToInt32(FrmSetting.ReadValues[4]);
                 // 翻译后是否复制到剪切板
-                copySourceTextToClip = Convert.ToBoolean(FrmSetting.ReadValues[6]);
-                copyDestTextToClip = Convert.ToBoolean(FrmSetting.ReadValues[7]);
+                CopySourceTextToClip = Convert.ToBoolean(FrmSetting.ReadValues[5]);
+                CopyDestTextToClip = Convert.ToBoolean(FrmSetting.ReadValues[6]);
                 // 翻译后是否朗读译文
-                isSpeak = Convert.ToBoolean(FrmSetting.ReadValues[8]);
+                Speak = Convert.ToBoolean(FrmSetting.ReadValues[7]);
                 // 翻译源
-                sourceOfTran = FrmSetting.ReadValues[9];
-                // 固定截图翻译坐标
-                screenRect.X = Convert.ToInt32(FrmSetting.ReadValues[10]);
-                screenRect.Y = Convert.ToInt32(FrmSetting.ReadValues[11]);
-                screenRect.Width = Convert.ToInt32(FrmSetting.ReadValues[12]);
-                screenRect.Height = Convert.ToInt32(FrmSetting.ReadValues[13]);
+                SourceOfTran = FrmSetting.ReadValues[8];
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("加载配置文件错误，请重新设置！", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
 
-        // 获取功能键键值
         private uint GetKeyVal(string key)
         {
             switch (key.Trim().ToLower())
@@ -210,8 +192,9 @@ namespace 截图翻译
 
         private void RegHotKey(uint f1, uint f2, Keys k, int num)
         {
-            if (!RegisterHotKey(this.Handle, num, f1 | f2, k)) // 注册热键
+            if (!RegisterHotKey(this.Handle, num, (f1 | f2), k)) // 注册热键
             {   // 如果注册失败
+                UnregisterHotKey(this.Handle, num); // 卸载已注册的热键
                 throw new Exception("注册热键失败！");
             }
         }
@@ -228,51 +211,34 @@ namespace 截图翻译
 
             base.WndProc(ref m);
 
-            switch (m.WParam.ToString())
+            if (m.WParam.ToString() == "1000")      // 截图翻译
             {
-                case "1000": // 截图翻译
-                    {
-                        isFixedScreen = false;
-                        tranMode = TranMode.TranAndShowText;
-                        StartThread(null);
-                        this.WindowState = FormWindowState.Minimized;
-                        break;
-                    }
-                case "1001": // 切换英译中模式
-                    {
-                        if (!isEnToZh) // 如果当前翻译模式为 俄 译 中
-                        {
-                            showCont = "当前翻译模式：英译中";
-                            isEnToZh = true;
-                            tranMode = TranMode.ShowText; // 显示“当前模式：英译中”这句话
-                            StartThread(showCont);
-                        }
-                        break;
-                    }
-                case "1002": // 翻译
-                    {
-                        ShowTranForm();
-                        break;
-                    }
-                case "1003": // 切换俄译中模式
-                    {
-                        if (isEnToZh) // 如果当前翻译模式为 英 译 中
-                        {
-                            showCont = "当前翻译模式：俄译中";
-                            isEnToZh = false;
-                            tranMode = TranMode.ShowText;  // 显示“当前模式：x译中”这句话
-                            StartThread(showCont);
-                        }
-                        break;
-                    }
-                case "1004": // 固定区域截图翻译
-                    {
-                        isFixedScreen = true;
-                        tranMode = TranMode.TranAndShowText;
-                        StartThread(null);
-                        this.WindowState = FormWindowState.Minimized;
-                        break;
-                    }
+                tranMode = TranMode.TranAndShowText;
+                StartThread(null);
+            }
+            else if (m.WParam.ToString() == "1001") // 切换英译中模式
+            {
+                if (!EnToZh) // 如果当前翻译模式为 俄 译 中
+                {
+                    Show_cont = "当前翻译模式：英译中";
+                    EnToZh = true;
+                    tranMode = TranMode.ShowText; // 显示“当前模式：英译中”这句话
+                    StartThread(Show_cont);
+                }
+            }
+            else if (m.WParam.ToString() == "1002") // 翻译
+            {
+                ShowTranForm();
+            }
+            else if (m.WParam.ToString() == "1003") // 切换俄译中模式
+            {
+                if (EnToZh) // 如果当前翻译模式为 英 译 中
+                {
+                    Show_cont = "当前翻译模式：俄译中";
+                    EnToZh = false;
+                    tranMode = TranMode.ShowText;  // 显示“当前模式：x译中”这句话
+                    StartThread(Show_cont);
+                }
             }
 
             // base.WndProc(ref m);
@@ -282,7 +248,7 @@ namespace 截图翻译
         //切换显示的窗口
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!showWindow[tabControl1.SelectedIndex])//判断是否打开窗口
+            if (!ShowWindow[tabControl1.SelectedIndex])//判断是否打开窗口
                 CreateForm(((TabControl)sender).SelectedTab.Text.ToString(), sender);
         }
 
@@ -306,45 +272,27 @@ namespace 截图翻译
             {   // 截图翻译并显示
                 if (tranMode == TranMode.TranAndShowText)
                 {
-                    Thread.Sleep(200);
+                    // 显示截图窗口
+                    DialogResult result = shot.ShowDialog();
+                    // 如果文件不存在，则视为用户取消截图
+                    if (!File.Exists(savePath) || result == DialogResult.Cancel)
+                        return;
 
-                    // 如果是固定区域翻译（isFixedScreen = true则视为固定区域翻译）
-                    if (isFixedScreen == true)
-                    {
-                        if (screenRect.Width <= 0 || screenRect.Height <= 0)
-                            throw new Exception("请设置固定截图翻译坐标！");
-
-                        Screenshot(savePath, screenRect.X, screenRect.Y, screenRect.Width, screenRect.Height);
-
-                        // 如果文件不存在，则视为截图失败
-                        if (!File.Exists(savePath))
-                            throw new Exception("固定区域截图失败！");
-                    }
-                    else
-                    {
-                        // 显示截图窗口
-                        DialogResult result = shot.ShowDialog();
-
-                        // 如果文件不存在，则视为用户取消截图
-                        if (!File.Exists(savePath) || result == DialogResult.Cancel)
-                            return;
-                    }
-
-                    // 翻译模式isEnToZh=true为英译中，false为俄译中
-                    if (isEnToZh == false)
+                    // 翻译模式EnToZh=true为英译中，false为俄译中
+                    if (EnToZh == false)
                         from = "ru";
 
-                    // sourceOfTran有“有道”两字使用有道翻译，否则使用百度翻译
-                    if (sourceOfTran.IndexOf("有道") != -1)
+                    // SourceOfTran有“有道”两字使用有道翻译，否则使用百度翻译
+                    if (SourceOfTran.IndexOf("有道") != -1)
                         Youdao.YoudaoTran(savePath, from, "zh-CHS", out src, out dst);
                     else
                         Baidu.BaiduTran(savePath, from, "zh", out src, out dst);
 
-                    if (copySourceTextToClip)
+                    if (CopySourceTextToClip)
                         Clipboard.SetText(src);// 复制原文到剪切板
-                    if (copyDestTextToClip)
+                    if (CopyDestTextToClip)
                         Clipboard.SetText(dst);// 复制译文到剪切板
-                    if (isSpeak)
+                    if (Speak)
                     {
                         SpeechSynthesizer speech = new SpeechSynthesizer();
                         speech.Rate = 3;   // 语速
@@ -353,13 +301,13 @@ namespace 截图翻译
                 }
                 else
                 {
-                    dst = showCont;
+                    dst = Show_cont;
                 }
 
                 // 不为空
                 if (!string.IsNullOrEmpty(dst))
                 {
-                    using (FrmShowCont sc = new FrmShowCont(showTime))
+                    using (FrmShowCont sc = new FrmShowCont(ShowTime))
                     {
                         sc.ContText(dst);
                         sc.ShowDialog();
@@ -372,8 +320,8 @@ namespace 截图翻译
                     return;
 
                 dst = "错误：" + ex.Message;
-                // 显示错误
-                using (FrmShowCont sc = new FrmShowCont(showTime))
+
+                using (FrmShowCont sc = new FrmShowCont(ShowTime))
                 {
                     sc.ContText(dst);
                     sc.ShowDialog();
@@ -393,12 +341,12 @@ namespace 截图翻译
         private void StartThread(string cont)
         {
             // 如果此次按热键的时间距离上次不足300毫秒则忽略掉
-            if ((DateTime.Now - lastTime).TotalMilliseconds < 500)
+            if ((DateTime.Now - Time).TotalMilliseconds < 500)
             {
-                lastTime = DateTime.Now;
+                Time = DateTime.Now;
                 return;
             }
-            lastTime = DateTime.Now;
+            Time = DateTime.Now;
 
             // 显示提示内容
             if (cont != null)
@@ -419,7 +367,7 @@ namespace 截图翻译
 
 
         /// <summary>
-        /// 关闭线程
+        /// 关闭新线程
         /// </summary>
         /// <param name="checkState">此项为true则只返回线程的运行状态</param>
         /// <returns></returns>
@@ -448,46 +396,12 @@ namespace 截图翻译
         {
             try
             {
-                FrmTranslate ts = new FrmTranslate(sourceOfTran);
+                FrmTranslate ts = new FrmTranslate(SourceOfTran);
                 ts.Show();
             }
             catch
             {
                 ;
-            }
-        }
-
-
-        /// <summary>
-        /// 从指定坐标截取指定大小区域
-        /// </summary>
-        /// <param name="x">左上角横坐标</param>
-        /// <param name="y">左上角纵坐标</param>
-        /// <param name="width">宽度</param>
-        /// <param name="height">高度</param>
-        /// <returns></returns>
-        public static void Screenshot(string savePath, int x, int y, int width, int height)
-        {
-            Bitmap bit = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(bit);
-
-            try
-            {
-                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.CopyFromScreen(x, y, 0, 0, new Size(width, height));
-                bit.Save(savePath, ImageFormat.Bmp);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                g.Dispose();
-                bit.Dispose();
             }
         }
     }
