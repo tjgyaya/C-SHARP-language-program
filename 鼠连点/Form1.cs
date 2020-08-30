@@ -291,7 +291,7 @@ namespace 鼠连点
         // 显示关于窗口
         private void new_about(object sender, EventArgs e)
         {
-            About ab = new About();
+            About ab = new About(new Point(this.Location.X + this.Width / 2, this.Location.Y + this.Height / 2));
             ab.ShowDialog();
         }
 
@@ -326,13 +326,13 @@ namespace 鼠连点
         {
             try
             {
-                if(firstStart)
+                if (firstStart)
                 {
                     firstStart = false;
                     return;
                 }
                 UnregisterHotKey(this.Handle, HOT_KEY_ID); // 卸载热键
-                  //  throw new Exception("卸载热键失败！");
+                                                           //  throw new Exception("卸载热键失败！");
 
                 Keys key = (Keys)Enum.Parse(typeof(Keys), comboBox2_HotKey.SelectedItem.ToString());
                 if (!RegisterHotKey(this.Handle, HOT_KEY_ID, 0, key)) // 注册热键

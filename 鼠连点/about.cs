@@ -12,10 +12,12 @@ namespace 鼠连点
 {
     public partial class About : Form
     {
-        public About()
+        private Point local;
+        public About(Point p)
         {
             InitializeComponent();
-            pictureBox1.Image = imageList1.Images[0];//显示图片
+            pictureBox1.Image = imageList1.Images[0];//显示图片  
+            local = p;
         }
 
         /// <summary>
@@ -30,7 +32,12 @@ namespace 鼠连点
 
         private void linkLabel1_WebSite(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/cdmxz/C-SHARP-language-language-program");
+            System.Diagnostics.Process.Start("https://cdmxz.github.io");
+        }
+
+        private void About_Load(object sender, EventArgs e)
+        {
+            this.Location = new Point(local.X - this.Width / 2, local.Y - this.Height / 2);
         }
     }
 }
