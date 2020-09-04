@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +16,8 @@ namespace 自动进入钉钉直播
     public partial class FrmSetOCRKey : Form
     {
         private Point local;
-        private string apikeyPath;
+        private string apikeyPath = Path.Combine(Application.StartupPath + "\\", "apikey.txt");
+        private string OCR_KEYMth = Path.Combine(Application.StartupPath + "\\", "OCR_KEYMth.mht");
         public FrmSetOCRKey(int x, int y)
         {
             InitializeComponent();
@@ -39,7 +41,7 @@ namespace 自动进入钉钉直播
                 if (string.IsNullOrEmpty(textBox2_SecretKey.Text))
                     throw new Exception("SecretKey不能为空！");
 
-                string tmp;
+                string tmp = null;
                 OCR.GetAccessToken(out tmp, textBox1_APIKey.Text, textBox2_SecretKey.Text);
                 if (!string.IsNullOrEmpty(tmp))
                 {
@@ -61,24 +63,44 @@ namespace 自动进入钉钉直播
             if (local.X >= 0 && local.Y >= 0)
                 this.Location = local;
 
+            // 加载mth文件（教程）
+            try
+            {
+                if (!File.Exists(OCR_KEYMth))
+                {
+                    File.WriteAllBytes(OCR_KEYMth, Properties.Resources.OCR_KEY);// 将资源文件（*.mht）写入到磁盘
+                    FileInfo fi = new FileInfo(OCR_KEYMth);
+                    fi.Attributes = FileAttributes.Temporary | FileAttributes.Hidden;
+                }
+                webBrowser1.Navigate(OCR_KEYMth);                            // 用webBrowser控件加载“mth”文件
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             // 加载ApiKey文件
             DirectoryInfo dir = new DirectoryInfo(Application.StartupPath);
             FileInfo[] files = dir.GetFiles("*.txt");// 查找目录下时txt的文件
             foreach (var f in files)
             {
                 if (f.ToString().ToLower() == "apikey.txt")
-                {
-                    apikeyPath = Path.Combine(Application.StartupPath + "\\", "apikey.txt");
-                }
+                    apikeyPath = Path.Combine(Application.StartupPath + "\\", f.ToString());
             }
-
             if (!File.Exists(apikeyPath))
                 return;
-
             string ak, sk;
             OCR.ReadApiKeyFile(apikeyPath, out ak, out sk);
             textBox1_APIKey.Text = ak;
             textBox2_SecretKey.Text = sk;
+        }
+
+        private void FrmSetOCRKey_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (File.Exists(OCR_KEYMth))
+                File.Delete(OCR_KEYMth);
+            webBrowser1.Dispose();
+            this.Dispose();
         }
     }
 }

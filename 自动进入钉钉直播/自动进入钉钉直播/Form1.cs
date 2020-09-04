@@ -634,7 +634,14 @@ namespace 自动进入钉钉直播
             // 如果设置了阻止系统休眠
             if (checkBox13_preventSleep.Checked)
                 SetThreadExecutionState(ES_CONTINUOUS);// 清除执行状态标志以禁用离开模式并允许系统空闲以正常睡眠
-            Environment.Exit(0);
+            try
+            {
+                Environment.Exit(0);
+            }
+            catch
+            {
+                ;
+            }
         }
 
         /// <summary>
@@ -944,6 +951,7 @@ namespace 自动进入钉钉直播
         // 启动
         private void button5_Start_Click(object sender, EventArgs e)
         {
+          //  return;
             // 判断当前状态（启动|停止）
             if (start == false)
             {// 启动

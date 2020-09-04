@@ -373,7 +373,7 @@
             // 
             this.button7_SaveConfigFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7_SaveConfigFile.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button7_SaveConfigFile.Location = new System.Drawing.Point(100, 20);
+            this.button7_SaveConfigFile.Location = new System.Drawing.Point(95, 19);
             this.button7_SaveConfigFile.Name = "button7_SaveConfigFile";
             this.button7_SaveConfigFile.Size = new System.Drawing.Size(93, 25);
             this.button7_SaveConfigFile.TabIndex = 72;
@@ -386,7 +386,7 @@
             // 
             this.button6_delConfigFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6_delConfigFile.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button6_delConfigFile.Location = new System.Drawing.Point(100, 62);
+            this.button6_delConfigFile.Location = new System.Drawing.Point(95, 62);
             this.button6_delConfigFile.Name = "button6_delConfigFile";
             this.button6_delConfigFile.Size = new System.Drawing.Size(93, 25);
             this.button6_delConfigFile.TabIndex = 71;
@@ -401,7 +401,7 @@
             this.button2_AddStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2_AddStart.Location = new System.Drawing.Point(9, 19);
             this.button2_AddStart.Name = "button2_AddStart";
-            this.button2_AddStart.Size = new System.Drawing.Size(81, 25);
+            this.button2_AddStart.Size = new System.Drawing.Size(78, 25);
             this.button2_AddStart.TabIndex = 69;
             this.button2_AddStart.Text = "添加自启动";
             this.toolTip1.SetToolTip(this.button2_AddStart, "添加自启动后本软件将 会 在系统启动时自动启动");
@@ -414,7 +414,7 @@
             this.button3_DelStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3_DelStart.Location = new System.Drawing.Point(9, 62);
             this.button3_DelStart.Name = "button3_DelStart";
-            this.button3_DelStart.Size = new System.Drawing.Size(81, 25);
+            this.button3_DelStart.Size = new System.Drawing.Size(78, 25);
             this.button3_DelStart.TabIndex = 70;
             this.button3_DelStart.Text = "删除自启动";
             this.toolTip1.SetToolTip(this.button3_DelStart, "删除自启动后本软件将 不会 在系统启动时自动启动");
@@ -442,7 +442,7 @@
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
             this.label24.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label24.Location = new System.Drawing.Point(311, 393);
+            this.label24.Location = new System.Drawing.Point(311, 392);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(249, 38);
             this.label24.TabIndex = 69;
@@ -470,9 +470,9 @@
             // 
             this.button1_SetOCRKey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1_SetOCRKey.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button1_SetOCRKey.Location = new System.Drawing.Point(204, 22);
+            this.button1_SetOCRKey.Location = new System.Drawing.Point(196, 19);
             this.button1_SetOCRKey.Name = "button1_SetOCRKey";
-            this.button1_SetOCRKey.Size = new System.Drawing.Size(74, 25);
+            this.button1_SetOCRKey.Size = new System.Drawing.Size(79, 25);
             this.button1_SetOCRKey.TabIndex = 73;
             this.button1_SetOCRKey.Text = "OCR KEY";
             this.toolTip1.SetToolTip(this.button1_SetOCRKey, "设置文字识别Key，防止多人使用同一Key\r\n造成识别钉钉直播是否开启失效");
@@ -483,9 +483,9 @@
             // 
             this.button2_SetOCRKeyWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2_SetOCRKeyWord.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button2_SetOCRKeyWord.Location = new System.Drawing.Point(204, 62);
+            this.button2_SetOCRKeyWord.Location = new System.Drawing.Point(196, 62);
             this.button2_SetOCRKeyWord.Name = "button2_SetOCRKeyWord";
-            this.button2_SetOCRKeyWord.Size = new System.Drawing.Size(74, 25);
+            this.button2_SetOCRKeyWord.Size = new System.Drawing.Size(79, 25);
             this.button2_SetOCRKeyWord.TabIndex = 74;
             this.button2_SetOCRKeyWord.Text = "设置关键字";
             this.toolTip1.SetToolTip(this.button2_SetOCRKeyWord, "设置RGB识别数据和OCR识别关键字，\r\n提高识别钉钉直播是否开启的准确性。");
@@ -1197,7 +1197,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "自动进入钉钉直播V2.3.7";
+            this.Text = "自动进入钉钉直播V2.3.9";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);

@@ -49,10 +49,13 @@ namespace 自动进入钉钉直播
             }
 
             // 如果不能从桌面获取钉钉快捷方式
-            MessageBox.Show("无法从注册表和桌面获取钉钉路径，\n请手动选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）。", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            DialogResult result = MessageBox.Show("无法从注册表和桌面获取钉钉路径，\n请手动选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）。", "自动进入钉钉直播间", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Cancel)
+                return null;
+
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                dialog.Filter = "DingtalkLauncher.exe (*.exe)| DingtalkLauncher.exe";
+                dialog.Filter = "DingtalkLauncher.exe (*.exe)| *.exe";
                 dialog.Title = "请选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）";
                 dialog.DefaultExt = "exe";
                 dialog.AddExtension = true;
@@ -60,7 +63,7 @@ namespace 自动进入钉钉直播
                 dialog.CheckPathExists = true;
                 dialog.Multiselect = false;
 
-                DialogResult result = dialog.ShowDialog();
+                result = dialog.ShowDialog();
                 return result == DialogResult.OK ? dialog.FileName : null;
             }
 

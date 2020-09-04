@@ -96,14 +96,14 @@ namespace 自动进入钉钉直播
         // 获取AccessToken
         public static void GetAccessToken(out string token, string APIKey = null, string SecretKey = null)
         {
+            // 如果传入的密钥为空，则使用默认的密钥
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(SecretKey))
             {
                 APIKey = API_KEY;
                 SecretKey = SECRET_KEY;
             }
 
-            string host = "https://aip.baidubce.com/oauth/2.0/token";
-
+            string url = "https://aip.baidubce.com/oauth/2.0/token";
             List<KeyValuePair<string, string>> paraList = new List<KeyValuePair<string, string>>();
             paraList.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
             paraList.Add(new KeyValuePair<string, string>("client_id", APIKey));
@@ -114,7 +114,7 @@ namespace 自动进入钉钉直播
             string result;
             try
             {
-                response = client.PostAsync(host, new FormUrlEncodedContent(paraList)).Result;
+                response = client.PostAsync(url, new FormUrlEncodedContent(paraList)).Result;
                 result = response.Content.ReadAsStringAsync().Result;
             }
             catch (Exception ex)
@@ -146,7 +146,7 @@ namespace 自动进入钉钉直播
         // 调用百度API文字识别
         private static string GeneralBasic(string path)
         {
-            string host = null, token, result;
+            string url = null, token, result;
 
             // 获取文字识别AccessToken
             GetAccessToken(out token);
@@ -154,14 +154,14 @@ namespace 自动进入钉钉直播
             for (int i = 1; i < 4; i++)
             {
                 if (i == 1)
-                    host = general_basic_host + token;
+                    url = general_basic_host + token;
                 else if (i == 2)
-                    host = basic_host + token;
+                    url = basic_host + token;
                 else if (i == 3)
-                    host = accurate_host + token;
+                    url = accurate_host + token;
 
                 Encoding encoding = Encoding.Default;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "post";
                 request.KeepAlive = true;
 

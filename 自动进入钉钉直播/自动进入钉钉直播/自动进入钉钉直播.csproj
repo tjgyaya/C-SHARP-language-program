@@ -166,6 +166,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\OCR.mht" />
+    <None Include="Resources\OCR_KEY.mht" />
     <None Include="Resources\RGB.mht" />
   </ItemGroup>
   <ItemGroup>

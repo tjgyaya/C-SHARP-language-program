@@ -57,93 +57,82 @@ int ShowTop, int PositionX, int PositionY, int PreventSleep, string DingDingPath
             ref int Time8Start, ref string Time8Time, ref int ShowTop, ref int PositionX, ref int PositionY, ref int PreventSleep,
             ref string DingDingPath, string config_file_path)
         {
-            const int MAXSIZE = 260;
-            int ch, i = 0, j = 0;
-            char[] config = new char[MAXSIZE]; // 储存从文件读取的参数
+            int j = 0;
+            string config; // 储存从文件读取的参数
             FileStream fs = new FileStream(config_file_path, FileMode.Open, FileAccess.Read, FileShare.None);
+            StreamReader sr = new StreamReader(fs);
             try
             {
                 // 判断文件是否为空
                 if (fs.Length == 0)
                     throw new Exception("文件为空！");
 
-                while ((ch = fs.ReadByte()) != -1)
+                while ((config = sr.ReadLine()) != null)
                 {
-                    if (ch == '=')   //判断ch是否为“=”
+                    // 截取“=”到“;”内的参数
+                    if (config.IndexOf(" ") != -1)    // 删除空格
+                        config = config.Replace(" ", "");
+                    int begin, end;
+                    if ((begin = config.IndexOf("=")) != -1 && (end = config.LastIndexOf(";")) != -1)
                     {
-                        while ((ch = fs.ReadByte()) != ';')//读取“=”到“;”内的参数
-                        {
-                            if (ch == ' ' && NumberOfArrayElement(config) == 0)//判断ch是否为空格
-                            {
-                                i = 0;
-                                continue;//跳过此次循环，丢弃读取的空格
-                            }
-                            config[i] = (char)ch;
-                            i++;
-                        }
-                    }
+                        config = config.Substring(begin + 1, end - (begin + 1));
 
-                    if (ch == '\n')       //判断是否读到下一行
-                    {
                         if (j == 0)
-                            AutoOpenLive = Convert.ToInt32(new string(config)); //第一行的内容是中断直播时自动进入
+                            AutoOpenLive = Convert.ToInt32(config); //第一行的内容是中断直播时自动进入
                         else if (j == 1)
-                            CheckLive = Convert.ToInt32(new string(config));//第二行的内容是每隔xx秒检测是否中断直播
+                            CheckLive = Convert.ToInt32(config);//第二行的内容是每隔xx秒检测是否中断直播
                         else if (j == 2)
-                            StopCheckLive = Convert.ToInt32(new string(config)); //第三行的内容是xx分钟后还未检测到直播开启则中断检测
+                            StopCheckLive = Convert.ToInt32(config); //第三行的内容是xx分钟后还未检测到直播开启则中断检测
                         else if (j == 3)
-                            AutoOPenNextLive = Convert.ToInt32(new string(config));//第四行的内容是是否自动打开下一次直播
+                            AutoOPenNextLive = Convert.ToInt32(config);//第四行的内容是是否自动打开下一次直播
                         else if (j == 4)
-                            OpenLiveTime = Convert.ToInt32(new string(config));//第五行的内容是距离下一次直播还有xx分钟时自动进入
+                            OpenLiveTime = Convert.ToInt32(config);//第五行的内容是距离下一次直播还有xx分钟时自动进入
                         else if (j == 5)
-                            Time1Start = Convert.ToInt32(new string(config));//第六行的内容是时间一
+                            Time1Start = Convert.ToInt32(config);//第六行的内容是时间一
                         else if (j == 6)
-                            Time1Time = new string(config); //第七行的内容是时间一内容
+                            Time1Time = config.ToString(); //第七行的内容是时间一内容
                         else if (j == 7)
-                            Time2Start = Convert.ToInt32(new string(config));//第八行的内容是时间二 
+                            Time2Start = Convert.ToInt32(config);//第八行的内容是时间二 
                         else if (j == 8)
-                            Time2Time = new string(config);//第九行的内容是时间一内容
+                            Time2Time = config.ToString();//第九行的内容是时间一内容
                         else if (j == 9)
-                            Time3Start = Convert.ToInt32(new string(config)); //第十行的内容是时间三
+                            Time3Start = Convert.ToInt32(config); //第十行的内容是时间三
                         else if (j == 10)
-                            Time3Time = new string(config);//第十一行的内容是时间时间三内容
+                            Time3Time = config.ToString();//第十一行的内容是时间时间三内容
                         else if (j == 11)
-                            Time4Start = Convert.ToInt32(new string(config));//第十二行的内容是时间四
+                            Time4Start = Convert.ToInt32(config);//第十二行的内容是时间四
                         else if (j == 12)
-                            Time4Time = new string(config);//第十三行的内容是时间时间四内容
+                            Time4Time = config.ToString();//第十三行的内容是时间时间四内容
                         else if (j == 13)
-                            Time5Start = Convert.ToInt32(new string(config));//第十四行的内容是时间五
+                            Time5Start = Convert.ToInt32(config);//第十四行的内容是时间五
                         else if (j == 14)
-                            Time5Time = new string(config);//第十五行的内容是时间五内容
+                            Time5Time = config.ToString();//第十五行的内容是时间五内容
                         else if (j == 15)
-                            Time6Start = Convert.ToInt32(new string(config));//第十六行的内容是时间六
+                            Time6Start = Convert.ToInt32(config);//第十六行的内容是时间六
                         else if (j == 16)
-                            Time6Time = new string(config);//第十七行的内容是时间六内容
+                            Time6Time = config.ToString();//第十七行的内容是时间六内容
                         else if (j == 17)
-                            Time7Start = Convert.ToInt32(new string(config));//第十八行的内容是时间七
+                            Time7Start = Convert.ToInt32(config);//第十八行的内容是时间七
                         else if (j == 18)
-                            Time7Time = new string(config);//第十九行的内容是时间七内容
+                            Time7Time = config.ToString();//第十九行的内容是时间七内容
                         else if (j == 19)
-                            Time8Start = Convert.ToInt32(new string(config));//第20行的内容是时间八
+                            Time8Start = Convert.ToInt32(config);//第20行的内容是时间八
                         else if (j == 20)
-                            Time8Time = new string(config);//第21行的内容是时间八内容
+                            Time8Time = config.ToString();//第21行的内容是时间八内容
                         else if (j == 21)
-                            ShowTop = Convert.ToInt32(new string(config));//第22行的内容是钉钉始终显示在最顶层
+                            ShowTop = Convert.ToInt32(config);//第22行的内容是钉钉始终显示在最顶层
                         else if (j == 22)
-                            PositionX = Convert.ToInt32(new string(config)); //第23行的内容是主窗体x坐标
+                            PositionX = Convert.ToInt32(config); //第23行的内容是主窗体x坐标
                         else if (j == 23)
-                            PositionY = Convert.ToInt32(new string(config));//第24行的内容是主窗体y坐标       
+                            PositionY = Convert.ToInt32(config);//第24行的内容是主窗体y坐标       
                         else if (j == 24)
-                            PreventSleep = Convert.ToInt32(new string(config));//第25行的内容是 是否阻止系统休眠
+                            PreventSleep = Convert.ToInt32(config);//第25行的内容是 是否阻止系统休眠
                         else if (j == 25)
-                            DingDingPath = new string(config);//第26行的内容是 钉钉路径
+                            DingDingPath = config.ToString();//第26行的内容是 钉钉路径
                         else if (j == 26)
                             break;
 
                         j++;
-                        i = 0;
-                        //数组每次循环前清零
-                        Array.Clear(config, 0, config.Length);
                     }
                 }
 
@@ -164,6 +153,8 @@ int ShowTop, int PositionX, int PositionY, int PreventSleep, string DingDingPath
             }
             finally
             {
+                sr.Close();
+                sr.Dispose();
                 fs.Close();
                 fs.Dispose();
             }

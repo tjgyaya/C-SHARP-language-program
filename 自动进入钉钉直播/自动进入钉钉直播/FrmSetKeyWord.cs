@@ -115,6 +115,7 @@ namespace 自动进入钉钉直播
         {
             DelFile();
             webBrowser1.Dispose();
+            this.Dispose();
         }
 
         private void DelFile()
