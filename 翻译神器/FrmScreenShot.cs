@@ -19,6 +19,7 @@ namespace 翻译神器
 
             this.TopMost = true;
             this.WindowState = FormWindowState.Maximized;
+            this.Cursor = Cursors.Cross;
             InitializeComponent();
         }
 

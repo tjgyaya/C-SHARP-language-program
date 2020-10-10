@@ -18,6 +18,7 @@ namespace 翻译神器.SourceOfTranslation
     class Baidu
     {
         private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
+        private static string accurate_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=";
 
         /// <summary>
         /// 先调用百度文字识别再调用百度翻译API进行翻译
@@ -32,7 +33,7 @@ namespace 翻译神器.SourceOfTranslation
                 throw new Exception("请设置百度文字识别和翻译Key！");
 
             // 调用百度文字识别
-            string srcText = GeneralBasic(img);
+            string srcText = GeneralBasic(from, img);
             if (string.IsNullOrEmpty(srcText))
                 throw new Exception("识别内容为空");
 
@@ -104,8 +105,12 @@ namespace 翻译神器.SourceOfTranslation
         }
 
         // 调用百度API文字识别
-        private static string GeneralBasic(Image img)
+        private static string GeneralBasic(string from, Image img)
         {
+            if (from == "ru")
+                from = "RUS";
+            else
+                from = "CHN_ENG";
             // 获取文字识别AccessToken
             string token = GetAccessToken();
 
@@ -115,7 +120,7 @@ namespace 翻译神器.SourceOfTranslation
             request.KeepAlive = true;
 
             string base64 = ImageToBase64(img);
-            string str = "image=" + HttpUtility.UrlEncode(base64);
+            string str = "image=" + HttpUtility.UrlEncode(base64) + "&language_type=" + from;
             byte[] buffer = encoding.GetBytes(str);
             request.ContentLength = buffer.Length;
             request.GetRequestStream().Write(buffer, 0, buffer.Length);
@@ -153,7 +158,7 @@ namespace 翻译神器.SourceOfTranslation
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true;
