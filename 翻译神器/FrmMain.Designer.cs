@@ -52,7 +52,6 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.button_Reload = new System.Windows.Forms.Button();
             this.groupBox_FixedTran = new System.Windows.Forms.GroupBox();
             this.button_SetPosition = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
@@ -106,7 +105,8 @@
             this.textBox_FixedTranHotkey.ReadOnly = true;
             this.textBox_FixedTranHotkey.Size = new System.Drawing.Size(111, 23);
             this.textBox_FixedTranHotkey.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.textBox_FixedTranHotkey, "在固定区域截图并翻译");
+            this.toolTip1.SetToolTip(this.textBox_FixedTranHotkey, "左键双击清除热键");
+            this.textBox_FixedTranHotkey.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox_MouseDoubleClick);
             this.textBox_FixedTranHotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox_PreviewKeyDown);
             // 
             // label_FixedTranHotkey
@@ -127,7 +127,8 @@
             this.textBox_SwitchRuToCn.ReadOnly = true;
             this.textBox_SwitchRuToCn.Size = new System.Drawing.Size(112, 23);
             this.textBox_SwitchRuToCn.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.textBox_SwitchRuToCn, "切换翻译源和目标语言为俄语翻译中文");
+            this.toolTip1.SetToolTip(this.textBox_SwitchRuToCn, "左键双击清除热键");
+            this.textBox_SwitchRuToCn.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox_MouseDoubleClick);
             this.textBox_SwitchRuToCn.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox_PreviewKeyDown);
             // 
             // label_SwitchRuToCn
@@ -148,7 +149,8 @@
             this.textBox_SwitchEnToCn.ReadOnly = true;
             this.textBox_SwitchEnToCn.Size = new System.Drawing.Size(112, 23);
             this.textBox_SwitchEnToCn.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.textBox_SwitchEnToCn, "切换翻译源和目标语言为英语翻译中文");
+            this.toolTip1.SetToolTip(this.textBox_SwitchEnToCn, "左键双击清除热键");
+            this.textBox_SwitchEnToCn.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox_MouseDoubleClick);
             this.textBox_SwitchEnToCn.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox_PreviewKeyDown);
             // 
             // label_SwitchEnToCn
@@ -181,6 +183,7 @@
             this.groupBox_HotKey.TabIndex = 3;
             this.groupBox_HotKey.TabStop = false;
             this.groupBox_HotKey.Text = "热键";
+            this.toolTip1.SetToolTip(this.groupBox_HotKey, "左键双击热键框清除热键");
             // 
             // textBox_TranHotkey
             // 
@@ -190,7 +193,8 @@
             this.textBox_TranHotkey.ReadOnly = true;
             this.textBox_TranHotkey.Size = new System.Drawing.Size(111, 23);
             this.textBox_TranHotkey.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.textBox_TranHotkey, "显示翻译窗口");
+            this.toolTip1.SetToolTip(this.textBox_TranHotkey, "左键双击清除热键");
+            this.textBox_TranHotkey.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox_MouseDoubleClick);
             this.textBox_TranHotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox_PreviewKeyDown);
             // 
             // label_TranHotkey
@@ -211,7 +215,8 @@
             this.textBox_ScreenHotkey.ReadOnly = true;
             this.textBox_ScreenHotkey.Size = new System.Drawing.Size(111, 23);
             this.textBox_ScreenHotkey.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.textBox_ScreenHotkey, "鼠标拖动截图并显示翻译结果");
+            this.toolTip1.SetToolTip(this.textBox_ScreenHotkey, "左键双击清除热键");
+            this.textBox_ScreenHotkey.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox_MouseDoubleClick);
             this.textBox_ScreenHotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox_PreviewKeyDown);
             // 
             // label_ScreenHotkey
@@ -322,7 +327,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.button_Reload);
             this.tabPage2.Controls.Add(this.groupBox_FixedTran);
             this.tabPage2.Controls.Add(this.button_Save);
             this.tabPage2.Controls.Add(this.groupBox_Other);
@@ -334,23 +338,8 @@
             this.tabPage2.Size = new System.Drawing.Size(450, 359);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "设置";
+            this.toolTip1.SetToolTip(this.tabPage2, "切换到此页面时，热键不会生效");
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // button_Reload
-            // 
-            this.button_Reload.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button_Reload.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
-            this.button_Reload.FlatAppearance.BorderSize = 2;
-            this.button_Reload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_Reload.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold);
-            this.button_Reload.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.button_Reload.Location = new System.Drawing.Point(101, 314);
-            this.button_Reload.Name = "button_Reload";
-            this.button_Reload.Size = new System.Drawing.Size(100, 37);
-            this.button_Reload.TabIndex = 7;
-            this.button_Reload.Text = "重新加载";
-            this.button_Reload.UseVisualStyleBackColor = true;
-            this.button_Reload.Click += new System.EventHandler(this.button_Reload_Click);
             // 
             // groupBox_FixedTran
             // 
@@ -388,7 +377,7 @@
             this.button_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Save.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold);
             this.button_Save.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.button_Save.Location = new System.Drawing.Point(238, 314);
+            this.button_Save.Location = new System.Drawing.Point(174, 315);
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(100, 37);
             this.button_Save.TabIndex = 5;
@@ -514,7 +503,8 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(458, 389);
-            this.tabControl1.TabIndex = 1;
+            this.tabControl1.TabIndex = 3;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage3
             // 
@@ -813,7 +803,6 @@
         private System.Windows.Forms.TextBox textBox_YoudaoAppKey;
         private System.Windows.Forms.Label label_YoudaoAppSecret;
         private System.Windows.Forms.Label label_YoudaoAppKey;
-        private System.Windows.Forms.Button button_Reload;
     }
 }
 

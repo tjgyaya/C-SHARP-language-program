@@ -1,0 +1,13 @@
+G:\C#\C#源代码\翻译神器\翻译神器\bin\Debug\翻译神器.exe.config
+G:\C#\C#源代码\翻译神器\翻译神器\bin\Debug\翻译神器.exe
+G:\C#\C#源代码\翻译神器\翻译神器\bin\Debug\翻译神器.pdb
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.csprojAssemblyReference.cache
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.FrmMain.resources
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.FrmScreenShot.resources
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.FrmShowCont.resources
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.FrmTranslate.resources
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.Properties.Resources.resources
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.csproj.GenerateResource.cache
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.csproj.CoreCompileInputs.cache
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.exe
+G:\C#\C#源代码\翻译神器\翻译神器\obj\Debug\翻译神器.pdb

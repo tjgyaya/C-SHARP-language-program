@@ -87,6 +87,7 @@ namespace 翻译神器
         private bool isSpeak;                        // 翻译后是否朗读译文
         private bool isFixedScreen;                  // 是否为固定截图翻译
         private bool copySourceTextToClip, copyDestTextToClip;     // 翻译后是否复制到剪切板（源语言、目标语言）
+        private bool putOnTheHook;                   // 装上钩子
         private int showTime = 5;                    // 翻译后延迟显示翻译后内容的时间（单位：秒）
         private string sourceOfTran = "百度翻译";    // 翻译来源（可选 百度 或 有道）
         private DateTime lastTime = DateTime.Now;    // 记录上次热键按下时间，避免多次按下热键造成卡死闪退
@@ -182,18 +183,7 @@ namespace 翻译神器
                 DataRecovery();
                 if (reload)// 重新加载配置文件
                     UnRegHotKey();
-                // 注册热键
-                int i = 0, j = 0;
-                foreach (var item in config)
-                {
-                    if (j++ < 6)
-                        continue;
-                    if (i > 4)
-                        break;
-                    RegHotKey(item.Value, 1000 + i);
-                    i++;
-                }
-
+                RegHotKey();
             }
             catch (Exception ex)
             {
@@ -274,35 +264,50 @@ namespace 翻译神器
             return 0;
         }
 
-        private void RegHotKey(string hotKey, int id)
+        private void RegHotKey()
         {
+            // 注册热键
+            int i = 0, j = 0, id;
+            string hotKey;
             Keys key;
             uint fun1 = 0, fun2 = 0;
 
-            if (string.IsNullOrEmpty(hotKey))
-                return;
-
-            // 如果热键为空
-            string[] arr = hotKey.Split(',');
-
-            // 前一个键为单键（a-z）
-            key = (Keys)Enum.Parse(typeof(Keys), arr[0], true);
-            if (arr.Length == 3) // 三个键
+            foreach (var item in config)
             {
-                // 后两个键为功能键（ctrl、alt...）
-                fun1 = GetKeyVal(arr[1]);
-                fun2 = GetKeyVal(arr[2]);
+                if (j++ < 6)
+                    continue;
+                if (i > 4)
+                    break;
+
+                hotKey = item.Value;
+                id = 1000 + i;
+                i++;
+                if (string.IsNullOrEmpty(hotKey))
+                    continue;
+
+                // 如果热键为空
+                string[] arr = hotKey.Split(',');
+
+                // 前一个键为单键（a-z）
+                key = (Keys)Enum.Parse(typeof(Keys), arr[0], true);
+                if (arr.Length == 3) // 三个键
+                {
+                    // 后两个键为功能键（ctrl、alt...）
+                    fun1 = GetKeyVal(arr[1]);
+                    fun2 = GetKeyVal(arr[2]);
+                }
+                if (arr.Length == 2)// 两个键
+                {
+                    // 后一个键为功能键（ctrl、alt...）
+                    fun1 = GetKeyVal(arr[1]);
+                }
+                // 如果只有一个键就取第一个键就好了key = arr[0];
+                if (!Api.RegisterHotKey(this.Handle, id, fun1 | fun2, key)) // 注册热键
+                {   // 如果注册失败
+                    throw new Exception("注册热键失败！");
+                }
             }
-            if (arr.Length == 2)// 两个键
-            {
-                // 后一个键为功能键（ctrl、alt...）
-                fun1 = GetKeyVal(arr[1]);
-            }
-            // 如果只有一个键就取第一个键就好了key = arr[0];
-            if (!Api.RegisterHotKey(this.Handle, id, fun1 | fun2, key)) // 注册热键
-            {   // 如果注册失败
-                throw new Exception("注册热键失败！");
-            }
+            putOnTheHook = true;
         }
 
 
@@ -312,6 +317,7 @@ namespace 翻译神器
             {
                 Api.UnregisterHotKey(this.Handle, 1000 + i); // 卸载热键
             }
+            putOnTheHook = false;
         }
 
         // 通过监视系统消息，判断是否按下热键
@@ -322,8 +328,6 @@ namespace 翻译神器
                 base.WndProc(ref m);
                 return;
             }
-
-
 
             switch (m.WParam.ToString())
             {
@@ -416,7 +420,8 @@ namespace 翻译神器
 
                 InitDictionary();
                 ConfigFile.WriteFile(config);
-                MessageBox.Show("保存成功！\n重启软件后生效。", "保存成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("保存成功，立即生效！", "保存成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadFile(true);
             }
             catch (Exception ex)
             {
@@ -759,6 +764,21 @@ namespace 翻译神器
         private void button_Reload_Click(object sender, EventArgs e)
         {
             LoadFile(true);
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 1)
+            {
+                UnRegHotKey();
+            }
+            else if (!putOnTheHook)
+                RegHotKey();
+        }
+
+        private void textBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ((TextBox)sender).Text = "";
         }
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://ai.youdao.com/product-fanyi-picture.s");
