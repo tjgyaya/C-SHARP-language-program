@@ -67,8 +67,6 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string AppSecret;
-        //public static string AppKey = "6df1e6a7fbfcd42b";
-        //public static string AppSecret = "l3nfoha0QtyeYGhqo1DgmyMoSteuNEKS";
         public static bool IsEmptyOrNull
         {
             get
