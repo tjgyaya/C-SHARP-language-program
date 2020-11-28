@@ -140,6 +140,8 @@ namespace 鹰眼OCR
             checkBox_AddTextToEnd.Checked = Setting_Other.AddTextToEnd;
             checkBox_CopyText.Checked = Setting_Other.CopyText;
             checkBox_AutoTranslate.Checked = Setting_Other.AutoTranslate;
+            checkBox_ScreenSaveClip.Checked = Setting_Other.ScreenSaveClip;
+            checkBox_ExportToTXTFile.Checked = Setting_Other.ExportToTXTFile;
             textBox_SaveBaseDir.Text = Setting_Other.SaveBaseDir;
         }
         #endregion
@@ -240,6 +242,8 @@ namespace 鹰眼OCR
             ConfigFile.WriteFile(Setting_Other.AutoTranslate_KeyName, checkBox_AutoTranslate.Checked.ToString());
             ConfigFile.WriteFile(Setting_Other.SaveBaseDir_KeyName, textBox_SaveBaseDir.Text.Trim(' ', '\\'));
             ConfigFile.WriteFile(Setting_Other.PdfDelayTime_KeyName, ((int)numericUpDown_DelayTime.Value).ToString());
+            ConfigFile.WriteFile(Setting_Other.ExportToTXTFile_KeyName, checkBox_ExportToTXTFile.Checked.ToString());
+            ConfigFile.WriteFile(Setting_Other.ScreenSaveClip_KeyName, checkBox_ScreenSaveClip.Checked.ToString());
         }
         #endregion
 
@@ -391,9 +395,9 @@ namespace 鹰眼OCR
         // 保存窗口类名和窗口标题
         private void SaveWindowNameAndWindowClass()
         {
-            if (string.IsNullOrEmpty(textBox_WindowClass.Text) && string.IsNullOrEmpty(textBox_WindowName.Text))
-                throw new Exception("\n请填写 窗口标题 或 窗口类名！");
-            else if (!string.IsNullOrEmpty(textBox_WindowClass.Text) && !string.IsNullOrEmpty(textBox_WindowName.Text))
+            //if (string.IsNullOrEmpty(textBox_WindowClass.Text) && string.IsNullOrEmpty(textBox_WindowName.Text))
+            //    throw new Exception("\n请填写 窗口标题 或 窗口类名！");
+            if (!string.IsNullOrEmpty(textBox_WindowClass.Text) && !string.IsNullOrEmpty(textBox_WindowName.Text))
                 throw new Exception("\n请不要同时填写 窗口标题 或 窗口类名！");
             else
             {
@@ -407,27 +411,41 @@ namespace 鹰眼OCR
         {
             bool change = HideWindow();// 隐藏窗口
             FrmScreenShot shot = null;
+            IntPtr hwnd = IntPtr.Zero;
             try
             {
                 SaveWindowNameAndWindowClass();
-                // 通过窗口类名或窗口标题获的窗口句柄
-                IntPtr hwnd = Api.FindWindowHandle(FixedScreen.WindowName, FixedScreen.WindowClass);
-                // 激活目标窗口，让目标窗口显示在最前方
-                Api.SetForegroundWindow(hwnd);
-                Thread.Sleep(300);// 延时，等待窗口显示到最前方
+                if (!FixedScreen.WindowNameAndClassIsNull)
+                {
+                    // 通过窗口类名或窗口标题获的窗口句柄
+                    hwnd = Api.FindWindowHandle(FixedScreen.WindowName, FixedScreen.WindowClass);
+                    // 激活目标窗口，让目标窗口显示在最前方
+                    Api.SetForegroundWindow(hwnd);
+                    Thread.Sleep(300);// 延时，等待窗口显示到最前方
 
-                shot = new FrmScreenShot();
-                shot.WindowHandle = hwnd;
+                    shot = new FrmScreenShot();
+                    shot.WindowHandle = hwnd;
+                }
+                else
+                    shot = new FrmScreenShot();
+
                 // 显示截图窗口
                 if (shot.ShowDialog() == DialogResult.Cancel)
                     return;
-                Api.POINT p = new Api.POINT();
-                p.X = shot.StartPos.X;
-                p.Y = shot.StartPos.Y;
-                // 屏幕坐标转为客户端窗口坐标
-                Api.ScreenToClient(hwnd, ref p);
-                // 保存截图坐标高宽
-                screenRect = new Rectangle(p.X, p.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
+
+                if (!FixedScreen.WindowNameAndClassIsNull)
+                {
+                    Api.POINT p = new Api.POINT();
+                    p.X = shot.StartPos.X;
+                    p.Y = shot.StartPos.Y;
+                    // 屏幕坐标转为客户端窗口坐标
+                    Api.ScreenToClient(hwnd, ref p);
+                    // 保存截图坐标高宽
+                    screenRect = new Rectangle(p.X, p.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
+                }
+                else
+                    // 保存截图坐标高宽
+                    screenRect = new Rectangle(shot.StartPos.X, shot.StartPos.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
                 if (shot.SelectedArea.Width > 0 && shot.SelectedArea.Height > 0)
                     MessageBox.Show("设置成功！\n请点击“保存”按钮。", "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace 鹰眼OCR.PDF
 {
     // 保存完一页时
-    public delegate void SaveOnePageDelegate(Image img, int pageNumber, string langType);
+    public delegate void SaveOnePageDelegate(Image img, int pageNumber);
 
     class PdfToImage
     {
         public SaveOnePageDelegate SaveOnePage { get; set; }
 
-        public void ToImage(string fileName, int sleepTime, string langType)
+        public void ToImage(string fileName, int sleepTime)
         {
             sleepTime = sleepTime <= 0 ? 100 : sleepTime;
             if (!File.Exists(fileName))
@@ -30,7 +30,7 @@ namespace 鹰眼OCR.PDF
                     int h = (int)pdf.PageSizes[i - 1].Height;
                     Size size = new Size(w, h);
                     using (Image img = GetPdfImage(fileName, i, size))
-                        SaveOnePage?.Invoke(img, i, langType);// 保存完一页时调用委托
+                        SaveOnePage?.Invoke(img, i);// 保存完一页时调用委托
                     System.Threading.Thread.Sleep(sleepTime);
                 }
             }

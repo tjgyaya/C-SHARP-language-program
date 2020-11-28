@@ -89,7 +89,7 @@ namespace 鹰眼OCR
 
         private void FrmScreenShot_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == 27)
+            if (e.KeyCode == Keys.Escape)
                 Cancel();
         }
 
@@ -252,6 +252,11 @@ namespace 鹰眼OCR
             {
                 IsMyDisposed = true;
             }
+        }
+
+        private void FrmScreenShot_Shown(object sender, EventArgs e)
+        {
+            this.Activate();
         }
     }
 }

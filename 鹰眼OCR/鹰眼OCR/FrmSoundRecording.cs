@@ -15,6 +15,9 @@ using 鹰眼OCR.Audio;
 
 namespace 鹰眼OCR
 {
+    // 语音识别委托
+    public delegate void SpeechRecognitionHandler();
+
     public partial class FrmSoundRecording : Form
     {
         public SpeechRecognitionHandler SpeechRecognition { get; set; }
@@ -39,7 +42,16 @@ namespace 鹰眼OCR
         /// </summary>
         public int SamplingRate { get; set; }
 
-        public string[] SpeechLang { get; set; }
+        private string[] _SpeechLang;
+        public string[] SpeechLang
+        {
+            get { return _SpeechLang; }
+            set
+            {
+                _SpeechLang = value;
+                RefreshLanguage(_SpeechLang);
+            }
+        }
 
         public int MaxSec { get; set; }
 
@@ -75,7 +87,7 @@ namespace 鹰眼OCR
             }
             catch (Exception ex)
             {
-                if(!Setting_Other.SaveRecord)
+                if (!Setting_Other.SaveRecord)
                 {
                     if (Directory.Exists(Path.GetDirectoryName(FileName)))
                         Directory.Delete(Path.GetDirectoryName(FileName));
@@ -158,20 +170,7 @@ namespace 鹰眼OCR
 
         private void FrmSoundRecording_Load(object sender, EventArgs e)
         {
-            try
-            {
-                if (SpeechLang != null)
-                {
-                    comboBox_Lang.Items.Clear();
-                    comboBox_Lang.Items.AddRange(SpeechLang);
-                }
-                comboBox_Lang.SelectedIndex = 0;
-                this.Location = Position;
-            }
-            catch (Exception ex)
-            {
-                label3.Text = ex.Message;
-            }
+            this.Location = Position;
         }
 
         private void timer1_RecordingTime_Tick(object sender, EventArgs e)
@@ -196,6 +195,22 @@ namespace 鹰眼OCR
         private void comboBox_Lang_SelectedIndexChanged(object sender, EventArgs e)
         {
             RecordLang = comboBox_Lang.SelectedItem.ToString();
+        }
+
+        public void RefreshLanguage(string[] lang)
+        {
+            if (lang == null)
+                return;
+            try
+            {
+                comboBox_Lang.Items.Clear();
+                comboBox_Lang.Items.AddRange(lang);
+                comboBox_Lang.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                label3.Text = ex.Message;
+            }
         }
     }
 }

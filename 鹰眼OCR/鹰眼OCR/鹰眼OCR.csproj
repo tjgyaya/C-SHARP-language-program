@@ -186,6 +186,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OCR\Youdao.cs" />
+    <Compile Include="Screenshot.cs" />
     <EmbeddedResource Include="FrmFind.resx">
       <DependentUpon>FrmFind.cs</DependentUpon>
     </EmbeddedResource>

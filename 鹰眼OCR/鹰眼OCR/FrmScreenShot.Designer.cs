@@ -43,6 +43,7 @@
             this.Name = "FrmScreenShot";
             this.Text = "截图";
             this.TopMost = true;
+            this.Shown += new System.EventHandler(this.FrmScreenShot_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FrmScreenShot_Paint);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmScreenShot_KeyUp);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.FrmScreenShot_MouseClick);

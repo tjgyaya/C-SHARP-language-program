@@ -133,6 +133,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.从右到左的顺序toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel_Top = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.label_BugSubmission = new System.Windows.Forms.Label();
             this.label_Course = new System.Windows.Forms.Label();
             this.label_SoftwareName = new System.Windows.Forms.Label();
@@ -158,7 +159,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.label2 = new System.Windows.Forms.Label();
             this.panel_Back.SuspendLayout();
             this.panel_Main.SuspendLayout();
             this.menu_richTextBox1.SuspendLayout();
@@ -1300,6 +1300,19 @@
             this.panel_Top.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseDown);
             this.panel_Top.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseMove);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label2.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.Location = new System.Drawing.Point(332, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(65, 19);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "吾爱破解";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
             // label_BugSubmission
             // 
             this.label_BugSubmission.AutoSize = true;
@@ -1334,7 +1347,7 @@
             this.label_SoftwareName.Name = "label_SoftwareName";
             this.label_SoftwareName.Size = new System.Drawing.Size(136, 38);
             this.label_SoftwareName.TabIndex = 1;
-            this.label_SoftwareName.Text = "鹰眼OCR  V1.0";
+            this.label_SoftwareName.Text = "鹰眼OCR  V2.0";
             this.label_SoftwareName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox_Icon
@@ -1487,19 +1500,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label2.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(332, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 19);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "吾爱破解";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // MainForm
             // 
