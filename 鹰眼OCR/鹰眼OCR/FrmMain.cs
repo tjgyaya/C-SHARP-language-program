@@ -43,6 +43,15 @@ namespace 鹰眼OCR
         public static string CorrectionAK;
         public static string CorrectionSK;
 
+        //public static string ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
+        //public static string SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
+        //public static string TTS_ApiKey = "qk3y9G2FQLrQsCa9v9NzzW8h";
+        //public static string TTS_SecretKey = "qtYsvvdEGgQ6EzxVSFuYRvl8NmzVihy1";
+        //public static string AppId = "20200424000429104";
+        //public static string Password = "5mzyraBsLRk2yfGQMhXJ";
+        //public static string CorrectionAK = "O26bQOVrdh4SOeLeogaDCel3";
+        //public static string CorrectionSK = "EGiBPCkZtG4S0u8QlpCZUYiIfGCYhwji";
+
         public static bool IsEmptyOrNull
         {
             get
@@ -60,6 +69,8 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string AppSecret;
+        //public static string AppKey = "6df1e6a7fbfcd42b";
+        //public static string AppSecret = "l3nfoha0QtyeYGhqo1DgmyMoSteuNEKS";
         public static bool IsEmptyOrNull
         {
             get
@@ -77,6 +88,8 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string SecretKey;
+        //public static string AppKey = "9e605eb8912049a99c065688dc253b06";
+        //public static string SecretKey = "3d189c46e3bdec0659221530c3726643";
 
         public static bool IsEmptyOrNull
         {
@@ -400,10 +413,16 @@ namespace 鹰眼OCR
         }
 
         #region 点击左上角的图标时打开网站
+        //private void pictureBox_Icon_MouseClick(object sender, MouseEventArgs e)
+        //{ }
+        //private void label_Course_Click(object sender, EventArgs e)
+        //{ }
+        //private void label_BugSubmission_Click(object sender, EventArgs e)
+        //{ }
+        private void label2_Click(object sender, EventArgs e) => OpenUrl("https://www.52pojie.cn/thread-1315991-1-1.html");
         private void pictureBox_Icon_MouseClick(object sender, MouseEventArgs e) => OpenUrl("https://fuhohua.gitee.io");
         private void label_Course_Click(object sender, EventArgs e) => OpenUrl("https://shimo.im/docs/WWQBEvdJF2MRdTVM/");
         private void label_BugSubmission_Click(object sender, EventArgs e) => OpenUrl("http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=XW5pb2VvbG9sZWgdLCxzPjIw");
-        private void label2_Click(object sender, EventArgs e) => OpenUrl("https://www.52pojie.cn/thread-1315991-1-1.html");
         #endregion
 
         #region 工具栏菜单
@@ -602,7 +621,12 @@ namespace 鹰眼OCR
         {
             try
             {
-                label_BugSubmission.Visible = false;
+                //label_Course.Visible = false;
+                //label_BugSubmission.Visible = false;
+
+                #region 吾爱
+                label2.Visible = false;  
+                #endregion
                 InitPath();
                 if (!File.Exists(SavePath.ConfigPath))
                     return;
@@ -2058,6 +2082,25 @@ namespace 鹰眼OCR
         {
             if (!File.Exists(SavePath.ConfigPath))
                 MessageBox.Show("请先点击右上角设置按钮，设置文件识别Key。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                AutoUpdate autoUpdate = new AutoUpdate();
+                if (autoUpdate.GetUpdate())
+                {
+                    DialogResult result = MessageBox.Show("本软件有新版本，是否更新？", "更新提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        autoUpdate.ParsingURL(autoUpdate.FileUrl, out string url, out string psd);
+                        OpenUrl(url);
+                        Clipboard.SetText(psd);
+                        MessageBox.Show("密码已复制到剪切板。", "更新提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                return;
+            }
         }
 
         // 固定截图

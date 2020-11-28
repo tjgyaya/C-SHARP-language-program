@@ -133,6 +133,7 @@
     <Compile Include="Api.cs" />
     <Compile Include="Audio\Recorder.cs" />
     <Compile Include="Audio\WavInfo.cs" />
+    <Compile Include="AutoUpdate.cs" />
     <Compile Include="ConfigFile.cs" />
     <Compile Include="FrmFind.cs">
       <SubType>Form</SubType>

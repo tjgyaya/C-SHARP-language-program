@@ -37,6 +37,15 @@ namespace 鹰眼OCR
                 this.Width = (int)(770 * g.DpiX / 96);
             }
             listBox_Menu.SelectedIndex = 1;
+
+            //linkLabelBaiduOCRUrl.Visible = false;
+            //linkLabel_BaiduTTSUrl.Visible = false;
+            //linkLabel_BaiduTranUrl.Visible = false;
+            //linkLabel_BaiduCorrectionUrl.Visible = false;
+            //linkLabel_YoudaoUrl.Visible = false;
+            //linkLabel_JingDongUrl.Visible = false;
+            //linkLabel_Help.Visible = false;
+            //label11.Text += "请查看教程文档";
         }
 
         private void FrmSetting_Load(object sender, EventArgs e)
@@ -46,6 +55,21 @@ namespace 鹰眼OCR
             ReadOther();
             this.Location = Position;
         }
+
+        //private void linkLabelBaiduOCRUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
+        //private void linkLabel_BaiduTTSUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
+        //private void linkLabel_BaiduTranUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
+        //private void linkLabel_BaiduCorrectionUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
+        //private void linkLabel_YoudaoUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
+        //private void linkLabel_JingDongUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
+        //private void linkLabel_Help_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
+
 
         private void linkLabelBaiduOCRUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => OpenUrl("https://ai.baidu.com/tech/ocr/general");
 
