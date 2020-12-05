@@ -16,13 +16,13 @@
         "Entry"
         {
         "MsmKey" = "8:_09941C49D1B2609B488CF7A8BE480FA1"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_30A38312AD70C629A92294328BD177BE"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -33,32 +33,26 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_579D071DA47E9A6DD0580A4B540EB2DC"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_5ADB540DB55FABB9A812C2FE76408F06"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_790461CF950A5C930D588A81973F6530"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_8BF90C2D3BB09373E968366B210490F6"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,7 +70,7 @@
         "Entry"
         {
         "MsmKey" = "8:_9F368B54CBB87F7EF46B46011C106FA7"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,7 +82,7 @@
         "Entry"
         {
         "MsmKey" = "8:_A3C4A020A05B58B9093E16FD5494533E"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -99,14 +93,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B746F4E1531E484AB1C9C9CCB90B3070"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_D16ADBD8D43DB9B390B510FD6EE54DDC"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D16ADBD8D43DB9B390B510FD6EE54DDC"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "MsmKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -118,13 +112,13 @@
         "Entry"
         {
         "MsmKey" = "8:_E6974EA6EC111B12E39198355A056743"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_ED4C36E79EB92130AFEEDA9C96FAEFDC"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -159,14 +153,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_46D39634966740898E0D94C54DC7F3C0"
+        "MsmKey" = "8:_F2F083F8D7B64CC9ABB3DE9563D2E6CE"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A5D30B7132D34A69AEC431EBEC6E04F0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -609,26 +609,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B746F4E1531E484AB1C9C9CCB90B3070"
-            {
-            "SourcePath" = "8:..\\鹰眼OCR\\bin\\Release\\x86\\pdfium.dll"
-            "TargetName" = "8:pdfium.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_E9D07AFCAE5F4E078D298A15DA059E1F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D16ADBD8D43DB9B390B510FD6EE54DDC"
             {
             "AssemblyRegister" = "3:1"
@@ -742,6 +722,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2F083F8D7B64CC9ABB3DE9563D2E6CE"
+            {
+            "SourcePath" = "8:..\\鹰眼OCR\\bin\\Release\\pdfium.dll"
+            "TargetName" = "8:pdfium.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_2CD4B5A000F841BDA30EF550D5DC3E91"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -780,17 +780,6 @@
                         {
                         }
                     }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_E9D07AFCAE5F4E078D298A15DA059E1F"
-                    {
-                    "Name" = "8:x86"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_A2E667F2E0F149CA9BD9E51DDC2A1354"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_8A0DBA45AF754234A5DB1B70D2BCB3B6"
@@ -821,7 +810,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:鹰眼OCR"
         "ProductCode" = "8:{F476010F-B3E7-414C-9FE9-B4A15CB73ADE}"
-        "PackageCode" = "8:{8F032FE3-5ED3-4374-BA63-6043888CD8FC}"
+        "PackageCode" = "8:{17FB7398-8499-42E5-84BE-8E72418B49A4}"
         "UpgradeCode" = "8:{88849826-C029-4D3E-AFC2-6E0AEE07C44D}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -941,7 +930,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_54ECFBE0709842318C9B52A74260AB53"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_83D031584C144F5FB089F6A8FDC091CB"
             {
             "Name" = "8:鹰眼OCR"
             "Arguments" = "8:"
@@ -949,13 +938,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_46D39634966740898E0D94C54DC7F3C0"
+            "Target" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
             "Folder" = "8:_1A4BF5038AB3462CBDD9B9734576B50D"
             "WorkingFolder" = "8:_2CD4B5A000F841BDA30EF550D5DC3E91"
             "Icon" = "8:_F023747CF5E64E869EA95ABD741EC40F"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_85974B262DB04EB19AA408F37A9BF79C"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_F46430E437944E098056CFDCDCCA32DD"
             {
             "Name" = "8:鹰眼OCR"
             "Arguments" = "8:"
@@ -963,7 +952,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_46D39634966740898E0D94C54DC7F3C0"
+            "Target" = "8:_DB5D85C86AC54D98BB45445AFD47403A"
             "Folder" = "8:_8A0DBA45AF754234A5DB1B70D2BCB3B6"
             "WorkingFolder" = "8:_2CD4B5A000F841BDA30EF550D5DC3E91"
             "Icon" = "8:_F023747CF5E64E869EA95ABD741EC40F"
@@ -1368,7 +1357,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_46D39634966740898E0D94C54DC7F3C0"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DB5D85C86AC54D98BB45445AFD47403A"
             {
             "SourcePath" = "8:..\\鹰眼OCR\\obj\\Release\\鹰眼OCR.exe"
             "TargetName" = "8:"
