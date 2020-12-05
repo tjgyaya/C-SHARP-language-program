@@ -4,7 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -14,7 +16,12 @@ namespace 鹰眼OCR.OCR
 {
     class JingDong
     {
-        public static string Post(string url, byte[] buffer, string contentType = null, WebHeaderCollection headers = null, string appkey = null, string secretkey = null)
+        static JingDong()
+        {
+            // 避免错误：基础连接已经关闭: 未能为 SSL/TLS 安全通道建立信任关系。
+            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(RemoteCertificateValidate);
+        }
+        private static string Post(string url, byte[] buffer, string contentType = null, WebHeaderCollection headers = null, string appkey = null, string secretkey = null)
         {
             string ak = appkey ?? JingDongKey.AppKey;
             string sk = secretkey ?? JingDongKey.SecretKey;
@@ -124,7 +131,7 @@ namespace 鹰眼OCR.OCR
         {
             string url = "https://aiapi.jd.com/jdai/ocr_universal";
             byte[] bArr = WebExt.ImageToBytes(img);
-            string result = Post(url:url, buffer:bArr, contentType: null, headers: null, appkey: appkey, secretkey: secretkey);
+            string result = Post(url: url, buffer: bArr, contentType: null, headers: null, appkey: appkey, secretkey: secretkey);
             return GeneralParseJSON(result);
         }
 
@@ -237,10 +244,15 @@ namespace 鹰眼OCR.OCR
             return WebExt.GetMD5(sk + ts);
         }
 
-        public static string TimeSpan()
+        private static string TimeSpan()
         {
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return Convert.ToString((long)ts.TotalMilliseconds);
+        }
+
+        private static bool RemoteCertificateValidate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        {   // 总是接受  
+            return true;
         }
     }
 
