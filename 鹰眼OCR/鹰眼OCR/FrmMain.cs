@@ -42,7 +42,6 @@ namespace 鹰眼OCR
         public static string Password;
         public static string CorrectionAK;
         public static string CorrectionSK;
-
         public static bool IsEmptyOrNull
         {
             get
@@ -59,7 +58,7 @@ namespace 鹰眼OCR
     public struct YoudaoKey
     {
         public static string AppKey;
-        public static string AppSecret;;
+        public static string AppSecret;
         public static bool IsEmptyOrNull
         {
             get
@@ -77,7 +76,6 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string SecretKey;
-
         public static bool IsEmptyOrNull
         {
             get
@@ -1033,8 +1031,9 @@ namespace 鹰眼OCR
                 {
                     pdfToImage.ToImage(fileName, Setting_Other.PdfDelayTime);
                 }
-                catch
+                catch(Exception ex)
                 {
+                    RefreshLog(ex.Message);
                     return;
                 }
             });

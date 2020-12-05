@@ -14,11 +14,13 @@ namespace 鹰眼OCR.OCR
 {
     class JingDong
     {
-        public static string Post(string url, byte[] buffer, string contentType = null, WebHeaderCollection headers = null)
+        public static string Post(string url, byte[] buffer, string contentType = null, WebHeaderCollection headers = null, string appkey = null, string secretkey = null)
         {
+            string ak = appkey ?? JingDongKey.AppKey;
+            string sk = secretkey ?? JingDongKey.SecretKey;
             string timeSpan = TimeSpan();
-            string sign = GetSign(JingDongKey.SecretKey, timeSpan);
-            url += "?appkey=" + JingDongKey.AppKey + "&timestamp=" + timeSpan + "&sign=" + sign;
+            string sign = GetSign(sk, timeSpan);
+            url += "?appkey=" + ak + "&timestamp=" + timeSpan + "&sign=" + sign;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "post";
             request.Timeout = 30_000;// 30秒超时
@@ -118,11 +120,11 @@ namespace 鹰眼OCR.OCR
             return str;
         }
 
-        public static string GeneralBasic(Image img)
+        public static string GeneralBasic(Image img, string appkey = null, string secretkey = null)
         {
             string url = "https://aiapi.jd.com/jdai/ocr_universal";
             byte[] bArr = WebExt.ImageToBytes(img);
-            string result = Post(url, bArr);
+            string result = Post(url:url, buffer:bArr, contentType: null, headers: null, appkey: appkey, secretkey: secretkey);
             return GeneralParseJSON(result);
         }
 

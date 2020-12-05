@@ -305,7 +305,7 @@ namespace 鹰眼OCR
         {
             try
             {
-                Baidu.Translate("百度翻译测试", "中文", "英语");
+                Baidu.Translate("翻译测试", "中文", "英语", textBox_BaiduTranId.Text, textBox_BaiduTranPw.Text);
                 MessageBox.Show("测试成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -319,7 +319,7 @@ namespace 鹰眼OCR
         {
             try
             {
-                Baidu.ErrorCorrection("百度是一家人工只能公司", out string srcText, out string correctQuery);
+                Baidu.GetAccessToken(textBox_BaiduCorrectionAk.Text, textBox_BaiduCorrectionSk.Text);
                 MessageBox.Show("测试成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -336,7 +336,7 @@ namespace 鹰眼OCR
                 DialogResult result = MessageBox.Show("即将调用有道OCR识别接口并发送一张图片进行测试\r\n一定会导致扣费。\r\n\t\t一定会导致扣费，是否继续？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    Youdao.GeneralBasic(Properties.Resources.OCR测试图片);
+                    Youdao.GeneralBasic(Properties.Resources.OCR测试图片, textBox_YoudaoAK.Text, textBox_YoudaoSK.Text);
                     MessageBox.Show("测试成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -351,7 +351,7 @@ namespace 鹰眼OCR
         {
             try
             {
-                JingDong.GeneralBasic(Properties.Resources.OCR测试图片);
+                JingDong.GeneralBasic(Properties.Resources.OCR测试图片, textBox_JingDongAk.Text, textBox_JingDongSk.Text);
                 MessageBox.Show("测试成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

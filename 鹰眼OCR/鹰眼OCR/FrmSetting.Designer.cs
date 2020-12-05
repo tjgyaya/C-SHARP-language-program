@@ -136,7 +136,7 @@
             this.button_SaveSetting.BackColor = System.Drawing.Color.LightGreen;
             this.button_SaveSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_SaveSetting.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_SaveSetting.Location = new System.Drawing.Point(639, 260);
+            this.button_SaveSetting.Location = new System.Drawing.Point(661, 260);
             this.button_SaveSetting.Name = "button_SaveSetting";
             this.button_SaveSetting.Size = new System.Drawing.Size(63, 30);
             this.button_SaveSetting.TabIndex = 10;
@@ -553,7 +553,7 @@
             this.button_Cancel.BackColor = System.Drawing.Color.LightGreen;
             this.button_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button_Cancel.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_Cancel.Location = new System.Drawing.Point(556, 260);
+            this.button_Cancel.Location = new System.Drawing.Point(577, 260);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(63, 30);
             this.button_Cancel.TabIndex = 11;
@@ -647,7 +647,7 @@
             this.panel_Main.Location = new System.Drawing.Point(63, 4);
             this.panel_Main.Margin = new System.Windows.Forms.Padding(0);
             this.panel_Main.Name = "panel_Main";
-            this.panel_Main.Size = new System.Drawing.Size(661, 253);
+            this.panel_Main.Size = new System.Drawing.Size(670, 253);
             this.panel_Main.TabIndex = 1;
             // 
             // panel_About
@@ -934,7 +934,7 @@
             this.panel_Key.Location = new System.Drawing.Point(-1, 0);
             this.panel_Key.Margin = new System.Windows.Forms.Padding(0);
             this.panel_Key.Name = "panel_Key";
-            this.panel_Key.Size = new System.Drawing.Size(639, 252);
+            this.panel_Key.Size = new System.Drawing.Size(652, 252);
             this.panel_Key.TabIndex = 0;
             // 
             // linkLabel_Help
@@ -1199,7 +1199,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(724, 293);
+            this.ClientSize = new System.Drawing.Size(742, 293);
             this.Controls.Add(this.button_Cancel);
             this.Controls.Add(this.panel_Main);
             this.Controls.Add(this.button_SaveSetting);

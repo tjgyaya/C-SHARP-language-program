@@ -22,14 +22,16 @@ namespace 鹰眼OCR.OCR
         /// <param name="srcText">源文本</param>
         /// <param name="from">源语言</param>
         /// <param name="to">目标语言</param>
-        public static string Translate(string srcText, string from, string to)
+        public static string Translate(string srcText, string from, string to, string appid = null, string password = null)
         {
             string salt = DateTime.Now.Millisecond.ToString();
+            string id = appid ?? BaiduKey.AppId;
+            string psd = password ?? BaiduKey.Password;
             // 签名
-            string sign = GetTranslateMD5(BaiduKey.AppId + srcText + salt + BaiduKey.Password);
+            string sign = GetTranslateMD5(id + srcText + salt + psd);
             string url = "https://fanyi-api.baidu.com/api/trans/vip/translate";
             string str = string.Format($"q={HttpUtility.UrlEncode(srcText)}&from={GetTranLang(from)}&to={GetTranLang(to)}" +
-                 $"&appid={BaiduKey.AppId}&salt={salt}&sign={sign}");
+                 $"&appid={id}&salt={salt}&sign={sign}");
             string result = WebExt.Request(url, null, str);
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
             BaiduTranslate list = js.Deserialize<BaiduTranslate>(result);  // 将json数据转化为对象类型并赋值给list
@@ -214,8 +216,8 @@ namespace 鹰眼OCR.OCR
         public static string GetAccessToken(string apikey = null, string secretkey = null)
         {
             string host = "https://aip.baidubce.com/oauth/2.0/token";
-            string ak = string.IsNullOrEmpty(apikey) ? BaiduKey.ApiKey : apikey;
-            string sk = string.IsNullOrEmpty(secretkey) ? BaiduKey.SecretKey : secretkey;
+            string ak = apikey ?? BaiduKey.ApiKey;
+            string sk = secretkey ?? BaiduKey.SecretKey;
             string str = string.Format($"grant_type=client_credentials&client_id={ak}&client_secret={sk}");
             string result = WebExt.Request(host, "", str);
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类

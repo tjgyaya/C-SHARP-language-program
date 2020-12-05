@@ -72,15 +72,17 @@ namespace 鹰眼OCR
         /// <param name="path"></param>
         /// <param name="img"></param>
         /// <returns>解析后的数据</returns>
-        public static string GeneralBasic(Image img)
+        public static string GeneralBasic(Image img, string appKey = null, string appSecret = null)
         {
+            string ak = appKey ?? YoudaoKey.AppKey;
+            string secret = appSecret ?? YoudaoKey.AppSecret;
             string url = "https://openapi.youdao.com/ocrapi";
             string base64 = WebExt.ImageToBase64(img);
             string salt = DateTime.Now.Millisecond.ToString();
             string curTime = WebExt.GetTimeSpan();
-            string sign = ComputeHash(YoudaoKey.AppKey + Truncate(base64) + salt + curTime + YoudaoKey.AppSecret);
+            string sign = ComputeHash(ak + Truncate(base64) + salt + curTime + secret);
             string str = string.Format($"img={HttpUtility.UrlEncode(base64)}" +
-                $"&langType=auto&detectType=10012&imageType=1&appKey={YoudaoKey.AppKey}" +
+                $"&langType=auto&detectType=10012&imageType=1&appKey={ak}" +
                 $"&salt={salt}&sign={sign}&docType=json&signType=v3&curtime={curTime}");
             string result = WebExt.Request(url, null, str);
             // 解析json数据
