@@ -10,23 +10,6 @@ namespace 鹰眼OCR
 {
     class Api
     {
-        [DllImport("user32.dll")]
-        public static extern int GetAsyncKeyState(int vKey);
-
-        public const int VK_LBUTTON = 0x01;
-        public const int VK_RBUTTON = 0x02;
-
-        [DllImport("user32.dll")]
-        public extern static uint MapVirtualKey(uint uCode, uint uMapType);
-
-        public const int KEYEVENTF_KEYUP = 0x0002; // 释放按键
-        public const int MAPVK_VK_TO_VSC = 0;      // 虚拟密钥代码转换为扫描代码
-
-
-        [DllImport("user32.dll")]
-        public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
-
-
         [DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
         public static extern bool SetForegroundWindow(IntPtr hwnd);
 

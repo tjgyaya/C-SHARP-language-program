@@ -182,7 +182,7 @@
     <Compile Include="OCR\JingDong.cs" />
     <Compile Include="OCR\WebExt.cs" />
     <Compile Include="Audio\PlayAudio.cs" />
-    <Compile Include="PDF\PdfToImage.cs" />
+    <Compile Include="PDF\PDFOperation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OCR\Youdao.cs" />

@@ -42,6 +42,16 @@ namespace 鹰眼OCR
         public static string Password;
         public static string CorrectionAK;
         public static string CorrectionSK;
+
+        //public static string ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
+        //public static string SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
+        //public static string TTS_ApiKey = "qk3y9G2FQLrQsCa9v9NzzW8h";
+        //public static string TTS_SecretKey = "qtYsvvdEGgQ6EzxVSFuYRvl8NmzVihy1";
+        //public static string AppId = "20200424000429104";
+        //public static string Password = "5mzyraBsLRk2yfGQMhXJ";
+        //public static string CorrectionAK = "O26bQOVrdh4SOeLeogaDCel3";
+        //public static string CorrectionSK = "EGiBPCkZtG4S0u8QlpCZUYiIfGCYhwji";
+
         public static bool IsEmptyOrNull
         {
             get
@@ -59,6 +69,8 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string AppSecret;
+        //public static string AppKey = "6df1e6a7fbfcd42b";
+        //public static string AppSecret = "l3nfoha0QtyeYGhqo1DgmyMoSteuNEKS";
         public static bool IsEmptyOrNull
         {
             get
@@ -76,6 +88,9 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string SecretKey;
+        //public static string AppKey = "9e605eb8912049a99c065688dc253b06";
+        //public static string SecretKey = "3d189c46e3bdec0659221530c3726643";
+
         public static bool IsEmptyOrNull
         {
             get
@@ -254,7 +269,7 @@ namespace 鹰眼OCR
             toolStripComboBox_LangType.SelectedIndex = 0;
 
             playAudio.PlayStopped += new PlayStoppedHandler(PlayStopped);
-            pdfToImage.SaveOnePage += new SaveOnePageDelegate(PdfCallback);
+            pdfToImage.GetOnePageEvent += PdfCallback;
         }
 
         private Image CaptureImage
@@ -276,7 +291,7 @@ namespace 鹰眼OCR
         private FrmScreenShot shot;         // 截图窗体
         private FrmFind frmFind;            // 查找窗体
         private PlayAudio playAudio = new PlayAudio();// 播放mp3
-        private PdfToImage pdfToImage = new PdfToImage();
+        private PDFOperation.PdfToImage pdfToImage = new PDFOperation.PdfToImage();
         private SavePath savePath;
         private string speakUrl, speakFileName; // 有翻译下载的音频文件的链接
         private bool isEnToZh, first = true;
@@ -1001,7 +1016,14 @@ namespace 鹰眼OCR
         // pdf识别
         private void RecognitionPdf(string fileName)
         {
-            StartPDFThread(fileName);
+            try
+            {
+                StartPDFThread(fileName);
+            }
+            catch (Exception ex)
+            {
+                RefreshLog(ex.Message);
+            }
         }
 
         private bool ThreadIsRunning(Thread thread)
@@ -1023,6 +1045,8 @@ namespace 鹰眼OCR
         private void StartPDFThread(string fileName)
         {   // 启动新线程
             CloseThread(PDFThread);
+            if (!PDFOperation.IsPDFile(fileName))
+                throw new Exception("不是PDF文件！");
             if (!Setting_Other.AddTextToEnd)
                 richTextBox1.Clear();
             PDFThread = new Thread(() =>

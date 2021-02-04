@@ -237,7 +237,7 @@ namespace 鹰眼OCR
                 case "日文":
                     return "ja";
                 case "韩文":
-                    return "ja";
+                    return "ko";
                 default:
                     return "zh-CHS";
             }
