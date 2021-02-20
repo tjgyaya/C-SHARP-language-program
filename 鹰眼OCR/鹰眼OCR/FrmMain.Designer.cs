@@ -35,11 +35,6 @@
             this.comboBox_DestLang = new System.Windows.Forms.ComboBox();
             this.comboBox_SelectTranApi = new System.Windows.Forms.ComboBox();
             this.button_Translate = new System.Windows.Forms.Button();
-            this.button_SwitchTranLang = new System.Windows.Forms.Button();
-            this.button_Setting = new System.Windows.Forms.Button();
-            this.button_TopMost = new System.Windows.Forms.Button();
-            this.button_Close = new System.Windows.Forms.Button();
-            this.button_Minimize = new System.Windows.Forms.Button();
             this.panel_Back = new System.Windows.Forms.Panel();
             this.panel_Main = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -78,6 +73,47 @@
             this.toolStripLabel6 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBox_People = new System.Windows.Forms.ToolStripComboBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.panel_Translate = new System.Windows.Forms.Panel();
+            this.button_CloseTranslate = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.menu_richTextBox2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.导出ToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.撤销toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.剪切ToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.复制toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除DToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.全部清除toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.全选toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.从右到左的顺序toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel_Top = new System.Windows.Forms.Panel();
+            this.label_BugSubmission = new System.Windows.Forms.Label();
+            this.label_Course = new System.Windows.Forms.Label();
+            this.label_SoftwareName = new System.Windows.Forms.Label();
+            this.panel_line = new System.Windows.Forms.Panel();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusLabel_wordNum = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusLabel_Log = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menu_speechRecognition = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.百度接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.学而思接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_tts = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_ocr = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.百度接口ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.腾讯接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.有道接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.搜狗接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.学而思接口ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.toolStripButton_Import = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_Export = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_Photograph = new System.Windows.Forms.ToolStripButton();
@@ -115,50 +151,13 @@
             this.百度语音合成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.京东语音合成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.本地语音合成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel_Translate = new System.Windows.Forms.Panel();
             this.button_PlayDestText = new System.Windows.Forms.Button();
-            this.button_CloseTranslate = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.menu_richTextBox2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.导出ToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.撤销toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.剪切ToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.复制toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.删除DToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.全部清除toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.全选toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.从右到左的顺序toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel_Top = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label_BugSubmission = new System.Windows.Forms.Label();
-            this.label_Course = new System.Windows.Forms.Label();
-            this.label_SoftwareName = new System.Windows.Forms.Label();
+            this.button_SwitchTranLang = new System.Windows.Forms.Button();
+            this.button_Setting = new System.Windows.Forms.Button();
+            this.button_TopMost = new System.Windows.Forms.Button();
+            this.button_Close = new System.Windows.Forms.Button();
+            this.button_Minimize = new System.Windows.Forms.Button();
             this.pictureBox_Icon = new System.Windows.Forms.PictureBox();
-            this.panel_line = new System.Windows.Forms.Panel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLabel_wordNum = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLabel_Log = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menu_speechRecognition = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.百度接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.学而思接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu_tts = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu_ocr = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.百度接口ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.腾讯接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.有道接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.搜狗接口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.学而思接口ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.panel_Back.SuspendLayout();
             this.panel_Main.SuspendLayout();
             this.menu_richTextBox1.SuspendLayout();
@@ -167,11 +166,11 @@
             this.panel_Translate.SuspendLayout();
             this.menu_richTextBox2.SuspendLayout();
             this.panel_Top.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Icon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menu_speechRecognition.SuspendLayout();
             this.menu_tts.SuspendLayout();
             this.menu_ocr.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Icon)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox_SourceLang
@@ -231,84 +230,6 @@
             this.toolTip1.SetToolTip(this.button_Translate, "翻译");
             this.button_Translate.UseVisualStyleBackColor = false;
             this.button_Translate.Click += new System.EventHandler(this.button_Translate_Click);
-            // 
-            // button_SwitchTranLang
-            // 
-            this.button_SwitchTranLang.BackColor = System.Drawing.Color.White;
-            this.button_SwitchTranLang.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_SwitchTranLang.FlatAppearance.BorderSize = 0;
-            this.button_SwitchTranLang.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_SwitchTranLang.Image = global::鹰眼OCR.Properties.Resources.切换;
-            this.button_SwitchTranLang.Location = new System.Drawing.Point(156, 1);
-            this.button_SwitchTranLang.Name = "button_SwitchTranLang";
-            this.button_SwitchTranLang.Size = new System.Drawing.Size(81, 26);
-            this.button_SwitchTranLang.TabIndex = 10;
-            this.toolTip1.SetToolTip(this.button_SwitchTranLang, "切换源语言和目标语言");
-            this.button_SwitchTranLang.UseVisualStyleBackColor = false;
-            this.button_SwitchTranLang.Click += new System.EventHandler(this.button_SwitchTranLang_Click);
-            // 
-            // button_Setting
-            // 
-            this.button_Setting.BackColor = System.Drawing.Color.Transparent;
-            this.button_Setting.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_Setting.FlatAppearance.BorderSize = 0;
-            this.button_Setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_Setting.Image = global::鹰眼OCR.Properties.Resources.设置;
-            this.button_Setting.Location = new System.Drawing.Point(672, -1);
-            this.button_Setting.Name = "button_Setting";
-            this.button_Setting.Size = new System.Drawing.Size(47, 39);
-            this.button_Setting.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.button_Setting, "设置");
-            this.button_Setting.UseVisualStyleBackColor = false;
-            this.button_Setting.Click += new System.EventHandler(this.button_Setting_Click);
-            // 
-            // button_TopMost
-            // 
-            this.button_TopMost.BackColor = System.Drawing.Color.Transparent;
-            this.button_TopMost.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_TopMost.FlatAppearance.BorderSize = 0;
-            this.button_TopMost.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_TopMost.Image = global::鹰眼OCR.Properties.Resources.顶置;
-            this.button_TopMost.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button_TopMost.Location = new System.Drawing.Point(619, -1);
-            this.button_TopMost.Name = "button_TopMost";
-            this.button_TopMost.Size = new System.Drawing.Size(47, 39);
-            this.button_TopMost.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.button_TopMost, "顶置窗口");
-            this.button_TopMost.UseVisualStyleBackColor = false;
-            this.button_TopMost.Click += new System.EventHandler(this.button_TopMost_Click);
-            // 
-            // button_Close
-            // 
-            this.button_Close.BackColor = System.Drawing.Color.Transparent;
-            this.button_Close.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_Close.FlatAppearance.BorderSize = 0;
-            this.button_Close.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
-            this.button_Close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_Close.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button_Close.Image = global::鹰眼OCR.Properties.Resources.关闭;
-            this.button_Close.Location = new System.Drawing.Point(791, -1);
-            this.button_Close.Name = "button_Close";
-            this.button_Close.Size = new System.Drawing.Size(59, 39);
-            this.button_Close.TabIndex = 4;
-            this.toolTip1.SetToolTip(this.button_Close, "关闭");
-            this.button_Close.UseVisualStyleBackColor = false;
-            this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
-            // 
-            // button_Minimize
-            // 
-            this.button_Minimize.BackColor = System.Drawing.Color.Transparent;
-            this.button_Minimize.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_Minimize.FlatAppearance.BorderSize = 0;
-            this.button_Minimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_Minimize.Image = global::鹰眼OCR.Properties.Resources.最小化;
-            this.button_Minimize.Location = new System.Drawing.Point(737, -1);
-            this.button_Minimize.Name = "button_Minimize";
-            this.button_Minimize.Size = new System.Drawing.Size(47, 39);
-            this.button_Minimize.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.button_Minimize, "最小化");
-            this.button_Minimize.UseVisualStyleBackColor = false;
-            this.button_Minimize.Click += new System.EventHandler(this.button_Minimize_Click);
             // 
             // panel_Back
             // 
@@ -747,6 +668,353 @@
             this.toolStrip1.TabIndex = 12;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // panel_Translate
+            // 
+            this.panel_Translate.BackColor = System.Drawing.SystemColors.Control;
+            this.panel_Translate.Controls.Add(this.button_PlayDestText);
+            this.panel_Translate.Controls.Add(this.button_CloseTranslate);
+            this.panel_Translate.Controls.Add(this.button_SwitchTranLang);
+            this.panel_Translate.Controls.Add(this.button_Translate);
+            this.panel_Translate.Controls.Add(this.label1);
+            this.panel_Translate.Controls.Add(this.comboBox_SelectTranApi);
+            this.panel_Translate.Controls.Add(this.comboBox_DestLang);
+            this.panel_Translate.Controls.Add(this.comboBox_SourceLang);
+            this.panel_Translate.Controls.Add(this.richTextBox2);
+            this.panel_Translate.Location = new System.Drawing.Point(433, 42);
+            this.panel_Translate.Name = "panel_Translate";
+            this.panel_Translate.Size = new System.Drawing.Size(418, 445);
+            this.panel_Translate.TabIndex = 3;
+            // 
+            // button_CloseTranslate
+            // 
+            this.button_CloseTranslate.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.button_CloseTranslate.FlatAppearance.BorderSize = 0;
+            this.button_CloseTranslate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_CloseTranslate.Font = new System.Drawing.Font("微软雅黑", 11F);
+            this.button_CloseTranslate.ForeColor = System.Drawing.Color.White;
+            this.button_CloseTranslate.Location = new System.Drawing.Point(1, 0);
+            this.button_CloseTranslate.Name = "button_CloseTranslate";
+            this.button_CloseTranslate.Size = new System.Drawing.Size(52, 33);
+            this.button_CloseTranslate.TabIndex = 22;
+            this.button_CloseTranslate.Text = "关闭";
+            this.button_CloseTranslate.UseVisualStyleBackColor = false;
+            this.button_CloseTranslate.Click += new System.EventHandler(this.button_CloseTranslate_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.ForeColor = System.Drawing.Color.Coral;
+            this.label1.Location = new System.Drawing.Point(134, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(130, 36);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "左边输入待翻译的文本\r\n右边输出翻译后的文本\r\n";
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.AcceptsTab = true;
+            this.richTextBox2.BackColor = System.Drawing.Color.White;
+            this.richTextBox2.ContextMenuStrip = this.menu_richTextBox2;
+            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.richTextBox2.Font = new System.Drawing.Font("微软雅黑", 10F);
+            this.richTextBox2.HideSelection = false;
+            this.richTextBox2.Location = new System.Drawing.Point(0, 64);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
+            this.richTextBox2.MaxLength = 0;
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.richTextBox2.ShowSelectionMargin = true;
+            this.richTextBox2.Size = new System.Drawing.Size(418, 381);
+            this.richTextBox2.TabIndex = 15;
+            this.richTextBox2.Text = "";
+            this.richTextBox2.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox_LinkClicked);
+            // 
+            // menu_richTextBox2
+            // 
+            this.menu_richTextBox2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.导出ToolStripMenuItem2,
+            this.撤销toolStripMenuItem2,
+            this.toolStripSeparator3,
+            this.剪切ToolStripMenuItem2,
+            this.复制toolStripMenuItem2,
+            this.删除DToolStripMenuItem2,
+            this.全部清除toolStripMenuItem2,
+            this.toolStripSeparator4,
+            this.全选toolStripMenuItem2,
+            this.toolStripSeparator5,
+            this.从右到左的顺序toolStripMenuItem2});
+            this.menu_richTextBox2.Name = "contextMenuStrip1";
+            this.menu_richTextBox2.Size = new System.Drawing.Size(177, 198);
+            // 
+            // 导出ToolStripMenuItem2
+            // 
+            this.导出ToolStripMenuItem2.Name = "导出ToolStripMenuItem2";
+            this.导出ToolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.导出ToolStripMenuItem2.Text = "导出(&E)";
+            this.导出ToolStripMenuItem2.Click += new System.EventHandler(this.导出ToolStripMenuItem2_Click);
+            // 
+            // 撤销toolStripMenuItem2
+            // 
+            this.撤销toolStripMenuItem2.Name = "撤销toolStripMenuItem2";
+            this.撤销toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.撤销toolStripMenuItem2.Text = "撤销(&U)";
+            this.撤销toolStripMenuItem2.Click += new System.EventHandler(this.撤销toolStripMenuItem2_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
+            // 
+            // 剪切ToolStripMenuItem2
+            // 
+            this.剪切ToolStripMenuItem2.Name = "剪切ToolStripMenuItem2";
+            this.剪切ToolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.剪切ToolStripMenuItem2.Text = "剪切(&T)";
+            this.剪切ToolStripMenuItem2.Click += new System.EventHandler(this.剪切toolStripMenuItem2_Click);
+            // 
+            // 复制toolStripMenuItem2
+            // 
+            this.复制toolStripMenuItem2.Name = "复制toolStripMenuItem2";
+            this.复制toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.复制toolStripMenuItem2.Text = "复制(&C)";
+            this.复制toolStripMenuItem2.Click += new System.EventHandler(this.复制toolStripMenuItem2_Click);
+            // 
+            // 删除DToolStripMenuItem2
+            // 
+            this.删除DToolStripMenuItem2.Name = "删除DToolStripMenuItem2";
+            this.删除DToolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.删除DToolStripMenuItem2.Text = "删除(&D)";
+            this.删除DToolStripMenuItem2.Click += new System.EventHandler(this.删除toolStripMenuItem2_Click);
+            // 
+            // 全部清除toolStripMenuItem2
+            // 
+            this.全部清除toolStripMenuItem2.Name = "全部清除toolStripMenuItem2";
+            this.全部清除toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.全部清除toolStripMenuItem2.Text = "全部清除";
+            this.全部清除toolStripMenuItem2.Click += new System.EventHandler(this.全部清除toolStripMenuItem2_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(173, 6);
+            // 
+            // 全选toolStripMenuItem2
+            // 
+            this.全选toolStripMenuItem2.Name = "全选toolStripMenuItem2";
+            this.全选toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.全选toolStripMenuItem2.Text = "全选(&A)";
+            this.全选toolStripMenuItem2.Click += new System.EventHandler(this.全选toolStripMenuItem2_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(173, 6);
+            // 
+            // 从右到左的顺序toolStripMenuItem2
+            // 
+            this.从右到左的顺序toolStripMenuItem2.Name = "从右到左的顺序toolStripMenuItem2";
+            this.从右到左的顺序toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
+            this.从右到左的顺序toolStripMenuItem2.Text = "从右到左的顺序(&R)";
+            this.从右到左的顺序toolStripMenuItem2.Click += new System.EventHandler(this.从右到左的顺序toolStripMenuItem2_Click);
+            // 
+            // panel_Top
+            // 
+            this.panel_Top.Controls.Add(this.label_BugSubmission);
+            this.panel_Top.Controls.Add(this.label_Course);
+            this.panel_Top.Controls.Add(this.button_Setting);
+            this.panel_Top.Controls.Add(this.button_TopMost);
+            this.panel_Top.Controls.Add(this.button_Close);
+            this.panel_Top.Controls.Add(this.button_Minimize);
+            this.panel_Top.Controls.Add(this.label_SoftwareName);
+            this.panel_Top.Controls.Add(this.pictureBox_Icon);
+            this.panel_Top.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel_Top.Location = new System.Drawing.Point(0, 0);
+            this.panel_Top.Name = "panel_Top";
+            this.panel_Top.Size = new System.Drawing.Size(850, 39);
+            this.panel_Top.TabIndex = 15;
+            this.panel_Top.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseDown);
+            this.panel_Top.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseMove);
+            // 
+            // label_BugSubmission
+            // 
+            this.label_BugSubmission.AutoSize = true;
+            this.label_BugSubmission.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label_BugSubmission.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label_BugSubmission.ForeColor = System.Drawing.Color.DarkOrange;
+            this.label_BugSubmission.Location = new System.Drawing.Point(257, 16);
+            this.label_BugSubmission.Name = "label_BugSubmission";
+            this.label_BugSubmission.Size = new System.Drawing.Size(69, 19);
+            this.label_BugSubmission.TabIndex = 9;
+            this.label_BugSubmission.Text = "BUG提交";
+            this.label_BugSubmission.Click += new System.EventHandler(this.label_BugSubmission_Click);
+            // 
+            // label_Course
+            // 
+            this.label_Course.AutoSize = true;
+            this.label_Course.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label_Course.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label_Course.ForeColor = System.Drawing.Color.LimeGreen;
+            this.label_Course.Location = new System.Drawing.Point(186, 16);
+            this.label_Course.Name = "label_Course";
+            this.label_Course.Size = new System.Drawing.Size(65, 19);
+            this.label_Course.TabIndex = 8;
+            this.label_Course.Text = "使用教程";
+            this.label_Course.Click += new System.EventHandler(this.label_Course_Click);
+            // 
+            // label_SoftwareName
+            // 
+            this.label_SoftwareName.Font = new System.Drawing.Font("微软雅黑", 12.5F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label_SoftwareName.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label_SoftwareName.Location = new System.Drawing.Point(49, -1);
+            this.label_SoftwareName.Name = "label_SoftwareName";
+            this.label_SoftwareName.Size = new System.Drawing.Size(136, 38);
+            this.label_SoftwareName.TabIndex = 1;
+            this.label_SoftwareName.Text = "鹰眼OCR  V2.0";
+            this.label_SoftwareName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel_line
+            // 
+            this.panel_line.BackColor = System.Drawing.Color.DimGray;
+            this.panel_line.Location = new System.Drawing.Point(-1, 39);
+            this.panel_line.Name = "panel_line";
+            this.panel_line.Size = new System.Drawing.Size(852, 1);
+            this.panel_line.TabIndex = 16;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.statusLabel_wordNum,
+            this.toolStripStatusLabel3,
+            this.statusLabel_Log});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 490);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
+            this.statusStrip1.Size = new System.Drawing.Size(850, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 14;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(12, 3, 0, 2);
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(56, 17);
+            this.toolStripStatusLabel1.Text = "字符数：";
+            // 
+            // statusLabel_wordNum
+            // 
+            this.statusLabel_wordNum.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.statusLabel_wordNum.Name = "statusLabel_wordNum";
+            this.statusLabel_wordNum.Size = new System.Drawing.Size(15, 17);
+            this.statusLabel_wordNum.Text = "0";
+            // 
+            // toolStripStatusLabel3
+            // 
+            this.toolStripStatusLabel3.Margin = new System.Windows.Forms.Padding(50, 3, 0, 2);
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(44, 17);
+            this.toolStripStatusLabel3.Text = "日志：";
+            // 
+            // statusLabel_Log
+            // 
+            this.statusLabel_Log.Name = "statusLabel_Log";
+            this.statusLabel_Log.Size = new System.Drawing.Size(20, 17);
+            this.statusLabel_Log.Text = "无";
+            // 
+            // menu_speechRecognition
+            // 
+            this.menu_speechRecognition.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.menu_speechRecognition.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.百度接口ToolStripMenuItem,
+            this.学而思接口ToolStripMenuItem});
+            this.menu_speechRecognition.Name = "menu_speechRecognition";
+            this.menu_speechRecognition.Size = new System.Drawing.Size(137, 48);
+            // 
+            // 百度接口ToolStripMenuItem
+            // 
+            this.百度接口ToolStripMenuItem.Name = "百度接口ToolStripMenuItem";
+            this.百度接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.百度接口ToolStripMenuItem.Text = "百度接口";
+            // 
+            // 学而思接口ToolStripMenuItem
+            // 
+            this.学而思接口ToolStripMenuItem.Name = "学而思接口ToolStripMenuItem";
+            this.学而思接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.学而思接口ToolStripMenuItem.Text = "学而思接口";
+            // 
+            // menu_tts
+            // 
+            this.menu_tts.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.menu_tts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem1});
+            this.menu_tts.Name = "menu_speechRecognition";
+            this.menu_tts.Size = new System.Drawing.Size(137, 48);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(136, 22);
+            this.toolStripMenuItem2.Text = "学而思接口";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.toolStripMenuItem1.Text = "百度接口";
+            // 
+            // menu_ocr
+            // 
+            this.menu_ocr.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.menu_ocr.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.百度接口ToolStripMenuItem1,
+            this.腾讯接口ToolStripMenuItem,
+            this.有道接口ToolStripMenuItem,
+            this.搜狗接口ToolStripMenuItem,
+            this.学而思接口ToolStripMenuItem1});
+            this.menu_ocr.Name = "menu_speechRecognition";
+            this.menu_ocr.Size = new System.Drawing.Size(137, 114);
+            // 
+            // 百度接口ToolStripMenuItem1
+            // 
+            this.百度接口ToolStripMenuItem1.Name = "百度接口ToolStripMenuItem1";
+            this.百度接口ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.百度接口ToolStripMenuItem1.Text = "百度接口";
+            // 
+            // 腾讯接口ToolStripMenuItem
+            // 
+            this.腾讯接口ToolStripMenuItem.Name = "腾讯接口ToolStripMenuItem";
+            this.腾讯接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.腾讯接口ToolStripMenuItem.Text = "腾讯接口";
+            // 
+            // 有道接口ToolStripMenuItem
+            // 
+            this.有道接口ToolStripMenuItem.Name = "有道接口ToolStripMenuItem";
+            this.有道接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.有道接口ToolStripMenuItem.Text = "有道接口";
+            // 
+            // 搜狗接口ToolStripMenuItem
+            // 
+            this.搜狗接口ToolStripMenuItem.Name = "搜狗接口ToolStripMenuItem";
+            this.搜狗接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.搜狗接口ToolStripMenuItem.Text = "搜狗接口";
+            // 
+            // 学而思接口ToolStripMenuItem1
+            // 
+            this.学而思接口ToolStripMenuItem1.Name = "学而思接口ToolStripMenuItem1";
+            this.学而思接口ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.学而思接口ToolStripMenuItem1.Text = "学而思接口";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // toolStripButton_Import
             // 
             this.toolStripButton_Import.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1118,23 +1386,6 @@
             this.本地语音合成ToolStripMenuItem.Text = "本地语音合成";
             this.本地语音合成ToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem_ttsApi_Click);
             // 
-            // panel_Translate
-            // 
-            this.panel_Translate.BackColor = System.Drawing.SystemColors.Control;
-            this.panel_Translate.Controls.Add(this.button_PlayDestText);
-            this.panel_Translate.Controls.Add(this.button_CloseTranslate);
-            this.panel_Translate.Controls.Add(this.button_SwitchTranLang);
-            this.panel_Translate.Controls.Add(this.button_Translate);
-            this.panel_Translate.Controls.Add(this.label1);
-            this.panel_Translate.Controls.Add(this.comboBox_SelectTranApi);
-            this.panel_Translate.Controls.Add(this.comboBox_DestLang);
-            this.panel_Translate.Controls.Add(this.comboBox_SourceLang);
-            this.panel_Translate.Controls.Add(this.richTextBox2);
-            this.panel_Translate.Location = new System.Drawing.Point(433, 42);
-            this.panel_Translate.Name = "panel_Translate";
-            this.panel_Translate.Size = new System.Drawing.Size(418, 445);
-            this.panel_Translate.TabIndex = 3;
-            // 
             // button_PlayDestText
             // 
             this.button_PlayDestText.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -1146,209 +1397,83 @@
             this.button_PlayDestText.UseVisualStyleBackColor = true;
             this.button_PlayDestText.Click += new System.EventHandler(this.button_PlayDestText_Click);
             // 
-            // button_CloseTranslate
+            // button_SwitchTranLang
             // 
-            this.button_CloseTranslate.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.button_CloseTranslate.FlatAppearance.BorderSize = 0;
-            this.button_CloseTranslate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_CloseTranslate.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_CloseTranslate.ForeColor = System.Drawing.Color.White;
-            this.button_CloseTranslate.Location = new System.Drawing.Point(1, 0);
-            this.button_CloseTranslate.Name = "button_CloseTranslate";
-            this.button_CloseTranslate.Size = new System.Drawing.Size(52, 33);
-            this.button_CloseTranslate.TabIndex = 22;
-            this.button_CloseTranslate.Text = "关闭";
-            this.button_CloseTranslate.UseVisualStyleBackColor = false;
-            this.button_CloseTranslate.Click += new System.EventHandler(this.button_CloseTranslate_Click);
+            this.button_SwitchTranLang.BackColor = System.Drawing.Color.White;
+            this.button_SwitchTranLang.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_SwitchTranLang.FlatAppearance.BorderSize = 0;
+            this.button_SwitchTranLang.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_SwitchTranLang.Image = global::鹰眼OCR.Properties.Resources.切换;
+            this.button_SwitchTranLang.Location = new System.Drawing.Point(156, 1);
+            this.button_SwitchTranLang.Name = "button_SwitchTranLang";
+            this.button_SwitchTranLang.Size = new System.Drawing.Size(81, 26);
+            this.button_SwitchTranLang.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.button_SwitchTranLang, "切换源语言和目标语言");
+            this.button_SwitchTranLang.UseVisualStyleBackColor = false;
+            this.button_SwitchTranLang.Click += new System.EventHandler(this.button_SwitchTranLang_Click);
             // 
-            // label1
+            // button_Setting
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.ForeColor = System.Drawing.Color.Coral;
-            this.label1.Location = new System.Drawing.Point(134, 29);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 36);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "左边输入待翻译的文本\r\n右边输出翻译后的文本\r\n";
+            this.button_Setting.BackColor = System.Drawing.Color.Transparent;
+            this.button_Setting.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_Setting.FlatAppearance.BorderSize = 0;
+            this.button_Setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Setting.Image = global::鹰眼OCR.Properties.Resources.设置;
+            this.button_Setting.Location = new System.Drawing.Point(672, -1);
+            this.button_Setting.Name = "button_Setting";
+            this.button_Setting.Size = new System.Drawing.Size(47, 39);
+            this.button_Setting.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.button_Setting, "设置");
+            this.button_Setting.UseVisualStyleBackColor = false;
+            this.button_Setting.Click += new System.EventHandler(this.button_Setting_Click);
             // 
-            // richTextBox2
+            // button_TopMost
             // 
-            this.richTextBox2.AcceptsTab = true;
-            this.richTextBox2.BackColor = System.Drawing.Color.White;
-            this.richTextBox2.ContextMenuStrip = this.menu_richTextBox2;
-            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.richTextBox2.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.richTextBox2.HideSelection = false;
-            this.richTextBox2.Location = new System.Drawing.Point(0, 64);
-            this.richTextBox2.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.richTextBox2.MaxLength = 0;
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBox2.ShowSelectionMargin = true;
-            this.richTextBox2.Size = new System.Drawing.Size(418, 381);
-            this.richTextBox2.TabIndex = 15;
-            this.richTextBox2.Text = "";
-            this.richTextBox2.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox_LinkClicked);
+            this.button_TopMost.BackColor = System.Drawing.Color.Transparent;
+            this.button_TopMost.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_TopMost.FlatAppearance.BorderSize = 0;
+            this.button_TopMost.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_TopMost.Image = global::鹰眼OCR.Properties.Resources.顶置;
+            this.button_TopMost.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button_TopMost.Location = new System.Drawing.Point(619, -1);
+            this.button_TopMost.Name = "button_TopMost";
+            this.button_TopMost.Size = new System.Drawing.Size(47, 39);
+            this.button_TopMost.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.button_TopMost, "顶置窗口");
+            this.button_TopMost.UseVisualStyleBackColor = false;
+            this.button_TopMost.Click += new System.EventHandler(this.button_TopMost_Click);
             // 
-            // menu_richTextBox2
+            // button_Close
             // 
-            this.menu_richTextBox2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.导出ToolStripMenuItem2,
-            this.撤销toolStripMenuItem2,
-            this.toolStripSeparator3,
-            this.剪切ToolStripMenuItem2,
-            this.复制toolStripMenuItem2,
-            this.删除DToolStripMenuItem2,
-            this.全部清除toolStripMenuItem2,
-            this.toolStripSeparator4,
-            this.全选toolStripMenuItem2,
-            this.toolStripSeparator5,
-            this.从右到左的顺序toolStripMenuItem2});
-            this.menu_richTextBox2.Name = "contextMenuStrip1";
-            this.menu_richTextBox2.Size = new System.Drawing.Size(177, 198);
+            this.button_Close.BackColor = System.Drawing.Color.Transparent;
+            this.button_Close.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_Close.FlatAppearance.BorderSize = 0;
+            this.button_Close.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
+            this.button_Close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Close.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button_Close.Image = global::鹰眼OCR.Properties.Resources.关闭;
+            this.button_Close.Location = new System.Drawing.Point(791, -1);
+            this.button_Close.Name = "button_Close";
+            this.button_Close.Size = new System.Drawing.Size(59, 39);
+            this.button_Close.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.button_Close, "关闭");
+            this.button_Close.UseVisualStyleBackColor = false;
+            this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
             // 
-            // 导出ToolStripMenuItem2
+            // button_Minimize
             // 
-            this.导出ToolStripMenuItem2.Name = "导出ToolStripMenuItem2";
-            this.导出ToolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.导出ToolStripMenuItem2.Text = "导出(&E)";
-            this.导出ToolStripMenuItem2.Click += new System.EventHandler(this.导出ToolStripMenuItem2_Click);
-            // 
-            // 撤销toolStripMenuItem2
-            // 
-            this.撤销toolStripMenuItem2.Name = "撤销toolStripMenuItem2";
-            this.撤销toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.撤销toolStripMenuItem2.Text = "撤销(&U)";
-            this.撤销toolStripMenuItem2.Click += new System.EventHandler(this.撤销toolStripMenuItem2_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
-            // 
-            // 剪切ToolStripMenuItem2
-            // 
-            this.剪切ToolStripMenuItem2.Name = "剪切ToolStripMenuItem2";
-            this.剪切ToolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.剪切ToolStripMenuItem2.Text = "剪切(&T)";
-            this.剪切ToolStripMenuItem2.Click += new System.EventHandler(this.剪切toolStripMenuItem2_Click);
-            // 
-            // 复制toolStripMenuItem2
-            // 
-            this.复制toolStripMenuItem2.Name = "复制toolStripMenuItem2";
-            this.复制toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.复制toolStripMenuItem2.Text = "复制(&C)";
-            this.复制toolStripMenuItem2.Click += new System.EventHandler(this.复制toolStripMenuItem2_Click);
-            // 
-            // 删除DToolStripMenuItem2
-            // 
-            this.删除DToolStripMenuItem2.Name = "删除DToolStripMenuItem2";
-            this.删除DToolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.删除DToolStripMenuItem2.Text = "删除(&D)";
-            this.删除DToolStripMenuItem2.Click += new System.EventHandler(this.删除toolStripMenuItem2_Click);
-            // 
-            // 全部清除toolStripMenuItem2
-            // 
-            this.全部清除toolStripMenuItem2.Name = "全部清除toolStripMenuItem2";
-            this.全部清除toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.全部清除toolStripMenuItem2.Text = "全部清除";
-            this.全部清除toolStripMenuItem2.Click += new System.EventHandler(this.全部清除toolStripMenuItem2_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(173, 6);
-            // 
-            // 全选toolStripMenuItem2
-            // 
-            this.全选toolStripMenuItem2.Name = "全选toolStripMenuItem2";
-            this.全选toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.全选toolStripMenuItem2.Text = "全选(&A)";
-            this.全选toolStripMenuItem2.Click += new System.EventHandler(this.全选toolStripMenuItem2_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(173, 6);
-            // 
-            // 从右到左的顺序toolStripMenuItem2
-            // 
-            this.从右到左的顺序toolStripMenuItem2.Name = "从右到左的顺序toolStripMenuItem2";
-            this.从右到左的顺序toolStripMenuItem2.Size = new System.Drawing.Size(176, 22);
-            this.从右到左的顺序toolStripMenuItem2.Text = "从右到左的顺序(&R)";
-            this.从右到左的顺序toolStripMenuItem2.Click += new System.EventHandler(this.从右到左的顺序toolStripMenuItem2_Click);
-            // 
-            // panel_Top
-            // 
-            this.panel_Top.Controls.Add(this.label2);
-            this.panel_Top.Controls.Add(this.label_BugSubmission);
-            this.panel_Top.Controls.Add(this.label_Course);
-            this.panel_Top.Controls.Add(this.button_Setting);
-            this.panel_Top.Controls.Add(this.button_TopMost);
-            this.panel_Top.Controls.Add(this.button_Close);
-            this.panel_Top.Controls.Add(this.button_Minimize);
-            this.panel_Top.Controls.Add(this.label_SoftwareName);
-            this.panel_Top.Controls.Add(this.pictureBox_Icon);
-            this.panel_Top.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel_Top.Location = new System.Drawing.Point(0, 0);
-            this.panel_Top.Name = "panel_Top";
-            this.panel_Top.Size = new System.Drawing.Size(850, 39);
-            this.panel_Top.TabIndex = 15;
-            this.panel_Top.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseDown);
-            this.panel_Top.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseMove);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label2.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(332, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 19);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "吾爱破解";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // label_BugSubmission
-            // 
-            this.label_BugSubmission.AutoSize = true;
-            this.label_BugSubmission.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label_BugSubmission.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label_BugSubmission.ForeColor = System.Drawing.Color.DarkOrange;
-            this.label_BugSubmission.Location = new System.Drawing.Point(257, 16);
-            this.label_BugSubmission.Name = "label_BugSubmission";
-            this.label_BugSubmission.Size = new System.Drawing.Size(69, 19);
-            this.label_BugSubmission.TabIndex = 9;
-            this.label_BugSubmission.Text = "BUG提交";
-            this.label_BugSubmission.Click += new System.EventHandler(this.label_BugSubmission_Click);
-            // 
-            // label_Course
-            // 
-            this.label_Course.AutoSize = true;
-            this.label_Course.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label_Course.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label_Course.ForeColor = System.Drawing.Color.LimeGreen;
-            this.label_Course.Location = new System.Drawing.Point(186, 16);
-            this.label_Course.Name = "label_Course";
-            this.label_Course.Size = new System.Drawing.Size(65, 19);
-            this.label_Course.TabIndex = 8;
-            this.label_Course.Text = "使用教程";
-            this.label_Course.Click += new System.EventHandler(this.label_Course_Click);
-            // 
-            // label_SoftwareName
-            // 
-            this.label_SoftwareName.Font = new System.Drawing.Font("微软雅黑", 12.5F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label_SoftwareName.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label_SoftwareName.Location = new System.Drawing.Point(49, -1);
-            this.label_SoftwareName.Name = "label_SoftwareName";
-            this.label_SoftwareName.Size = new System.Drawing.Size(136, 38);
-            this.label_SoftwareName.TabIndex = 1;
-            this.label_SoftwareName.Text = "鹰眼OCR  V2.0";
-            this.label_SoftwareName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.button_Minimize.BackColor = System.Drawing.Color.Transparent;
+            this.button_Minimize.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_Minimize.FlatAppearance.BorderSize = 0;
+            this.button_Minimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Minimize.Image = global::鹰眼OCR.Properties.Resources.最小化;
+            this.button_Minimize.Location = new System.Drawing.Point(737, -1);
+            this.button_Minimize.Name = "button_Minimize";
+            this.button_Minimize.Size = new System.Drawing.Size(47, 39);
+            this.button_Minimize.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.button_Minimize, "最小化");
+            this.button_Minimize.UseVisualStyleBackColor = false;
+            this.button_Minimize.Click += new System.EventHandler(this.button_Minimize_Click);
             // 
             // pictureBox_Icon
             // 
@@ -1360,146 +1485,6 @@
             this.pictureBox_Icon.TabIndex = 0;
             this.pictureBox_Icon.TabStop = false;
             this.pictureBox_Icon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Icon_MouseClick);
-            // 
-            // panel_line
-            // 
-            this.panel_line.BackColor = System.Drawing.Color.DimGray;
-            this.panel_line.Location = new System.Drawing.Point(-1, 39);
-            this.panel_line.Name = "panel_line";
-            this.panel_line.Size = new System.Drawing.Size(852, 1);
-            this.panel_line.TabIndex = 16;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.statusLabel_wordNum,
-            this.toolStripStatusLabel3,
-            this.statusLabel_Log});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 490);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
-            this.statusStrip1.Size = new System.Drawing.Size(850, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 14;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(12, 3, 0, 2);
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(56, 17);
-            this.toolStripStatusLabel1.Text = "字符数：";
-            // 
-            // statusLabel_wordNum
-            // 
-            this.statusLabel_wordNum.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.statusLabel_wordNum.Name = "statusLabel_wordNum";
-            this.statusLabel_wordNum.Size = new System.Drawing.Size(15, 17);
-            this.statusLabel_wordNum.Text = "0";
-            // 
-            // toolStripStatusLabel3
-            // 
-            this.toolStripStatusLabel3.Margin = new System.Windows.Forms.Padding(50, 3, 0, 2);
-            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(44, 17);
-            this.toolStripStatusLabel3.Text = "日志：";
-            // 
-            // statusLabel_Log
-            // 
-            this.statusLabel_Log.Name = "statusLabel_Log";
-            this.statusLabel_Log.Size = new System.Drawing.Size(20, 17);
-            this.statusLabel_Log.Text = "无";
-            // 
-            // menu_speechRecognition
-            // 
-            this.menu_speechRecognition.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.menu_speechRecognition.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.百度接口ToolStripMenuItem,
-            this.学而思接口ToolStripMenuItem});
-            this.menu_speechRecognition.Name = "menu_speechRecognition";
-            this.menu_speechRecognition.Size = new System.Drawing.Size(137, 48);
-            // 
-            // 百度接口ToolStripMenuItem
-            // 
-            this.百度接口ToolStripMenuItem.Name = "百度接口ToolStripMenuItem";
-            this.百度接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.百度接口ToolStripMenuItem.Text = "百度接口";
-            // 
-            // 学而思接口ToolStripMenuItem
-            // 
-            this.学而思接口ToolStripMenuItem.Name = "学而思接口ToolStripMenuItem";
-            this.学而思接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.学而思接口ToolStripMenuItem.Text = "学而思接口";
-            // 
-            // menu_tts
-            // 
-            this.menu_tts.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.menu_tts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem1});
-            this.menu_tts.Name = "menu_speechRecognition";
-            this.menu_tts.Size = new System.Drawing.Size(137, 48);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(136, 22);
-            this.toolStripMenuItem2.Text = "学而思接口";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
-            this.toolStripMenuItem1.Text = "百度接口";
-            // 
-            // menu_ocr
-            // 
-            this.menu_ocr.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.menu_ocr.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.百度接口ToolStripMenuItem1,
-            this.腾讯接口ToolStripMenuItem,
-            this.有道接口ToolStripMenuItem,
-            this.搜狗接口ToolStripMenuItem,
-            this.学而思接口ToolStripMenuItem1});
-            this.menu_ocr.Name = "menu_speechRecognition";
-            this.menu_ocr.Size = new System.Drawing.Size(137, 114);
-            // 
-            // 百度接口ToolStripMenuItem1
-            // 
-            this.百度接口ToolStripMenuItem1.Name = "百度接口ToolStripMenuItem1";
-            this.百度接口ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
-            this.百度接口ToolStripMenuItem1.Text = "百度接口";
-            // 
-            // 腾讯接口ToolStripMenuItem
-            // 
-            this.腾讯接口ToolStripMenuItem.Name = "腾讯接口ToolStripMenuItem";
-            this.腾讯接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.腾讯接口ToolStripMenuItem.Text = "腾讯接口";
-            // 
-            // 有道接口ToolStripMenuItem
-            // 
-            this.有道接口ToolStripMenuItem.Name = "有道接口ToolStripMenuItem";
-            this.有道接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.有道接口ToolStripMenuItem.Text = "有道接口";
-            // 
-            // 搜狗接口ToolStripMenuItem
-            // 
-            this.搜狗接口ToolStripMenuItem.Name = "搜狗接口ToolStripMenuItem";
-            this.搜狗接口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.搜狗接口ToolStripMenuItem.Text = "搜狗接口";
-            // 
-            // 学而思接口ToolStripMenuItem1
-            // 
-            this.学而思接口ToolStripMenuItem1.Name = "学而思接口ToolStripMenuItem1";
-            this.学而思接口ToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
-            this.学而思接口ToolStripMenuItem1.Text = "学而思接口";
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // MainForm
             // 
@@ -1532,12 +1517,12 @@
             this.menu_richTextBox2.ResumeLayout(false);
             this.panel_Top.ResumeLayout(false);
             this.panel_Top.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Icon)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menu_speechRecognition.ResumeLayout(false);
             this.menu_tts.ResumeLayout(false);
             this.menu_ocr.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Icon)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1671,7 +1656,6 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox_LangType;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.Label label2;
     }
 }
 

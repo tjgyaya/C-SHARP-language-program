@@ -119,6 +119,7 @@
             this.textBox_YoudaoSK = new System.Windows.Forms.TextBox();
             this.textBox_YoudaoAK = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.panel_Bottom = new System.Windows.Forms.Panel();
             this.panel_HotKey.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_DelayTime)).BeginInit();
             this.panel_Main.SuspendLayout();
@@ -129,6 +130,7 @@
             this.groupBox_JingDongKey.SuspendLayout();
             this.groupBox_BaiduKey.SuspendLayout();
             this.groupBox_YoudaoKey.SuspendLayout();
+            this.panel_Bottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_SaveSetting
@@ -136,7 +138,7 @@
             this.button_SaveSetting.BackColor = System.Drawing.Color.LightGreen;
             this.button_SaveSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_SaveSetting.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_SaveSetting.Location = new System.Drawing.Point(661, 260);
+            this.button_SaveSetting.Location = new System.Drawing.Point(666, 3);
             this.button_SaveSetting.Name = "button_SaveSetting";
             this.button_SaveSetting.Size = new System.Drawing.Size(63, 30);
             this.button_SaveSetting.TabIndex = 10;
@@ -151,7 +153,7 @@
             this.button_JingDongKeyTest.FlatAppearance.BorderSize = 0;
             this.button_JingDongKeyTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_JingDongKeyTest.ForeColor = System.Drawing.Color.Black;
-            this.button_JingDongKeyTest.Location = new System.Drawing.Point(262, 47);
+            this.button_JingDongKeyTest.Location = new System.Drawing.Point(266, 47);
             this.button_JingDongKeyTest.Name = "button_JingDongKeyTest";
             this.button_JingDongKeyTest.Size = new System.Drawing.Size(50, 23);
             this.button_JingDongKeyTest.TabIndex = 45;
@@ -186,7 +188,7 @@
             this.button_BaiduCorrectionKeyTest.FlatAppearance.BorderSize = 0;
             this.button_BaiduCorrectionKeyTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_BaiduCorrectionKeyTest.ForeColor = System.Drawing.Color.Black;
-            this.button_BaiduCorrectionKeyTest.Location = new System.Drawing.Point(262, 221);
+            this.button_BaiduCorrectionKeyTest.Location = new System.Drawing.Point(268, 221);
             this.button_BaiduCorrectionKeyTest.Name = "button_BaiduCorrectionKeyTest";
             this.button_BaiduCorrectionKeyTest.Size = new System.Drawing.Size(50, 23);
             this.button_BaiduCorrectionKeyTest.TabIndex = 45;
@@ -221,7 +223,7 @@
             this.button_BaiduTranKeyTest.FlatAppearance.BorderSize = 0;
             this.button_BaiduTranKeyTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_BaiduTranKeyTest.ForeColor = System.Drawing.Color.Black;
-            this.button_BaiduTranKeyTest.Location = new System.Drawing.Point(262, 164);
+            this.button_BaiduTranKeyTest.Location = new System.Drawing.Point(268, 164);
             this.button_BaiduTranKeyTest.Name = "button_BaiduTranKeyTest";
             this.button_BaiduTranKeyTest.Size = new System.Drawing.Size(50, 23);
             this.button_BaiduTranKeyTest.TabIndex = 39;
@@ -256,7 +258,7 @@
             this.button_BaiduTTSKeyTest.FlatAppearance.BorderSize = 0;
             this.button_BaiduTTSKeyTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_BaiduTTSKeyTest.ForeColor = System.Drawing.Color.Black;
-            this.button_BaiduTTSKeyTest.Location = new System.Drawing.Point(262, 107);
+            this.button_BaiduTTSKeyTest.Location = new System.Drawing.Point(268, 107);
             this.button_BaiduTTSKeyTest.Name = "button_BaiduTTSKeyTest";
             this.button_BaiduTTSKeyTest.Size = new System.Drawing.Size(50, 23);
             this.button_BaiduTTSKeyTest.TabIndex = 33;
@@ -291,7 +293,7 @@
             this.button_BaiduOCRKeyTest.FlatAppearance.BorderSize = 0;
             this.button_BaiduOCRKeyTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_BaiduOCRKeyTest.ForeColor = System.Drawing.Color.Black;
-            this.button_BaiduOCRKeyTest.Location = new System.Drawing.Point(262, 50);
+            this.button_BaiduOCRKeyTest.Location = new System.Drawing.Point(268, 50);
             this.button_BaiduOCRKeyTest.Name = "button_BaiduOCRKeyTest";
             this.button_BaiduOCRKeyTest.Size = new System.Drawing.Size(50, 23);
             this.button_BaiduOCRKeyTest.TabIndex = 27;
@@ -326,7 +328,7 @@
             this.button_YoudaoKeyTest.FlatAppearance.BorderSize = 0;
             this.button_YoudaoKeyTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_YoudaoKeyTest.ForeColor = System.Drawing.Color.Black;
-            this.button_YoudaoKeyTest.Location = new System.Drawing.Point(262, 47);
+            this.button_YoudaoKeyTest.Location = new System.Drawing.Point(266, 47);
             this.button_YoudaoKeyTest.Name = "button_YoudaoKeyTest";
             this.button_YoudaoKeyTest.Size = new System.Drawing.Size(50, 23);
             this.button_YoudaoKeyTest.TabIndex = 39;
@@ -374,7 +376,7 @@
             this.panel_HotKey.Controls.Add(this.label_ScreenHotKey);
             this.panel_HotKey.Location = new System.Drawing.Point(0, 282);
             this.panel_HotKey.Name = "panel_HotKey";
-            this.panel_HotKey.Size = new System.Drawing.Size(638, 230);
+            this.panel_HotKey.Size = new System.Drawing.Size(666, 230);
             this.panel_HotKey.TabIndex = 1;
             this.toolTip1.SetToolTip(this.panel_HotKey, "打开设置窗口时，热键不会生效。");
             // 
@@ -383,7 +385,7 @@
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("微软雅黑", 11F);
             this.label16.ForeColor = System.Drawing.Color.MediumSlateBlue;
-            this.label16.Location = new System.Drawing.Point(11, 168);
+            this.label16.Location = new System.Drawing.Point(11, 187);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(249, 40);
             this.label16.TabIndex = 22;
@@ -553,7 +555,7 @@
             this.button_Cancel.BackColor = System.Drawing.Color.LightGreen;
             this.button_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button_Cancel.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_Cancel.Location = new System.Drawing.Point(577, 260);
+            this.button_Cancel.Location = new System.Drawing.Point(582, 3);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(63, 30);
             this.button_Cancel.TabIndex = 11;
@@ -619,6 +621,7 @@
             // listBox_Menu
             // 
             this.listBox_Menu.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBox_Menu.Dock = System.Windows.Forms.DockStyle.Left;
             this.listBox_Menu.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.listBox_Menu.ForeColor = System.Drawing.Color.DarkOrange;
             this.listBox_Menu.FormattingEnabled = true;
@@ -629,9 +632,9 @@
             " Key",
             " 其它",
             " 关于"});
-            this.listBox_Menu.Location = new System.Drawing.Point(2, 4);
+            this.listBox_Menu.Location = new System.Drawing.Point(0, 0);
             this.listBox_Menu.Name = "listBox_Menu";
-            this.listBox_Menu.Size = new System.Drawing.Size(58, 218);
+            this.listBox_Menu.Size = new System.Drawing.Size(59, 272);
             this.listBox_Menu.TabIndex = 0;
             this.listBox_Menu.SelectedIndexChanged += new System.EventHandler(this.listBox_Menu_SelectedIndexChanged);
             // 
@@ -644,10 +647,11 @@
             this.panel_Main.Controls.Add(this.panel_Other);
             this.panel_Main.Controls.Add(this.panel_HotKey);
             this.panel_Main.Controls.Add(this.panel_Key);
-            this.panel_Main.Location = new System.Drawing.Point(63, 4);
+            this.panel_Main.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel_Main.Location = new System.Drawing.Point(62, 0);
             this.panel_Main.Margin = new System.Windows.Forms.Padding(0);
             this.panel_Main.Name = "panel_Main";
-            this.panel_Main.Size = new System.Drawing.Size(670, 253);
+            this.panel_Main.Size = new System.Drawing.Size(706, 272);
             this.panel_Main.TabIndex = 1;
             // 
             // panel_About
@@ -660,7 +664,7 @@
             this.panel_About.Controls.Add(this.pictureBox1);
             this.panel_About.Location = new System.Drawing.Point(2, 781);
             this.panel_About.Name = "panel_About";
-            this.panel_About.Size = new System.Drawing.Size(637, 242);
+            this.panel_About.Size = new System.Drawing.Size(664, 272);
             this.panel_About.TabIndex = 3;
             // 
             // label15
@@ -670,7 +674,7 @@
             this.label15.ForeColor = System.Drawing.Color.LimeGreen;
             this.label15.Location = new System.Drawing.Point(126, 63);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(509, 45);
+            this.label15.Size = new System.Drawing.Size(431, 45);
             this.label15.TabIndex = 10;
             this.label15.Text = "支持：导入图片识别、截图识别、拍照识别、文字转语音、语音转文字、翻译文字、文本纠错等功能。";
             // 
@@ -690,7 +694,7 @@
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("微软雅黑", 15F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
             this.label13.ForeColor = System.Drawing.Color.CornflowerBlue;
-            this.label13.Location = new System.Drawing.Point(187, 202);
+            this.label13.Location = new System.Drawing.Point(181, 227);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(288, 27);
             this.label13.TabIndex = 8;
@@ -712,7 +716,7 @@
             this.label_About.Font = new System.Drawing.Font("微软雅黑", 12F);
             this.label_About.Location = new System.Drawing.Point(124, 4);
             this.label_About.Name = "label_About";
-            this.label_About.Size = new System.Drawing.Size(513, 198);
+            this.label_About.Size = new System.Drawing.Size(520, 198);
             this.label_About.TabIndex = 1;
             this.label_About.Text = "介绍：\r\n鹰眼OCR 是基于.NET Framework 4.5用C#语言制作的文字识别程序。\r\n\r\n\r\n\r\n\r\n\r\n\r\n感谢您的使用！";
             // 
@@ -747,7 +751,7 @@
             this.panel_Other.Controls.Add(this.checkBox_SaveScreen);
             this.panel_Other.Location = new System.Drawing.Point(-1, 518);
             this.panel_Other.Name = "panel_Other";
-            this.panel_Other.Size = new System.Drawing.Size(639, 232);
+            this.panel_Other.Size = new System.Drawing.Size(667, 232);
             this.panel_Other.TabIndex = 2;
             // 
             // checkBox_ExportToTXTFile
@@ -934,7 +938,7 @@
             this.panel_Key.Location = new System.Drawing.Point(-1, 0);
             this.panel_Key.Margin = new System.Windows.Forms.Padding(0);
             this.panel_Key.Name = "panel_Key";
-            this.panel_Key.Size = new System.Drawing.Size(652, 252);
+            this.panel_Key.Size = new System.Drawing.Size(667, 252);
             this.panel_Key.TabIndex = 0;
             // 
             // linkLabel_Help
@@ -942,7 +946,7 @@
             this.linkLabel_Help.AutoSize = true;
             this.linkLabel_Help.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.linkLabel_Help.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabel_Help.Location = new System.Drawing.Point(450, 221);
+            this.linkLabel_Help.Location = new System.Drawing.Point(480, 225);
             this.linkLabel_Help.Name = "linkLabel_Help";
             this.linkLabel_Help.Size = new System.Drawing.Size(80, 17);
             this.linkLabel_Help.TabIndex = 12;
@@ -959,10 +963,10 @@
             this.groupBox_JingDongKey.Controls.Add(this.label3);
             this.groupBox_JingDongKey.Controls.Add(this.label4);
             this.groupBox_JingDongKey.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox_JingDongKey.Location = new System.Drawing.Point(320, 84);
+            this.groupBox_JingDongKey.Location = new System.Drawing.Point(345, 86);
             this.groupBox_JingDongKey.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox_JingDongKey.Name = "groupBox_JingDongKey";
-            this.groupBox_JingDongKey.Size = new System.Drawing.Size(316, 80);
+            this.groupBox_JingDongKey.Size = new System.Drawing.Size(322, 80);
             this.groupBox_JingDongKey.TabIndex = 9;
             this.groupBox_JingDongKey.TabStop = false;
             this.groupBox_JingDongKey.Text = "京东Key";
@@ -972,7 +976,7 @@
             this.linkLabel_JingDongUrl.ActiveLinkColor = System.Drawing.Color.OrangeRed;
             this.linkLabel_JingDongUrl.AutoSize = true;
             this.linkLabel_JingDongUrl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabel_JingDongUrl.Location = new System.Drawing.Point(261, 22);
+            this.linkLabel_JingDongUrl.Location = new System.Drawing.Point(265, 22);
             this.linkLabel_JingDongUrl.Name = "linkLabel_JingDongUrl";
             this.linkLabel_JingDongUrl.Size = new System.Drawing.Size(56, 17);
             this.linkLabel_JingDongUrl.TabIndex = 44;
@@ -982,14 +986,14 @@
             // 
             // textBox_JingDongSk
             // 
-            this.textBox_JingDongSk.Location = new System.Drawing.Point(46, 47);
+            this.textBox_JingDongSk.Location = new System.Drawing.Point(50, 47);
             this.textBox_JingDongSk.Name = "textBox_JingDongSk";
             this.textBox_JingDongSk.Size = new System.Drawing.Size(211, 23);
             this.textBox_JingDongSk.TabIndex = 43;
             // 
             // textBox_JingDongAk
             // 
-            this.textBox_JingDongAk.Location = new System.Drawing.Point(46, 19);
+            this.textBox_JingDongAk.Location = new System.Drawing.Point(50, 19);
             this.textBox_JingDongAk.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.textBox_JingDongAk.Name = "textBox_JingDongAk";
             this.textBox_JingDongAk.Size = new System.Drawing.Size(211, 23);
@@ -1025,7 +1029,7 @@
             this.groupBox_BaiduKey.Location = new System.Drawing.Point(1, -2);
             this.groupBox_BaiduKey.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox_BaiduKey.Name = "groupBox_BaiduKey";
-            this.groupBox_BaiduKey.Size = new System.Drawing.Size(316, 248);
+            this.groupBox_BaiduKey.Size = new System.Drawing.Size(331, 248);
             this.groupBox_BaiduKey.TabIndex = 7;
             this.groupBox_BaiduKey.TabStop = false;
             this.groupBox_BaiduKey.Text = "百度Key";
@@ -1035,7 +1039,7 @@
             this.linkLabel_BaiduCorrectionUrl.ActiveLinkColor = System.Drawing.Color.OrangeRed;
             this.linkLabel_BaiduCorrectionUrl.AutoSize = true;
             this.linkLabel_BaiduCorrectionUrl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabel_BaiduCorrectionUrl.Location = new System.Drawing.Point(261, 199);
+            this.linkLabel_BaiduCorrectionUrl.Location = new System.Drawing.Point(267, 199);
             this.linkLabel_BaiduCorrectionUrl.Name = "linkLabel_BaiduCorrectionUrl";
             this.linkLabel_BaiduCorrectionUrl.Size = new System.Drawing.Size(56, 17);
             this.linkLabel_BaiduCorrectionUrl.TabIndex = 44;
@@ -1045,14 +1049,14 @@
             // 
             // textBox_BaiduCorrectionSk
             // 
-            this.textBox_BaiduCorrectionSk.Location = new System.Drawing.Point(46, 221);
+            this.textBox_BaiduCorrectionSk.Location = new System.Drawing.Point(52, 221);
             this.textBox_BaiduCorrectionSk.Name = "textBox_BaiduCorrectionSk";
             this.textBox_BaiduCorrectionSk.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduCorrectionSk.TabIndex = 43;
             // 
             // textBox_BaiduCorrectionAk
             // 
-            this.textBox_BaiduCorrectionAk.Location = new System.Drawing.Point(46, 193);
+            this.textBox_BaiduCorrectionAk.Location = new System.Drawing.Point(52, 193);
             this.textBox_BaiduCorrectionAk.Name = "textBox_BaiduCorrectionAk";
             this.textBox_BaiduCorrectionAk.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduCorrectionAk.TabIndex = 42;
@@ -1062,7 +1066,7 @@
             this.linkLabel_BaiduTranUrl.ActiveLinkColor = System.Drawing.Color.OrangeRed;
             this.linkLabel_BaiduTranUrl.AutoSize = true;
             this.linkLabel_BaiduTranUrl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabel_BaiduTranUrl.Location = new System.Drawing.Point(261, 142);
+            this.linkLabel_BaiduTranUrl.Location = new System.Drawing.Point(267, 142);
             this.linkLabel_BaiduTranUrl.Name = "linkLabel_BaiduTranUrl";
             this.linkLabel_BaiduTranUrl.Size = new System.Drawing.Size(56, 17);
             this.linkLabel_BaiduTranUrl.TabIndex = 38;
@@ -1072,14 +1076,14 @@
             // 
             // textBox_BaiduTranPw
             // 
-            this.textBox_BaiduTranPw.Location = new System.Drawing.Point(46, 164);
+            this.textBox_BaiduTranPw.Location = new System.Drawing.Point(52, 164);
             this.textBox_BaiduTranPw.Name = "textBox_BaiduTranPw";
             this.textBox_BaiduTranPw.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduTranPw.TabIndex = 37;
             // 
             // textBox_BaiduTranId
             // 
-            this.textBox_BaiduTranId.Location = new System.Drawing.Point(46, 136);
+            this.textBox_BaiduTranId.Location = new System.Drawing.Point(52, 136);
             this.textBox_BaiduTranId.Name = "textBox_BaiduTranId";
             this.textBox_BaiduTranId.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduTranId.TabIndex = 36;
@@ -1089,7 +1093,7 @@
             this.linkLabel_BaiduTTSUrl.ActiveLinkColor = System.Drawing.Color.OrangeRed;
             this.linkLabel_BaiduTTSUrl.AutoSize = true;
             this.linkLabel_BaiduTTSUrl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabel_BaiduTTSUrl.Location = new System.Drawing.Point(261, 85);
+            this.linkLabel_BaiduTTSUrl.Location = new System.Drawing.Point(267, 85);
             this.linkLabel_BaiduTTSUrl.Name = "linkLabel_BaiduTTSUrl";
             this.linkLabel_BaiduTTSUrl.Size = new System.Drawing.Size(56, 17);
             this.linkLabel_BaiduTTSUrl.TabIndex = 32;
@@ -1099,14 +1103,14 @@
             // 
             // textBox_BaiduTTSSk
             // 
-            this.textBox_BaiduTTSSk.Location = new System.Drawing.Point(46, 107);
+            this.textBox_BaiduTTSSk.Location = new System.Drawing.Point(52, 107);
             this.textBox_BaiduTTSSk.Name = "textBox_BaiduTTSSk";
             this.textBox_BaiduTTSSk.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduTTSSk.TabIndex = 31;
             // 
             // textBox_BaiduTTSAk
             // 
-            this.textBox_BaiduTTSAk.Location = new System.Drawing.Point(46, 79);
+            this.textBox_BaiduTTSAk.Location = new System.Drawing.Point(52, 79);
             this.textBox_BaiduTTSAk.Name = "textBox_BaiduTTSAk";
             this.textBox_BaiduTTSAk.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduTTSAk.TabIndex = 30;
@@ -1116,7 +1120,7 @@
             this.linkLabelBaiduOCRUrl.ActiveLinkColor = System.Drawing.Color.OrangeRed;
             this.linkLabelBaiduOCRUrl.AutoSize = true;
             this.linkLabelBaiduOCRUrl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabelBaiduOCRUrl.Location = new System.Drawing.Point(261, 28);
+            this.linkLabelBaiduOCRUrl.Location = new System.Drawing.Point(267, 28);
             this.linkLabelBaiduOCRUrl.Name = "linkLabelBaiduOCRUrl";
             this.linkLabelBaiduOCRUrl.Size = new System.Drawing.Size(56, 17);
             this.linkLabelBaiduOCRUrl.TabIndex = 26;
@@ -1126,14 +1130,14 @@
             // 
             // textBox_BaiduOCRSk
             // 
-            this.textBox_BaiduOCRSk.Location = new System.Drawing.Point(46, 50);
+            this.textBox_BaiduOCRSk.Location = new System.Drawing.Point(52, 50);
             this.textBox_BaiduOCRSk.Name = "textBox_BaiduOCRSk";
             this.textBox_BaiduOCRSk.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduOCRSk.TabIndex = 21;
             // 
             // textBox_BaiduOCRAk
             // 
-            this.textBox_BaiduOCRAk.Location = new System.Drawing.Point(46, 22);
+            this.textBox_BaiduOCRAk.Location = new System.Drawing.Point(52, 22);
             this.textBox_BaiduOCRAk.Name = "textBox_BaiduOCRAk";
             this.textBox_BaiduOCRAk.Size = new System.Drawing.Size(211, 23);
             this.textBox_BaiduOCRAk.TabIndex = 20;
@@ -1143,7 +1147,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("微软雅黑", 9F);
             this.label11.ForeColor = System.Drawing.Color.Red;
-            this.label11.Location = new System.Drawing.Point(322, 170);
+            this.label11.Location = new System.Drawing.Point(344, 174);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(323, 68);
             this.label11.TabIndex = 11;
@@ -1158,10 +1162,10 @@
             this.groupBox_YoudaoKey.Controls.Add(this.label1);
             this.groupBox_YoudaoKey.Controls.Add(this.label2);
             this.groupBox_YoudaoKey.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox_YoudaoKey.Location = new System.Drawing.Point(320, -2);
+            this.groupBox_YoudaoKey.Location = new System.Drawing.Point(345, 0);
             this.groupBox_YoudaoKey.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox_YoudaoKey.Name = "groupBox_YoudaoKey";
-            this.groupBox_YoudaoKey.Size = new System.Drawing.Size(316, 80);
+            this.groupBox_YoudaoKey.Size = new System.Drawing.Size(322, 80);
             this.groupBox_YoudaoKey.TabIndex = 8;
             this.groupBox_YoudaoKey.TabStop = false;
             this.groupBox_YoudaoKey.Text = "有道Key";
@@ -1171,7 +1175,7 @@
             this.linkLabel_YoudaoUrl.ActiveLinkColor = System.Drawing.Color.OrangeRed;
             this.linkLabel_YoudaoUrl.AutoSize = true;
             this.linkLabel_YoudaoUrl.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.linkLabel_YoudaoUrl.Location = new System.Drawing.Point(261, 22);
+            this.linkLabel_YoudaoUrl.Location = new System.Drawing.Point(265, 22);
             this.linkLabel_YoudaoUrl.Name = "linkLabel_YoudaoUrl";
             this.linkLabel_YoudaoUrl.Size = new System.Drawing.Size(56, 17);
             this.linkLabel_YoudaoUrl.TabIndex = 38;
@@ -1181,29 +1185,39 @@
             // 
             // textBox_YoudaoSK
             // 
-            this.textBox_YoudaoSK.Location = new System.Drawing.Point(46, 47);
+            this.textBox_YoudaoSK.Location = new System.Drawing.Point(50, 47);
             this.textBox_YoudaoSK.Name = "textBox_YoudaoSK";
             this.textBox_YoudaoSK.Size = new System.Drawing.Size(211, 23);
             this.textBox_YoudaoSK.TabIndex = 37;
             // 
             // textBox_YoudaoAK
             // 
-            this.textBox_YoudaoAK.Location = new System.Drawing.Point(46, 19);
+            this.textBox_YoudaoAK.Location = new System.Drawing.Point(50, 19);
             this.textBox_YoudaoAK.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.textBox_YoudaoAK.Name = "textBox_YoudaoAK";
             this.textBox_YoudaoAK.Size = new System.Drawing.Size(211, 23);
             this.textBox_YoudaoAK.TabIndex = 36;
+            // 
+            // panel_Bottom
+            // 
+            this.panel_Bottom.AutoSize = true;
+            this.panel_Bottom.Controls.Add(this.button_Cancel);
+            this.panel_Bottom.Controls.Add(this.button_SaveSetting);
+            this.panel_Bottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel_Bottom.Location = new System.Drawing.Point(0, 272);
+            this.panel_Bottom.Name = "panel_Bottom";
+            this.panel_Bottom.Size = new System.Drawing.Size(768, 36);
+            this.panel_Bottom.TabIndex = 12;
             // 
             // FrmSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(742, 293);
-            this.Controls.Add(this.button_Cancel);
+            this.ClientSize = new System.Drawing.Size(768, 308);
             this.Controls.Add(this.panel_Main);
-            this.Controls.Add(this.button_SaveSetting);
             this.Controls.Add(this.listBox_Menu);
+            this.Controls.Add(this.panel_Bottom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmSetting";
@@ -1228,7 +1242,9 @@
             this.groupBox_BaiduKey.PerformLayout();
             this.groupBox_YoudaoKey.ResumeLayout(false);
             this.groupBox_YoudaoKey.PerformLayout();
+            this.panel_Bottom.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1322,5 +1338,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_DelayTime;
         private System.Windows.Forms.Label label_20;
         private System.Windows.Forms.CheckBox checkBox_ExportToTXTFile;
+        private System.Windows.Forms.Panel panel_Bottom;
     }
 }

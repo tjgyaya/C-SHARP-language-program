@@ -14,8 +14,8 @@ namespace 鹰眼OCR.PDF
         public class PdfToImage
         {
             // 获取完一页的图像时引发事件
-            public delegate void GetOnePageHandler(Image img, int pageNumber);
-            public event GetOnePageHandler GetOnePageEvent;
+            public delegate void GetOnePageEventHandler(Image img, int pageNumber);
+            public event GetOnePageEventHandler GetOnePageEvent;
 
             public void ToImage(string fileName, int sleepTime)
             {

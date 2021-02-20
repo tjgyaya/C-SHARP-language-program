@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Authentication.ExtendedProtection;
@@ -129,9 +130,6 @@ namespace 鹰眼OCR
         {
             if (screenImage == null)
                 Cancel();
-            //if (StartPos.IsEmpty)
-            //    return;
-
             // 将原图显示到窗体
             e.Graphics.DrawImage(this.screenImage, 0, 0, this.screenImage.Width, this.screenImage.Height);
             using (SolidBrush sb = new SolidBrush(Color.FromArgb(50, 0, 0, 0)))

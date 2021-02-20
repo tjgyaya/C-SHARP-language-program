@@ -17,25 +17,29 @@ namespace 鹰眼OCR
 {
     public partial class FrmSetting : Form
     {
+        public delegate void InstallingHotkeyDelegate();
+
         public Point Position { get; set; }
 
         private Rectangle screenRect;
 
-        public LoadConfigFileHandler LoadFile { get; set; }
+        public MainForm.LoadConfigFileDelegate LoadFile { get; set; }
 
         public SavePath Save_Path { get; set; }
 
-        public InstallAllHotkeysHandler InstallHotkey { get; set; }
+        public InstallingHotkeyDelegate InstallingHotkey { get; set; }
+
+
         public FrmSetting()
         {
             InitializeComponent();
             panel_Main.AutoScroll = false;
-            // 获取屏幕缩放比，动态调整窗口大小
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                panel_Main.Width = (int)(685 * g.DpiX / 96);
-                this.Width = (int)(770 * g.DpiX / 96);
-            }
+            //// 获取屏幕缩放比，动态调整窗口大小
+            //using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            //{
+            //    panel_Main.Width = (int)(685 * g.DpiX / 96);
+            //    this.Width = (int)(770 * g.DpiX / 96);
+            //}
             listBox_Menu.SelectedIndex = 1;
 
             //linkLabelBaiduOCRUrl.Visible = false;
@@ -535,7 +539,7 @@ namespace 鹰眼OCR
         {
             try
             {
-                InstallHotkey?.Invoke();
+                InstallingHotkey?.Invoke();
             }
             catch
             {

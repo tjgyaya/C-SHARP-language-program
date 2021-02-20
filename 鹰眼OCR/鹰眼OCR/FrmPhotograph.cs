@@ -20,7 +20,9 @@ namespace 鹰眼OCR
             InitializeComponent();
         }
 
-        public PhotoRecognitionHandler PhotoRecognition { get; set; }
+        // 拍照识别委托
+        public delegate void PhotographEventHandler(Image img);
+        public event PhotographEventHandler PhotographEvent;
 
         /// <summary>
         /// 窗体显示的坐标
@@ -116,9 +118,13 @@ namespace 鹰眼OCR
 
             // 将图片保存到本地
             groupBox1.Text = "已拍照";
-            PhotoRecognition?.Invoke(videoPlayer1.GetCurrentVideoFrame());
+            OnPhotograph(videoPlayer1.GetCurrentVideoFrame());
         }
 
+        private void OnPhotograph(Image img)
+        {
+            PhotographEvent?.Invoke(img);
+        }
 
         // 窗口加载时，自动连接摄像头
         private void FrmPhotograph_Load(object sender, EventArgs e)

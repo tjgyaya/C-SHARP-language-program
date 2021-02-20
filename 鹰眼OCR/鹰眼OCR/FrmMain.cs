@@ -13,23 +13,6 @@ using System.Collections.Generic;
 
 namespace 鹰眼OCR
 {
-    // 拍照识别委托
-    public delegate void PhotoRecognitionHandler(Image img);
-
-    public delegate void InstallAllHotkeysHandler();
-
-    public delegate void PlayStoppedHandler(string audioName, string mode);
-
-    public delegate void LoadConfigFileHandler(bool reload = false);
-
-    public delegate string RichTextBoxTextHandler();
-
-    public delegate string RichTextBoxSelectedTextHandler(string selectedText = null);
-
-    public delegate int RichTextBoxFindHandler(string str, int start, int end, RichTextBoxFinds options);
-
-    public delegate string SelectedLanguageTypeDelegate();
-
     #region 文字识别key
     // 百度文字识别和百度翻译key
     public struct BaiduKey
@@ -42,15 +25,6 @@ namespace 鹰眼OCR
         public static string Password;
         public static string CorrectionAK;
         public static string CorrectionSK;
-
-        //public static string ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
-        //public static string SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
-        //public static string TTS_ApiKey = "qk3y9G2FQLrQsCa9v9NzzW8h";
-        //public static string TTS_SecretKey = "qtYsvvdEGgQ6EzxVSFuYRvl8NmzVihy1";
-        //public static string AppId = "20200424000429104";
-        //public static string Password = "5mzyraBsLRk2yfGQMhXJ";
-        //public static string CorrectionAK = "O26bQOVrdh4SOeLeogaDCel3";
-        //public static string CorrectionSK = "EGiBPCkZtG4S0u8QlpCZUYiIfGCYhwji";
 
         public static bool IsEmptyOrNull
         {
@@ -69,8 +43,6 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string AppSecret;
-        //public static string AppKey = "6df1e6a7fbfcd42b";
-        //public static string AppSecret = "l3nfoha0QtyeYGhqo1DgmyMoSteuNEKS";
         public static bool IsEmptyOrNull
         {
             get
@@ -88,8 +60,6 @@ namespace 鹰眼OCR
     {
         public static string AppKey;
         public static string SecretKey;
-        //public static string AppKey = "9e605eb8912049a99c065688dc253b06";
-        //public static string SecretKey = "3d189c46e3bdec0659221530c3726643";
 
         public static bool IsEmptyOrNull
         {
@@ -223,6 +193,12 @@ namespace 鹰眼OCR
 
     public partial class MainForm : Form
     {
+        public delegate void LoadConfigFileDelegate(bool reload = false);
+        public delegate string RichTextBoxTextDelegate();
+        public delegate string RichTextBoxSelectedTextDelegate(string selectedText = null);
+        public delegate int RichTextBoxFindDelegate(string str, int start, int end, RichTextBoxFinds options);
+        public delegate string SelectedLanguageTypeDelegate();
+
         public MainForm()
         {
             InitializeComponent();
@@ -268,7 +244,7 @@ namespace 鹰眼OCR
             comboBox_SelectTranApi.SelectedIndex = 0;
             toolStripComboBox_LangType.SelectedIndex = 0;
 
-            playAudio.PlayStopped += new PlayStoppedHandler(PlayStopped);
+            playAudio.PlayStoppedEvent += PlayStopped;
             pdfToImage.GetOnePageEvent += PdfCallback;
         }
 
@@ -282,6 +258,9 @@ namespace 鹰眼OCR
                 _CaptureImage = value;
             }
         }
+
+
+
         private Point currentPos;
         private Image _CaptureImage;// 截取的图像
         private FrmQRCode qRCode; // 二维码生成窗体
@@ -623,10 +602,6 @@ namespace 鹰眼OCR
             {
                 //label_Course.Visible = false;
                 //label_BugSubmission.Visible = false;
-
-                #region 吾爱
-                label2.Visible = false;  
-                #endregion
                 InitPath();
                 if (!File.Exists(SavePath.ConfigPath))
                     return;
@@ -1055,7 +1030,7 @@ namespace 鹰眼OCR
                 {
                     pdfToImage.ToImage(fileName, Setting_Other.PdfDelayTime);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     RefreshLog(ex.Message);
                     return;
@@ -1118,7 +1093,7 @@ namespace 鹰眼OCR
                     ClearLog();
                     frmPhotograph = new FrmPhotograph();
                     frmPhotograph.Position = new Point(this.Location.X + (this.Width / 2 - frmPhotograph.Width / 2), this.Location.Y + (this.Height / 2 - frmPhotograph.Height / 2));
-                    frmPhotograph.PhotoRecognition += new PhotoRecognitionHandler(PhotoRecognition);
+                    frmPhotograph.PhotographEvent += PhotoRecognition;
                     frmPhotograph.Show();
                 }
                 else
@@ -1534,9 +1509,9 @@ namespace 鹰眼OCR
                 if (frmFind == null || frmFind.IsDisposed)
                 {
                     frmFind = new FrmFind(richTextBox1.SelectedText);
-                    frmFind.RichTextBoxText += new RichTextBoxTextHandler(GetRichTextBoxText);
-                    frmFind.RichTextBoxSelectedText += new RichTextBoxSelectedTextHandler(GetRichTextBoxSelectedText);
-                    frmFind.RichTextBoxFind += new RichTextBoxFindHandler(RichTextBoxFind);
+                    frmFind.RichTextBoxText += new RichTextBoxTextDelegate(GetRichTextBoxText);
+                    frmFind.RichTextBoxSelectedText += new RichTextBoxSelectedTextDelegate(GetRichTextBoxSelectedText);
+                    frmFind.RichTextBoxFind += new RichTextBoxFindDelegate(RichTextBoxFind);
                     frmFind.Position = new Point(this.Location.X + (this.Width / 2 - frmFind.Width / 2), this.Location.Y + (this.Height / 2 - frmFind.Height / 2));
                     frmFind.Show();
                 }
@@ -1828,8 +1803,8 @@ namespace 鹰眼OCR
                 {
                     frmSetting = new FrmSetting();
                     frmSetting.Save_Path = savePath;
-                    frmSetting.LoadFile += new LoadConfigFileHandler(LoadConfigFile);
-                    frmSetting.InstallHotkey += new InstallAllHotkeysHandler(InstallAllHotkeys);
+                    frmSetting.LoadFile += new LoadConfigFileDelegate(LoadConfigFile);
+                    frmSetting.InstallingHotkey += new FrmSetting.InstallingHotkeyDelegate(InstallAllHotkeys);
                     frmSetting.Position = new Point(this.Location.X + (this.Width / 2 - frmSetting.Width / 2), this.Location.Y + (this.Height / 2 - frmSetting.Height / 2));
                     frmSetting.Show();
                 }

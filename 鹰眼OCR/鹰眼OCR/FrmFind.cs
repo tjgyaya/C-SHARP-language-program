@@ -20,11 +20,11 @@ namespace 鹰眼OCR
 
         public Point Position;
 
-        public RichTextBoxTextHandler RichTextBoxText;
+        public MainForm.RichTextBoxTextDelegate RichTextBoxText;
 
-        public RichTextBoxSelectedTextHandler RichTextBoxSelectedText;
+        public MainForm.RichTextBoxSelectedTextDelegate RichTextBoxSelectedText;
 
-        public RichTextBoxFindHandler RichTextBoxFind;
+        public MainForm.RichTextBoxFindDelegate RichTextBoxFind;
 
         public FrmFind(string str)
         {
