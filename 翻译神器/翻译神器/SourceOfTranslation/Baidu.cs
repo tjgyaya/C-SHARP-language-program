@@ -17,7 +17,7 @@ namespace 翻译神器.SourceOfTranslation
 {
     class Baidu
     {
-        private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
+      //  private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
         private static string accurate_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=";
 
         /// <summary>
