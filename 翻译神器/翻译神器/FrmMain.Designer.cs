@@ -85,6 +85,8 @@
             this.textBox_BaiduApiKey = new System.Windows.Forms.TextBox();
             this.label_BaiduSecretKey = new System.Windows.Forms.Label();
             this.label_BaiduApiKey = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox_HotKey.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox_FixedTran.SuspendLayout();
@@ -251,6 +253,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.groupBox_FixedTran);
             this.tabPage2.Controls.Add(this.button_Save);
             this.tabPage2.Controls.Add(this.groupBox_Other);
@@ -317,7 +321,7 @@
             this.button_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Save.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold);
             this.button_Save.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.button_Save.Location = new System.Drawing.Point(174, 315);
+            this.button_Save.Location = new System.Drawing.Point(336, 315);
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(100, 37);
             this.button_Save.TabIndex = 5;
@@ -714,6 +718,28 @@
             this.label_BaiduApiKey.TabIndex = 0;
             this.label_BaiduApiKey.Text = "百度文字识别API Key：";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.ForeColor = System.Drawing.Color.Red;
+            this.label3.Location = new System.Drawing.Point(3, 315);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 17);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "提示:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.ForeColor = System.Drawing.Color.DimGray;
+            this.label4.Location = new System.Drawing.Point(3, 335);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(267, 17);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "显示译文窗口时长按CTRL键可延迟关闭译文窗口";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -732,6 +758,7 @@
             this.groupBox_HotKey.ResumeLayout(false);
             this.groupBox_HotKey.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.groupBox_FixedTran.ResumeLayout(false);
             this.groupBox_FixedTran.PerformLayout();
             this.groupBox_Other.ResumeLayout(false);
@@ -805,6 +832,8 @@
         private System.Windows.Forms.TextBox textBox_YoudaoAppKey;
         private System.Windows.Forms.Label label_YoudaoAppSecret;
         private System.Windows.Forms.Label label_YoudaoAppKey;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }
 

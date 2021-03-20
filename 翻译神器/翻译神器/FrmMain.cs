@@ -154,7 +154,6 @@ namespace 翻译神器
             UnRegHotKey();
             CloseThread(false);     // 关闭线程
             notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
-            this.Dispose();
             Environment.Exit(0);    // 退出
         }
 
@@ -579,8 +578,8 @@ namespace 翻译神器
             {
                 if (shot != null && !shot.IsDisposed)
                     shot.Dispose();
-                if (captureImage != null)
-                    captureImage.Dispose();
+                //if (captureImage != null)
+                //    captureImage.Dispose();
             }
         }
 

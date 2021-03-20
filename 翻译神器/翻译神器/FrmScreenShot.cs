@@ -181,7 +181,7 @@ namespace 翻译神器
         public void CopyScreen()
         {
             // 创建一个和屏幕一样大的空白图片
-            using (Bitmap bmp = new Bitmap(Screen.AllScreens[0].Bounds.Width, Screen.AllScreens[0].Bounds.Height))
+            Bitmap bmp = new Bitmap(Screen.AllScreens[0].Bounds.Width, Screen.AllScreens[0].Bounds.Height);
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 // 把屏幕图片拷贝到创建的空白图片中
