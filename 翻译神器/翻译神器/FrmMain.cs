@@ -165,36 +165,27 @@ namespace 翻译神器
 
         private void LoadFile(bool reload = false)
         {
-            // 判断文件是否存在
+            // 判断配置文件是否存在
             if (!File.Exists(ConfigFile.ConfigPath))
             {
-                MessageBox.Show("请先设定热键！", "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("请先设定热键！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-
             try
             {
-                // 读取配置文件
-                ConfigFile.ReadFile(ref config);
+                ConfigFile.ReadFile(ref config);   // 读取配置文件
                 DataRecovery();
                 if (reload)// 重新加载配置文件
                     UnRegHotKey();
                 RegHotKey();
+                if(!reload)
+                    this.notifyIcon1.ShowBalloonTip(5000, this.Text, "欢迎使用" + this.Text, ToolTipIcon.Info);
             }
             catch //(Exception ex)
             {
-                MessageBox.Show("加载配置文件错误，请重新设置！", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("加载配置文件错误，请重新设置！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                if (BaiduKey.IsEmptyOrNull)
-                {
-                    BaiduKey.ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
-                    BaiduKey.SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
-                    BaiduKey.AppId = "20200424000429104";
-                    BaiduKey.Password = "5mzyraBsLRk2yfGQMhXJ";
-                }
-            }
+            
         }
 
         // 从字典config恢复数据
@@ -393,12 +384,12 @@ namespace 翻译神器
 
                 InitDictionary();
                 ConfigFile.WriteFile(config);
-                MessageBox.Show("保存成功，立即生效！", "保存成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("保存成功，立即生效！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadFile(true);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("保存失败！\n原因：" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("保存失败！\n原因：" + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -451,13 +442,13 @@ namespace 翻译神器
                 // 保存截图坐标高宽
                 screenRect = new Rectangle(p.X, p.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
                 if (shot.SelectedArea.Width > 0 && shot.SelectedArea.Height > 0)
-                    MessageBox.Show("设置成功！\n请点击“保存配置”按钮。", "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("设置成功！\n请点击“保存配置”按钮。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     throw new Exception("设置失败，请重试！");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("设置固定翻译坐标失败！\n原因：" + ex.Message, "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("设置固定翻译坐标失败！\n原因：" + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -507,7 +498,7 @@ namespace 翻译神器
             p.X = screenRect.X;
             p.Y = screenRect.Y;
             Api.ClientToScreen(hwnd, ref p);
-           return Screenshot(p.X, p.Y, screenRect.Width, screenRect.Height);
+            return Screenshot(p.X, p.Y, screenRect.Width, screenRect.Height);
         }
 
         // 截图翻译
@@ -669,11 +660,11 @@ namespace 翻译神器
             try
             {
                 ConfigFile.WriteFile(config);
-                MessageBox.Show("测试成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("测试成功！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("保存到文件失败！\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("保存到文件失败！\n" + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -691,11 +682,11 @@ namespace 翻译神器
             try
             {
                 ConfigFile.WriteFile(config);
-                MessageBox.Show("测试成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("测试成功！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("保存到文件失败！\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("保存到文件失败！\n" + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -707,7 +698,7 @@ namespace 翻译神器
                 {
                     if (string.IsNullOrEmpty(((TextBox)item).Text))
                     {
-                        MessageBox.Show("缺少必备的参数！", "失败", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("缺少必备的参数！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return true;
                     }
                 }
@@ -718,11 +709,15 @@ namespace 翻译神器
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex == 1)
-            {
                 UnRegHotKey();
-            }
             else if (!putOnTheHook)
-                RegHotKey();
+            {
+                try
+                {
+                    RegHotKey();
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message + "\r\n请重启程序", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
         }
 
         private void textBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -739,7 +734,18 @@ namespace 翻译神器
                 this.ShowInTaskbar = false;
             else
                 this.ShowInTaskbar = true;
-            RegHotKey();
+            try
+            {
+                try
+                {
+                    RegHotKey();
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message + "\r\n请重启程序", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)

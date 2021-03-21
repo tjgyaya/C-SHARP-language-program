@@ -45,6 +45,8 @@
             this.label_WindowName = new System.Windows.Forms.Label();
             this.label_WindowClass = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox_FixedTran = new System.Windows.Forms.GroupBox();
             this.button_SetPosition = new System.Windows.Forms.Button();
             this.textBox_WindowClass = new System.Windows.Forms.TextBox();
@@ -85,8 +87,8 @@
             this.textBox_BaiduApiKey = new System.Windows.Forms.TextBox();
             this.label_BaiduSecretKey = new System.Windows.Forms.Label();
             this.label_BaiduApiKey = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox_HotKey.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox_FixedTran.SuspendLayout();
@@ -269,6 +271,28 @@
             this.toolTip1.SetToolTip(this.tabPage2, "切换到此页面时，热键不会生效");
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+            this.label4.ForeColor = System.Drawing.Color.DimGray;
+            this.label4.Location = new System.Drawing.Point(44, 333);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(159, 19);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "在此界面热键不会生效";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+            this.label3.ForeColor = System.Drawing.Color.Red;
+            this.label3.Location = new System.Drawing.Point(3, 333);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(43, 19);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "提示:";
+            // 
             // groupBox_FixedTran
             // 
             this.groupBox_FixedTran.Controls.Add(this.button_SetPosition);
@@ -441,7 +465,7 @@
             this.label2.BackColor = System.Drawing.SystemColors.Window;
             this.label2.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(3, 53);
+            this.label2.Location = new System.Drawing.Point(3, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(123, 30);
             this.label2.TabIndex = 11;
@@ -453,7 +477,7 @@
             this.label1.BackColor = System.Drawing.SystemColors.Window;
             this.label1.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label1.Location = new System.Drawing.Point(8, 83);
+            this.label1.Location = new System.Drawing.Point(8, 70);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(404, 180);
             this.label1.TabIndex = 10;
@@ -485,6 +509,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.richTextBox1);
@@ -718,27 +744,27 @@
             this.label_BaiduApiKey.TabIndex = 0;
             this.label_BaiduApiKey.Text = "百度文字识别API Key：";
             // 
-            // label3
+            // label5
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(3, 315);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 17);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "提示:";
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.Gray;
+            this.label5.Location = new System.Drawing.Point(10, 325);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(331, 19);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "显示译文窗口时长按CTRL键可延迟关闭译文窗口";
             // 
-            // label4
+            // label6
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.ForeColor = System.Drawing.Color.DimGray;
-            this.label4.Location = new System.Drawing.Point(3, 335);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(267, 17);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "显示译文窗口时长按CTRL键可延迟关闭译文窗口";
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.DimGray;
+            this.label6.Location = new System.Drawing.Point(10, 305);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 19);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "提示:";
             // 
             // FrmMain
             // 
@@ -834,6 +860,8 @@
         private System.Windows.Forms.Label label_YoudaoAppKey;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }
 
