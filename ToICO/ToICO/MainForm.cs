@@ -97,7 +97,7 @@ namespace ToICO
                 for (int i = 0; i < listView1.Items.Count; i++)
                 {
                     string file = listView1.Items[i].ImageKey;
-                    savePath = savePath ?? Path.GetDirectoryName(file);
+                    savePath ??= Path.GetDirectoryName(file);
                     ConvertImage(file, (string)comboBox_TargetFormat.SelectedItem, savePath);
                 }
                 toolStripStatusLabel1.Text = "保存成功。";
@@ -323,11 +323,11 @@ namespace ToICO
         {
             if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(dest))
                 return;
-            //if (destFormat.ToLower() == "ico")
-            //{
-            //    ConvertToIcon(source, dest, destSize);
-            //    return;
-            //}
+            if (destFormat.ToLower() == "ico")
+            {
+                ConvertToIcon(source, dest, destSize);
+                return;
+            }
             ImageFormat format = StrToImageFormat(destFormat);
             if (format == null)
                 throw new Exception("目标格式错误！");
