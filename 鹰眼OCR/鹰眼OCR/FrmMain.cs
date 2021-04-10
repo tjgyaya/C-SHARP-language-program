@@ -18,23 +18,14 @@ namespace 鹰眼OCR
     // 百度文字识别和百度翻译key
     public struct BaiduKey
     {
-        //public static string ApiKey;
-        //public static string SecretKey;
-        //public static string TTS_ApiKey;
-        //public static string TTS_SecretKey;
-        //public static string AppId;
-        //public static string Password;
-        //public static string CorrectionAK;
-        //public static string CorrectionSK;
-
-        public static string ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
-        public static string SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
-        public static string TTS_ApiKey = "qk3y9G2FQLrQsCa9v9NzzW8h";
-        public static string TTS_SecretKey = "qtYsvvdEGgQ6EzxVSFuYRvl8NmzVihy1";
-        public static string AppId = "20200424000429104";
-        public static string Password = "5mzyraBsLRk2yfGQMhXJ";
-        public static string CorrectionAK = "O26bQOVrdh4SOeLeogaDCel3";
-        public static string CorrectionSK = "EGiBPCkZtG4S0u8QlpCZUYiIfGCYhwji";
+        public static string ApiKey;
+        public static string SecretKey;
+        public static string TTS_ApiKey;
+        public static string TTS_SecretKey;
+        public static string AppId;
+        public static string Password;
+        public static string CorrectionAK;
+        public static string CorrectionSK;
 
         public static bool IsEmptyOrNull
         {
@@ -51,10 +42,9 @@ namespace 鹰眼OCR
     // 有道文字识别key
     public struct YoudaoKey
     {
-        //public static string AppKey;
-        //public static string AppSecret;
-        public static string AppKey = "6df1e6a7fbfcd42b";
-        public static string AppSecret = "l3nfoha0QtyeYGhqo1DgmyMoSteuNEKS";
+        public static string AppKey;
+        public static string AppSecret;
+
         public static bool IsEmptyOrNull
         {
             get
@@ -70,11 +60,8 @@ namespace 鹰眼OCR
     // 京东key
     public struct JingDongKey
     {
-        //public static string AppKey;
-        //public static string SecretKey;
-        public static string AppKey = "9e605eb8912049a99c065688dc253b06";
-        public static string SecretKey = "3d189c46e3bdec0659221530c3726643";
-
+        public static string AppKey;
+        public static string SecretKey;
         public static bool IsEmptyOrNull
         {
             get
