@@ -193,6 +193,26 @@ namespace 鹰眼OCR.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap 最大化 {
+            get {
+                object obj = ResourceManager.GetObject("最大化", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 最大化_细 {
+            get {
+                object obj = ResourceManager.GetObject("最大化_细", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap 最小化 {
             get {
                 object obj = ResourceManager.GetObject("最小化", resourceCulture);
@@ -297,6 +317,16 @@ namespace 鹰眼OCR.Properties {
             get {
                 object obj = ResourceManager.GetObject("通用文字识别_高精度", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] 重命名文件 {
+            get {
+                object obj = ResourceManager.GetObject("重命名文件", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

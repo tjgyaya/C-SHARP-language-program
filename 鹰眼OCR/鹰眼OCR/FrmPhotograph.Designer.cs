@@ -149,7 +149,7 @@
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmPhotograph";
-            this.Text = "拍照";
+            this.Text = "拍照识别";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPhotograph_FormClosing);
             this.Load += new System.EventHandler(this.FrmPhotograph_Load);
             this.groupBox1.ResumeLayout(false);

@@ -90,6 +90,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.从右到左的顺序toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel_Top = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.label_BugSubmission = new System.Windows.Forms.Label();
             this.label_Course = new System.Windows.Forms.Label();
             this.label_SoftwareName = new System.Windows.Forms.Label();
@@ -153,10 +154,10 @@
             this.本地语音合成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button_PlayDestText = new System.Windows.Forms.Button();
             this.button_SwitchTranLang = new System.Windows.Forms.Button();
-            this.button_Setting = new System.Windows.Forms.Button();
             this.button_TopMost = new System.Windows.Forms.Button();
-            this.button_Close = new System.Windows.Forms.Button();
             this.button_Minimize = new System.Windows.Forms.Button();
+            this.button_Close = new System.Windows.Forms.Button();
+            this.button_Setting = new System.Windows.Forms.Button();
             this.pictureBox_Icon = new System.Windows.Forms.PictureBox();
             this.panel_Back.SuspendLayout();
             this.panel_Main.SuspendLayout();
@@ -166,6 +167,7 @@
             this.panel_Translate.SuspendLayout();
             this.menu_richTextBox2.SuspendLayout();
             this.panel_Top.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.menu_speechRecognition.SuspendLayout();
             this.menu_tts.SuspendLayout();
@@ -242,7 +244,7 @@
             this.panel_Back.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_Back.Location = new System.Drawing.Point(0, 0);
             this.panel_Back.Name = "panel_Back";
-            this.panel_Back.Size = new System.Drawing.Size(852, 514);
+            this.panel_Back.Size = new System.Drawing.Size(857, 541);
             this.panel_Back.TabIndex = 13;
             // 
             // panel_Main
@@ -253,7 +255,7 @@
             this.panel_Main.Location = new System.Drawing.Point(0, 42);
             this.panel_Main.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.panel_Main.Name = "panel_Main";
-            this.panel_Main.Size = new System.Drawing.Size(430, 445);
+            this.panel_Main.Size = new System.Drawing.Size(430, 472);
             this.panel_Main.TabIndex = 20;
             // 
             // richTextBox1
@@ -270,7 +272,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.richTextBox1.ShowSelectionMargin = true;
-            this.richTextBox1.Size = new System.Drawing.Size(430, 381);
+            this.richTextBox1.Size = new System.Drawing.Size(430, 408);
             this.richTextBox1.TabIndex = 14;
             this.richTextBox1.Text = "";
             this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox_LinkClicked);
@@ -665,6 +667,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(430, 39);
+            this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 12;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -682,7 +685,7 @@
             this.panel_Translate.Controls.Add(this.richTextBox2);
             this.panel_Translate.Location = new System.Drawing.Point(433, 42);
             this.panel_Translate.Name = "panel_Translate";
-            this.panel_Translate.Size = new System.Drawing.Size(418, 445);
+            this.panel_Translate.Size = new System.Drawing.Size(421, 472);
             this.panel_Translate.TabIndex = 3;
             // 
             // button_CloseTranslate
@@ -718,7 +721,6 @@
             this.richTextBox2.AcceptsTab = true;
             this.richTextBox2.BackColor = System.Drawing.Color.White;
             this.richTextBox2.ContextMenuStrip = this.menu_richTextBox2;
-            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.richTextBox2.Font = new System.Drawing.Font("微软雅黑", 10F);
             this.richTextBox2.HideSelection = false;
             this.richTextBox2.Location = new System.Drawing.Point(0, 64);
@@ -727,7 +729,7 @@
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.richTextBox2.ShowSelectionMargin = true;
-            this.richTextBox2.Size = new System.Drawing.Size(418, 381);
+            this.richTextBox2.Size = new System.Drawing.Size(418, 408);
             this.richTextBox2.TabIndex = 15;
             this.richTextBox2.Text = "";
             this.richTextBox2.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox_LinkClicked);
@@ -822,21 +824,31 @@
             // 
             // panel_Top
             // 
+            this.panel_Top.Controls.Add(this.panel1);
             this.panel_Top.Controls.Add(this.label_BugSubmission);
             this.panel_Top.Controls.Add(this.label_Course);
-            this.panel_Top.Controls.Add(this.button_Setting);
-            this.panel_Top.Controls.Add(this.button_TopMost);
-            this.panel_Top.Controls.Add(this.button_Close);
-            this.panel_Top.Controls.Add(this.button_Minimize);
             this.panel_Top.Controls.Add(this.label_SoftwareName);
             this.panel_Top.Controls.Add(this.pictureBox_Icon);
             this.panel_Top.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_Top.Location = new System.Drawing.Point(0, 0);
             this.panel_Top.Name = "panel_Top";
-            this.panel_Top.Size = new System.Drawing.Size(850, 39);
+            this.panel_Top.Size = new System.Drawing.Size(855, 39);
             this.panel_Top.TabIndex = 15;
             this.panel_Top.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseDown);
             this.panel_Top.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_Top_MouseMove);
+            // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.Controls.Add(this.button_TopMost);
+            this.panel1.Controls.Add(this.button_Minimize);
+            this.panel1.Controls.Add(this.button_Close);
+            this.panel1.Controls.Add(this.button_Setting);
+            this.panel1.Location = new System.Drawing.Point(570, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(287, 42);
+            this.panel1.TabIndex = 25;
             // 
             // label_BugSubmission
             // 
@@ -872,7 +884,7 @@
             this.label_SoftwareName.Name = "label_SoftwareName";
             this.label_SoftwareName.Size = new System.Drawing.Size(136, 38);
             this.label_SoftwareName.TabIndex = 1;
-            this.label_SoftwareName.Text = "鹰眼OCR  V2.0";
+            this.label_SoftwareName.Text = "鹰眼OCR  V2.3";
             this.label_SoftwareName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel_line
@@ -891,10 +903,10 @@
             this.statusLabel_wordNum,
             this.toolStripStatusLabel3,
             this.statusLabel_Log});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 490);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 517);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
-            this.statusStrip1.Size = new System.Drawing.Size(850, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(855, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 14;
             this.statusStrip1.Text = "statusStrip1";
@@ -1412,36 +1424,36 @@
             this.button_SwitchTranLang.UseVisualStyleBackColor = false;
             this.button_SwitchTranLang.Click += new System.EventHandler(this.button_SwitchTranLang_Click);
             // 
-            // button_Setting
-            // 
-            this.button_Setting.BackColor = System.Drawing.Color.Transparent;
-            this.button_Setting.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_Setting.FlatAppearance.BorderSize = 0;
-            this.button_Setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_Setting.Image = global::鹰眼OCR.Properties.Resources.设置;
-            this.button_Setting.Location = new System.Drawing.Point(672, -1);
-            this.button_Setting.Name = "button_Setting";
-            this.button_Setting.Size = new System.Drawing.Size(47, 39);
-            this.button_Setting.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.button_Setting, "设置");
-            this.button_Setting.UseVisualStyleBackColor = false;
-            this.button_Setting.Click += new System.EventHandler(this.button_Setting_Click);
-            // 
             // button_TopMost
             // 
             this.button_TopMost.BackColor = System.Drawing.Color.Transparent;
             this.button_TopMost.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.button_TopMost.FlatAppearance.BorderSize = 0;
             this.button_TopMost.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_TopMost.Image = global::鹰眼OCR.Properties.Resources.顶置;
+            this.button_TopMost.Image = global::鹰眼OCR.Properties.Resources.取消顶置;
             this.button_TopMost.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button_TopMost.Location = new System.Drawing.Point(619, -1);
+            this.button_TopMost.Location = new System.Drawing.Point(55, 0);
             this.button_TopMost.Name = "button_TopMost";
             this.button_TopMost.Size = new System.Drawing.Size(47, 39);
             this.button_TopMost.TabIndex = 6;
             this.toolTip1.SetToolTip(this.button_TopMost, "顶置窗口");
             this.button_TopMost.UseVisualStyleBackColor = false;
             this.button_TopMost.Click += new System.EventHandler(this.button_TopMost_Click);
+            // 
+            // button_Minimize
+            // 
+            this.button_Minimize.BackColor = System.Drawing.Color.Transparent;
+            this.button_Minimize.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_Minimize.FlatAppearance.BorderSize = 0;
+            this.button_Minimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Minimize.Image = global::鹰眼OCR.Properties.Resources.最小化;
+            this.button_Minimize.Location = new System.Drawing.Point(181, 0);
+            this.button_Minimize.Name = "button_Minimize";
+            this.button_Minimize.Size = new System.Drawing.Size(50, 39);
+            this.button_Minimize.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.button_Minimize, "最小化");
+            this.button_Minimize.UseVisualStyleBackColor = false;
+            this.button_Minimize.Click += new System.EventHandler(this.button_Minimize_Click);
             // 
             // button_Close
             // 
@@ -1452,28 +1464,28 @@
             this.button_Close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Close.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button_Close.Image = global::鹰眼OCR.Properties.Resources.关闭;
-            this.button_Close.Location = new System.Drawing.Point(791, -1);
+            this.button_Close.Location = new System.Drawing.Point(234, 0);
             this.button_Close.Name = "button_Close";
-            this.button_Close.Size = new System.Drawing.Size(59, 39);
+            this.button_Close.Size = new System.Drawing.Size(50, 39);
             this.button_Close.TabIndex = 4;
             this.toolTip1.SetToolTip(this.button_Close, "关闭");
             this.button_Close.UseVisualStyleBackColor = false;
             this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
             // 
-            // button_Minimize
+            // button_Setting
             // 
-            this.button_Minimize.BackColor = System.Drawing.Color.Transparent;
-            this.button_Minimize.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button_Minimize.FlatAppearance.BorderSize = 0;
-            this.button_Minimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_Minimize.Image = global::鹰眼OCR.Properties.Resources.最小化;
-            this.button_Minimize.Location = new System.Drawing.Point(737, -1);
-            this.button_Minimize.Name = "button_Minimize";
-            this.button_Minimize.Size = new System.Drawing.Size(47, 39);
-            this.button_Minimize.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.button_Minimize, "最小化");
-            this.button_Minimize.UseVisualStyleBackColor = false;
-            this.button_Minimize.Click += new System.EventHandler(this.button_Minimize_Click);
+            this.button_Setting.BackColor = System.Drawing.Color.Transparent;
+            this.button_Setting.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button_Setting.FlatAppearance.BorderSize = 0;
+            this.button_Setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Setting.Image = global::鹰眼OCR.Properties.Resources.设置;
+            this.button_Setting.Location = new System.Drawing.Point(111, 0);
+            this.button_Setting.Name = "button_Setting";
+            this.button_Setting.Size = new System.Drawing.Size(47, 39);
+            this.button_Setting.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.button_Setting, "设置");
+            this.button_Setting.UseVisualStyleBackColor = false;
+            this.button_Setting.Click += new System.EventHandler(this.button_Setting_Click);
             // 
             // pictureBox_Icon
             // 
@@ -1491,7 +1503,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(852, 514);
+            this.ClientSize = new System.Drawing.Size(857, 541);
             this.Controls.Add(this.panel_Back);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1517,6 +1529,7 @@
             this.menu_richTextBox2.ResumeLayout(false);
             this.panel_Top.ResumeLayout(false);
             this.panel_Top.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menu_speechRecognition.ResumeLayout(false);
@@ -1656,6 +1669,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox_LangType;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

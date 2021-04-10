@@ -125,7 +125,6 @@ namespace 鹰眼OCR
             }
         }
 
-
         private void FrmScreenShot_Paint(object sender, PaintEventArgs e)
         {
             if (screenImage == null)

@@ -157,6 +157,12 @@
   <data name="数字" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\数字.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="最大化" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\最大化.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="最大化_细" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\最大化 细.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="最小化" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\最小化.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -189,6 +195,9 @@
   </data>
   <data name="通用文字识别_高精度" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\通用文字识别_高精度.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="重命名文件" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\重命名文件.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="重试" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\重试.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

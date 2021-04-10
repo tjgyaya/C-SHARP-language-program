@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using ZXing;
 using ZXing.QrCode;
@@ -54,7 +51,6 @@ namespace 鹰眼OCR.OCR
         /// <summary>
         /// 本地识别二维码
         /// </summary>
-        /// <param name="path">图片路径</param>
         /// <param name="img"></param>
         /// <returns></returns>
         public static string LocalIdentifyQRCode(Image img)

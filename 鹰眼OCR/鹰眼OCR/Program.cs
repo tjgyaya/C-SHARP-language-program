@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
@@ -15,14 +16,18 @@ namespace 鹰眼OCR
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                if (IsRun()) // 判断当前程序是否在运行
-                    throw new Exception("当前程序已经在运行！");
-                if (!IsAdministrator())
-                    MessageBox.Show("请以管理员权限运行！", "鹰眼OCR", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (args.Length == 0)
+                {
+                    if (IsRun()) // 判断当前程序是否在运行
+                        throw new Exception("当前程序已经在运行！");
+                }
+                //if (!IsAdministrator())
+                //    MessageBox.Show("请以管理员权限运行！", "鹰眼OCR", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DelFile();
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm());
@@ -33,6 +38,21 @@ namespace 鹰眼OCR
                 Environment.Exit(0);
             }
         }
+
+        private static void DelFile()
+        {
+            try
+            {
+                string file = "重命名文件.exe";
+                if (File.Exists(file))
+                    File.Delete(file);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
 
         /// <summary>
         /// 判断当前程序是否在运行

@@ -25,8 +25,6 @@ namespace 鹰眼OCR
 
         public Point Position { get; set; }
 
-        public bool IsOnline { get; set; }
-
         public FrmQRCode()
         {
             InitializeComponent();
@@ -43,10 +41,10 @@ namespace 鹰眼OCR
                     pictureBox1.Image.Dispose();
                     pictureBox1.Image = null;
                 }
-                if (IsOnline) // 在线生成二维码
-                    pictureBox1.Image = LocalQRCode.OnlineGenerateQRCode(size, _Content);
-                else          // 本地生成二维码
-                    pictureBox1.Image = LocalQRCode.LocalGenerateQRCode(size, _Content);
+                //if (IsOnline) // 在线生成二维码
+                //    pictureBox1.Image = LocalQRCode.OnlineGenerateQRCode(size, _Content);
+                //else          // 本地生成二维码
+                    pictureBox1.Image = LocalQRCode.LocalGenerateQRCode(size, text);
             }
             catch (Exception ex)
             {

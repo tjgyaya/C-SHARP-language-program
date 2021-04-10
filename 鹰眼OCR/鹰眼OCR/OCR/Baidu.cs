@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Management.Instrumentation;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using ZXing;
 
 namespace 鹰眼OCR.OCR
 {
@@ -157,7 +154,7 @@ namespace 鹰眼OCR.OCR
         /// <param name="rate"></param>
         /// <param name="devPid"></param>
         /// <returns></returns>
-        public static string Recognition(string audioPath, string rate, string devPid)
+        public static string Asr(string audioPath, string rate, string devPid)
         {
             string host = "http://vop.baidu.com/server_api?" + $"&cuid={DateTime.Now.Millisecond}&token={GetAccessToken(BaiduKey.TTS_ApiKey, BaiduKey.TTS_SecretKey)}&dev_pid={GetDevPid(devPid)}";
             byte[] buffer = File.ReadAllBytes(audioPath);

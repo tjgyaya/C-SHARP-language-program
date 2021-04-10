@@ -18,7 +18,7 @@ namespace 鹰眼OCR
     // 语音识别委托
     public delegate void SpeechRecognitionHandler();
 
-    public partial class FrmSoundRecording : Form
+    public partial class FrmAsr : Form
     {
         public SpeechRecognitionHandler SpeechRecognition { get; set; }
 
@@ -58,7 +58,7 @@ namespace 鹰眼OCR
         private Recorder recorder = new Recorder();
         private PlayAudio playAudio = new PlayAudio();
         private int MaxTime;
-        public FrmSoundRecording()
+        public FrmAsr()
         {
             InitializeComponent();
             SamplingRate = 16000;

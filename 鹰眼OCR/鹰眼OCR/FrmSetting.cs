@@ -12,12 +12,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using 鹰眼OCR.OCR;
 using System.Runtime.InteropServices;
+using System.Web;
+using System.Net;
 
 namespace 鹰眼OCR
 {
     public partial class FrmSetting : Form
     {
         public delegate void InstallingHotkeyDelegate();
+
+        AutoUpdate update;
 
         public Point Position { get; set; }
 
@@ -29,27 +33,13 @@ namespace 鹰眼OCR
 
         public InstallingHotkeyDelegate InstallingHotkey { get; set; }
 
-
         public FrmSetting()
         {
             InitializeComponent();
             panel_Main.AutoScroll = false;
-            //// 获取屏幕缩放比，动态调整窗口大小
-            //using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            //{
-            //    panel_Main.Width = (int)(685 * g.DpiX / 96);
-            //    this.Width = (int)(770 * g.DpiX / 96);
-            //}
             listBox_Menu.SelectedIndex = 1;
-
-            //linkLabelBaiduOCRUrl.Visible = false;
-            //linkLabel_BaiduTTSUrl.Visible = false;
-            //linkLabel_BaiduTranUrl.Visible = false;
-            //linkLabel_BaiduCorrectionUrl.Visible = false;
-            //linkLabel_YoudaoUrl.Visible = false;
-            //linkLabel_JingDongUrl.Visible = false;
-            //linkLabel_Help.Visible = false;
-            //label11.Text += "请查看教程文档";
+            panel_Update.Visible = false;
+            update = new AutoUpdate();
         }
 
         private void FrmSetting_Load(object sender, EventArgs e)
@@ -59,21 +49,6 @@ namespace 鹰眼OCR
             ReadOther();
             this.Location = Position;
         }
-
-        //private void linkLabelBaiduOCRUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
-        //private void linkLabel_BaiduTTSUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
-        //private void linkLabel_BaiduTranUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
-        //private void linkLabel_BaiduCorrectionUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
-        //private void linkLabel_YoudaoUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
-        //private void linkLabel_JingDongUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
-        //private void linkLabel_Help_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { }
-
 
         private void linkLabelBaiduOCRUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => OpenUrl("https://ai.baidu.com/tech/ocr/general");
 
@@ -368,14 +343,32 @@ namespace 鹰眼OCR
 
         private void listBox_Menu_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listBox_Menu.SelectedItem.ToString().Trim() == "选项")
+                return;
+            DisableButton(true);
             if (listBox_Menu.SelectedItem.ToString().Trim() == "热键")
                 HidePanel(panel_HotKey.Name);
             else if (listBox_Menu.SelectedItem.ToString().Trim() == "Key")
                 HidePanel(panel_Key.Name);
             else if (listBox_Menu.SelectedItem.ToString().Trim() == "其它")
                 HidePanel(panel_Other.Name);
+            else if (listBox_Menu.SelectedItem.ToString().Trim() == "更新")
+            {
+                HidePanel(panel_Update.Name);
+                DisableButton(false);
+                ShowUpdateInfo();
+            }
             else if (listBox_Menu.SelectedItem.ToString().Trim() == "关于")
+            {
                 HidePanel(panel_About.Name);
+                DisableButton(false);
+            }
+        }
+
+        private void DisableButton(bool val)
+        {
+            button_Cancel.Enabled = val;
+            button_SaveSetting.Enabled = val;
         }
 
         /// <summary>
@@ -589,5 +582,139 @@ namespace 鹰眼OCR
             }
         }
         #endregion
+
+        private Thread newThread;
+
+        private void DownloadUpdate(string fileName)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            HttpWebResponse response = null;
+            Stream stream = null;
+            FileStream fs = null;
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(update.FileUrl) as HttpWebRequest;
+                response = request.GetResponse() as HttpWebResponse; // 发送请求并获取响应
+                stream = response.GetResponseStream(); // 获取响应的数据流
+                fs = new FileStream(fileName, FileMode.Create);  // 将数据流写入到文件
+                byte[] bArr = new byte[4096];
+                double totalSize = 0.0;
+                int len = default;
+                // 刷新进度条委托
+                Action action = new Action(() => { RefreshProgress(totalSize); });
+                while ((len = stream.Read(bArr, 0, bArr.Length)) > 0)
+                {
+                    fs.Write(bArr, 0, len);
+                    totalSize += len;
+                    progressBar1.BeginInvoke(action);
+                }
+                fs.Close();
+
+                Thread.Sleep(1000);
+                // 判断下载的文件是否存在
+                if (!File.Exists(fileName))
+                    throw new Exception("下载更新文件失败");
+                // 判断下载的文件MD5是否和Xml文件中的一致
+                if (!update.FileMd5.ToLower().Equals(update.GetMd5(fileName).ToLower()))
+                    throw new Exception("下载的文件MD5不一致");
+                RenameFile(fileName, Process.GetCurrentProcess().MainModule.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("更新失败！\r\n原因：" + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            finally
+            {
+                stream?.Dispose();
+                response?.Dispose();
+                fs?.Dispose();
+            }
+        }
+
+        private void RefreshProgress(double curSize)
+        {
+            if (curSize == 0.0)
+                return;
+            double totalSize = int.Parse(update.UpdateSize.Replace(",", ""));
+            int val = (int)(curSize / totalSize * 100);
+            val = val > 100 ? 100 : val;
+            progressBar1.Value = val;
+            label_DownloadSize.Text = (curSize / 1048576).ToString("f2") + "MB/" + (totalSize / 1048576).ToString("f2") + "MB";
+        }
+
+        private void RenameFile(string source, string dest)
+        {
+            string name = Application.StartupPath + "\\重命名文件.exe";
+            File.WriteAllBytes(name, Properties.Resources.重命名文件);
+            string arguments = $"鹰眼OCR_重命名 \"{source}\" \"{dest}\"";
+            Process.Start(name, arguments);
+            // 退出当前进程
+            Environment.Exit(0);
+        }
+
+        private void button_CanelUpdate_Click(object sender, EventArgs e)
+        {
+            CanelUpdate();
+        }
+
+        private void CanelUpdate()
+        {
+            CloseThread();
+            progressBar1.Value = 0;
+            button_Update.Enabled = true;
+        }
+
+        private void CloseThread()
+        {   // 关闭新线程
+            if (newThread != null)
+            {
+                if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
+                    newThread.Abort();
+            }
+        }
+
+        private void StartThread(string fileName)
+        {   // 启动新线程
+            CloseThread();
+            newThread = new Thread(() => { DownloadUpdate(fileName); });
+            newThread.SetApartmentState(ApartmentState.STA);
+            newThread.Start(); // 启动新线程
+        }
+
+        private void button_Update_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!update.GetUpdate())
+                {
+                    MessageBox.Show("没有更新。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                //DialogResult result = MessageBox.Show("检测到更新，打开下载页面？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                //if (result == DialogResult.Yes)
+                //    OpenUrl(update.FileUrl);
+                button_Update.Enabled = false;
+                string destFile = Application.StartupPath + "\\未下载完的更新.tmp";
+                StartThread(destFile);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ShowUpdateInfo()
+        {
+            try
+            {
+                update.GetUpdate();
+                label_VersionInfo.Text = update.VersionInfo;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

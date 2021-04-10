@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmFind));
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button_ReplaceAll = new System.Windows.Forms.Button();
             this.button_Replace = new System.Windows.Forms.Button();
@@ -207,8 +208,10 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.checkBox_Matching);
             this.Controls.Add(this.label_Msg);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "FrmFind";
             this.Text = "查找与替换";
             this.TopMost = true;

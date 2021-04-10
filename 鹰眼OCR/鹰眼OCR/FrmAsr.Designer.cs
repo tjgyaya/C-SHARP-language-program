@@ -1,6 +1,6 @@
 ﻿namespace 鹰眼OCR
 {
-    partial class FrmSoundRecording
+    partial class FrmAsr
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSoundRecording));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAsr));
             this.button2_Stop = new System.Windows.Forms.Button();
             this.button1_Start = new System.Windows.Forms.Button();
             this.timer1_RecordingTime = new System.Windows.Forms.Timer(this.components);
@@ -166,7 +166,7 @@
             this.label2.TabIndex = 16;
             this.label2.Text = "00秒";
             // 
-            // FrmSoundRecording
+            // FrmAsr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -180,11 +180,12 @@
             this.Controls.Add(this.button1_Start);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3_Play);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Name = "FrmSoundRecording";
-            this.Text = "按下N键开始录音，再按N键结束";
+            this.MaximizeBox = false;
+            this.Name = "FrmAsr";
+            this.Text = "语音识别——按下N键开始录音，再按N键结束";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSoundRecording_FormClosing);
             this.Load += new System.EventHandler(this.FrmSoundRecording_Load);
             this.Shown += new System.EventHandler(this.FrmSoundRecording_Shown);

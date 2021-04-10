@@ -10,6 +10,7 @@ using 鹰眼OCR.PDF;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace 鹰眼OCR
 {
@@ -17,14 +18,23 @@ namespace 鹰眼OCR
     // 百度文字识别和百度翻译key
     public struct BaiduKey
     {
-        public static string ApiKey;
-        public static string SecretKey;
-        public static string TTS_ApiKey;
-        public static string TTS_SecretKey;
-        public static string AppId;
-        public static string Password;
-        public static string CorrectionAK;
-        public static string CorrectionSK;
+        //public static string ApiKey;
+        //public static string SecretKey;
+        //public static string TTS_ApiKey;
+        //public static string TTS_SecretKey;
+        //public static string AppId;
+        //public static string Password;
+        //public static string CorrectionAK;
+        //public static string CorrectionSK;
+
+        public static string ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
+        public static string SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
+        public static string TTS_ApiKey = "qk3y9G2FQLrQsCa9v9NzzW8h";
+        public static string TTS_SecretKey = "qtYsvvdEGgQ6EzxVSFuYRvl8NmzVihy1";
+        public static string AppId = "20200424000429104";
+        public static string Password = "5mzyraBsLRk2yfGQMhXJ";
+        public static string CorrectionAK = "O26bQOVrdh4SOeLeogaDCel3";
+        public static string CorrectionSK = "EGiBPCkZtG4S0u8QlpCZUYiIfGCYhwji";
 
         public static bool IsEmptyOrNull
         {
@@ -41,8 +51,10 @@ namespace 鹰眼OCR
     // 有道文字识别key
     public struct YoudaoKey
     {
-        public static string AppKey;
-        public static string AppSecret;
+        //public static string AppKey;
+        //public static string AppSecret;
+        public static string AppKey = "6df1e6a7fbfcd42b";
+        public static string AppSecret = "l3nfoha0QtyeYGhqo1DgmyMoSteuNEKS";
         public static bool IsEmptyOrNull
         {
             get
@@ -58,8 +70,10 @@ namespace 鹰眼OCR
     // 京东key
     public struct JingDongKey
     {
-        public static string AppKey;
-        public static string SecretKey;
+        //public static string AppKey;
+        //public static string SecretKey;
+        public static string AppKey = "9e605eb8912049a99c065688dc253b06";
+        public static string SecretKey = "3d189c46e3bdec0659221530c3726643";
 
         public static bool IsEmptyOrNull
         {
@@ -157,15 +171,15 @@ namespace 鹰眼OCR
     {
         public static int PdfDelayTime;
         public const string PdfDelayTime_KeyName = "识别PDF文件时，识别一页后的延迟时间";
-        public static bool SaveScreen;
+        public static bool SaveScreen = true;
         public const string SaveScreen_KeyName = "是否保留截图";
-        public static bool AutoDownloadForm;
+        public static bool AutoDownloadForm = true;
         public const string AutoDownloadForm_KeyName = "是否自动下载表格";
-        public static bool SaveRecord;
+        public static bool SaveRecord = true;
         public const string SaveRecord_KeyName = "是否保留录音";
-        public static bool SaveTTS;
+        public static bool SaveTTS = true;
         public const string SaveTTS_KeyName = "是否保留语音合成";
-        public static bool SavePhotograph;
+        public static bool SavePhotograph = true;
         public const string SavePhotograph_KeyName = "是否保留拍照";
         public static bool AddTextToEnd;
         public const string AddTextToEnd_KeyName = "识别后添加到末尾";
@@ -264,7 +278,7 @@ namespace 鹰眼OCR
         private Point currentPos;
         private Image _CaptureImage;// 截取的图像
         private FrmQRCode qRCode; // 二维码生成窗体
-        private FrmSoundRecording frmSound;// 语音识别窗体
+        private FrmAsr frmSound;// 语音识别窗体
         private FrmPhotograph frmPhotograph;// 拍照窗体
         private FrmSetting frmSetting;      // 设置窗体
         private FrmScreenShot shot;         // 截图窗体
@@ -600,8 +614,7 @@ namespace 鹰眼OCR
         {
             try
             {
-                //label_Course.Visible = false;
-                //label_BugSubmission.Visible = false;
+                Updater();
                 InitPath();
                 if (!File.Exists(SavePath.ConfigPath))
                     return;
@@ -615,6 +628,28 @@ namespace 鹰眼OCR
             finally
             {
                 first = false;
+            }
+        }
+
+        private void Updater()
+        {
+            try
+            {
+                Task.Run(() =>
+                {
+                    AutoUpdate autoUpdate = new AutoUpdate();
+                    if (autoUpdate.GetUpdate())
+                    {
+                        MessageBox.Show("本软件有新版本，请点击设置-更新-下载更新。", "更新提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //DialogResult result = MessageBox.Show("本软件有新版本，是否更新？", "更新提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        //if (result == DialogResult.Yes)
+                        //    OpenUrl(autoUpdate.FileUrl);
+                    }
+                });
+            }
+            catch
+            {
+                return;
             }
         }
 
@@ -974,7 +1009,7 @@ namespace 鹰眼OCR
             }
             catch (Exception ex)
             {
-                // RefreshLog(ex.Message);
+                RefreshLog(ex.Message);
                 return;
             }
         }
@@ -1076,7 +1111,7 @@ namespace 鹰眼OCR
             }
         }
 
-        private void ExportToFile(string text, string fileName)
+        private void ExportToFile(string fileName, string text)
         {
             if (string.IsNullOrEmpty(fileName))
                 return;
@@ -1253,7 +1288,7 @@ namespace 鹰眼OCR
                 if (frmSound == null || frmSound.IsDisposed)
                 {
                     ClearLog();
-                    frmSound = new FrmSoundRecording();
+                    frmSound = new FrmAsr();
                     frmSound.SaveDir = savePath.VoicePath;
                     frmSound.Position = new Point(this.Location.X + (this.Width / 2 - frmSound.Width / 2), this.Location.Y + (this.Height / 2 - frmSound.Height / 2));
                     frmSound.SpeechRecognition += new SpeechRecognitionHandler(SpeechRecognition);
@@ -1336,11 +1371,11 @@ namespace 鹰眼OCR
             try
             {
                 if (百度短语音识别ToolStripMenuItem.Checked)
-                    text = Baidu.Recognition(fileName, rate, lang);
+                    text = Baidu.Asr(fileName, rate, lang);
                 else if (京东短语音识别ToolStripMenuItem.Checked)
                     text = JingDong.ASR(fileName, rate);
                 else if (有道短语音识别ToolStripMenuItem.Checked)
-                    text = Youdao.Recognition(fileName, rate, lang);
+                    text = Youdao.Asr(fileName, rate, lang);
             }
             catch (Exception ex)
             {
@@ -1455,7 +1490,6 @@ namespace 鹰眼OCR
                 {
                     qRCode = new FrmQRCode();
                     qRCode.Content = richTextBox1.Text;
-                    qRCode.IsOnline = rightClick;// 鼠标右键按下则在线识别二维码
                     qRCode.Position = new Point(this.Location.X + (this.Width / 2 - qRCode.Width / 2), this.Location.Y + (this.Height / 2 - qRCode.Height / 2));
                     qRCode.Show();
                 }
@@ -1582,7 +1616,7 @@ namespace 鹰眼OCR
             }
             catch (Exception ex)
             {
-                text = string.Format($"时间：{DateTime.Now}\r\n错误：{ex.Message}\r\n请检查图片是否有效、正确，或检查网络连接是否正确。");
+                text = string.Format($"时间：{DateTime.Now}\r\n错误：{ex.Message}\r\n请检查图片是否有效、选择的识别功能是否匹配（如选择身份证识别但导入的图片不是身份证），或检查网络连接是否正确。");
             }
 
             if (!isPdf)// 不是PDF文件识别
@@ -2067,25 +2101,6 @@ namespace 鹰眼OCR
         {
             if (!File.Exists(SavePath.ConfigPath))
                 MessageBox.Show("请先点击右上角设置按钮，设置文件识别Key。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            try
-            {
-                AutoUpdate autoUpdate = new AutoUpdate();
-                if (autoUpdate.GetUpdate())
-                {
-                    DialogResult result = MessageBox.Show("本软件有新版本，是否更新？", "更新提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
-                    {
-                        autoUpdate.ParsingURL(autoUpdate.FileUrl, out string url, out string psd);
-                        OpenUrl(url);
-                        Clipboard.SetText(psd);
-                        MessageBox.Show("密码已复制到剪切板。", "更新提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch
-            {
-                return;
-            }
         }
 
         // 固定截图

@@ -1,9 +1,7 @@
 ﻿using NAudio.MediaFoundation;
 using NAudio.Wave;
 using System;
-using System.IO;
 using System.Speech.Synthesis;
-using System.Windows.Forms;
 
 namespace 鹰眼OCR.OCR
 {

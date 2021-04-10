@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
-using 鹰眼OCR.OCR;
-using System.Web.WebSockets;
 using System.Windows.Forms;
-using System.Diagnostics;
+using 鹰眼OCR.OCR;
 
 namespace 鹰眼OCR
 {
@@ -197,7 +193,7 @@ namespace 鹰眼OCR
         /// <param name="rate">采样率</param>
         /// <param name="lang">要识别的语言</param>
         /// <returns></returns>
-        public static string Recognition(string audioPath, string rate, string lang)
+        public static string Asr(string audioPath, string rate, string lang)
         {
             string url = "https://openapi.youdao.com/asrapi";
             string base64 = WebExt.FileToBase64(audioPath);

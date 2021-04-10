@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>鹰眼OCR</RootNamespace>
     <AssemblyName>鹰眼OCR</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -31,7 +31,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,6 +56,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <Prefer32Bit>true</Prefer32Bit>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
@@ -100,8 +103,8 @@
       <HintPath>..\packages\AForge.Video.DirectShow.2.2.5\lib\AForge.Video.DirectShow.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.JScript" />
-    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
       <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
@@ -171,11 +174,11 @@
     <Compile Include="FrmSetting.Designer.cs">
       <DependentUpon>FrmSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSoundRecording.cs">
+    <Compile Include="FrmAsr.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSoundRecording.Designer.cs">
-      <DependentUpon>FrmSoundRecording.cs</DependentUpon>
+    <Compile Include="FrmAsr.Designer.cs">
+      <DependentUpon>FrmAsr.cs</DependentUpon>
     </Compile>
     <Compile Include="OCR\Baidu.cs" />
     <Compile Include="OCR\LocalTTS.cs" />
@@ -206,8 +209,8 @@
     <EmbeddedResource Include="FrmSetting.resx">
       <DependentUpon>FrmSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmSoundRecording.resx">
-      <DependentUpon>FrmSoundRecording.cs</DependentUpon>
+    <EmbeddedResource Include="FrmAsr.resx">
+      <DependentUpon>FrmAsr.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -257,9 +260,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\鹰眼.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\整理.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\关闭.png" />
@@ -326,6 +326,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\重命名文件.exe" />
+    <None Include="Resources\最大化.png" />
+    <None Include="Resources\最大化 细.png" />
     <None Include="Resources\OCR测试图片.png" />
     <None Include="Resources\切换.png" />
     <None Include="Resources\查找.png" />

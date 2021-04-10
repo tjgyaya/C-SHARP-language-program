@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace 鹰眼OCR.OCR
 {
@@ -73,7 +70,7 @@ namespace 鹰眼OCR.OCR
 
         public static byte[] ImageToBytes(Image img)
         {
-            using (MemoryStream ms=new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 img.Save(ms, ImageFormat.Png);
                 return ms.ToArray();
@@ -115,18 +112,21 @@ namespace 鹰眼OCR.OCR
         {
             if (string.IsNullOrEmpty(url))
                 return false;
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse; // 发送请求并获取响应
-            Stream stream = response.GetResponseStream(); // 获取响应的数据流
+            HttpWebRequest request;
+            HttpWebResponse response = null; // 发送请求并获取响应
+            Stream stream = null;
+            FileStream fs = null;
             try
-            {    // 将数据流写入到文件
-                using (FileStream fs = new FileStream(savePath, FileMode.Create))
-                {
-                    byte[] bArr = new byte[4096];
-                    int len = default;
-                    while ((len = stream.Read(bArr, 0, bArr.Length)) > 0)
-                        fs.Write(bArr, 0, len);
-                }
+            {
+                request = WebRequest.Create(url) as HttpWebRequest;
+                response = request.GetResponse() as HttpWebResponse; // 发送请求并获取响应
+                stream = response.GetResponseStream(); // 获取响应的数据流
+                fs = new FileStream(savePath, FileMode.Create);  // 将数据流写入到文件
+                byte[] bArr = new byte[4096];
+                int len = default;
+                while ((len = stream.Read(bArr, 0, bArr.Length)) > 0)
+                    fs.Write(bArr, 0, len);
+                fs.Close();
                 return true;
             }
             catch
@@ -135,10 +135,9 @@ namespace 鹰眼OCR.OCR
             }
             finally
             {
-                if (stream != null)
-                    stream.Dispose();
-                if (response != null)
-                    response.Dispose();
+                stream?.Dispose();
+                response?.Dispose();
+                fs?.Dispose();
             }
         }
     }

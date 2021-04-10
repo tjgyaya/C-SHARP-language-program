@@ -72,11 +72,20 @@
             this.label_20 = new System.Windows.Forms.Label();
             this.listBox_Menu = new System.Windows.Forms.ListBox();
             this.panel_Main = new System.Windows.Forms.Panel();
+            this.panel_Update = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.button_CanelUpdate = new System.Windows.Forms.Button();
+            this.button_Update = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label_VersionInfo = new System.Windows.Forms.Label();
+            this.label_DownloadSize = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel_About = new System.Windows.Forms.Panel();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.label_About = new System.Windows.Forms.Label();
             this.pictureBox1 = new AForge.Controls.PictureBox();
             this.panel_Other = new System.Windows.Forms.Panel();
@@ -123,6 +132,10 @@
             this.panel_HotKey.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_DelayTime)).BeginInit();
             this.panel_Main.SuspendLayout();
+            this.panel_Update.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.panel_About.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel_Other.SuspendLayout();
@@ -138,7 +151,7 @@
             this.button_SaveSetting.BackColor = System.Drawing.Color.LightGreen;
             this.button_SaveSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_SaveSetting.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_SaveSetting.Location = new System.Drawing.Point(666, 3);
+            this.button_SaveSetting.Location = new System.Drawing.Point(693, 3);
             this.button_SaveSetting.Name = "button_SaveSetting";
             this.button_SaveSetting.Size = new System.Drawing.Size(63, 30);
             this.button_SaveSetting.TabIndex = 10;
@@ -376,7 +389,7 @@
             this.panel_HotKey.Controls.Add(this.label_ScreenHotKey);
             this.panel_HotKey.Location = new System.Drawing.Point(0, 282);
             this.panel_HotKey.Name = "panel_HotKey";
-            this.panel_HotKey.Size = new System.Drawing.Size(666, 230);
+            this.panel_HotKey.Size = new System.Drawing.Size(666, 258);
             this.panel_HotKey.TabIndex = 1;
             this.toolTip1.SetToolTip(this.panel_HotKey, "打开设置窗口时，热键不会生效。");
             // 
@@ -387,9 +400,9 @@
             this.label16.ForeColor = System.Drawing.Color.MediumSlateBlue;
             this.label16.Location = new System.Drawing.Point(11, 187);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(249, 40);
+            this.label16.Size = new System.Drawing.Size(273, 60);
             this.label16.TabIndex = 22;
-            this.label16.Text = "提示：\r\n打开设置窗口时，热键将不会生效。";
+            this.label16.Text = "提示：\r\n1、打开设置窗口时，热键将不会生效。\r\n2、左键双击热键清除。";
             // 
             // checkBox_FixedScreenTran
             // 
@@ -422,7 +435,7 @@
             // 
             this.textBox_WindowName.BackColor = System.Drawing.Color.White;
             this.textBox_WindowName.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.textBox_WindowName.Location = new System.Drawing.Point(458, 59);
+            this.textBox_WindowName.Location = new System.Drawing.Point(473, 59);
             this.textBox_WindowName.Name = "textBox_WindowName";
             this.textBox_WindowName.Size = new System.Drawing.Size(101, 25);
             this.textBox_WindowName.TabIndex = 19;
@@ -432,7 +445,7 @@
             // 
             this.label_WindowName.AutoSize = true;
             this.label_WindowName.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.label_WindowName.Location = new System.Drawing.Point(387, 62);
+            this.label_WindowName.Location = new System.Drawing.Point(385, 61);
             this.label_WindowName.Name = "label_WindowName";
             this.label_WindowName.Size = new System.Drawing.Size(84, 20);
             this.label_WindowName.TabIndex = 18;
@@ -442,7 +455,7 @@
             // 
             this.textBox_WindowClass.BackColor = System.Drawing.Color.White;
             this.textBox_WindowClass.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.textBox_WindowClass.Location = new System.Drawing.Point(267, 59);
+            this.textBox_WindowClass.Location = new System.Drawing.Point(278, 58);
             this.textBox_WindowClass.Name = "textBox_WindowClass";
             this.textBox_WindowClass.Size = new System.Drawing.Size(101, 25);
             this.textBox_WindowClass.TabIndex = 17;
@@ -452,7 +465,7 @@
             // 
             this.label_WindowClass.AutoSize = true;
             this.label_WindowClass.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.label_WindowClass.Location = new System.Drawing.Point(195, 62);
+            this.label_WindowClass.Location = new System.Drawing.Point(193, 61);
             this.label_WindowClass.Name = "label_WindowClass";
             this.label_WindowClass.Size = new System.Drawing.Size(84, 20);
             this.label_WindowClass.TabIndex = 16;
@@ -462,7 +475,7 @@
             // 
             this.textBox_FixedScreenHotKey.BackColor = System.Drawing.Color.White;
             this.textBox_FixedScreenHotKey.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.textBox_FixedScreenHotKey.Location = new System.Drawing.Point(80, 57);
+            this.textBox_FixedScreenHotKey.Location = new System.Drawing.Point(88, 59);
             this.textBox_FixedScreenHotKey.Name = "textBox_FixedScreenHotKey";
             this.textBox_FixedScreenHotKey.ReadOnly = true;
             this.textBox_FixedScreenHotKey.Size = new System.Drawing.Size(101, 25);
@@ -485,7 +498,7 @@
             // 
             this.textBox_RecordHotKey.BackColor = System.Drawing.Color.White;
             this.textBox_RecordHotKey.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.textBox_RecordHotKey.Location = new System.Drawing.Point(458, 14);
+            this.textBox_RecordHotKey.Location = new System.Drawing.Point(473, 14);
             this.textBox_RecordHotKey.Name = "textBox_RecordHotKey";
             this.textBox_RecordHotKey.ReadOnly = true;
             this.textBox_RecordHotKey.Size = new System.Drawing.Size(101, 25);
@@ -498,7 +511,7 @@
             // 
             this.label_RecordHotKey.AutoSize = true;
             this.label_RecordHotKey.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.label_RecordHotKey.Location = new System.Drawing.Point(387, 17);
+            this.label_RecordHotKey.Location = new System.Drawing.Point(385, 16);
             this.label_RecordHotKey.Name = "label_RecordHotKey";
             this.label_RecordHotKey.Size = new System.Drawing.Size(84, 20);
             this.label_RecordHotKey.TabIndex = 4;
@@ -508,7 +521,7 @@
             // 
             this.textBox_PhotographHotKey.BackColor = System.Drawing.Color.White;
             this.textBox_PhotographHotKey.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.textBox_PhotographHotKey.Location = new System.Drawing.Point(266, 14);
+            this.textBox_PhotographHotKey.Location = new System.Drawing.Point(278, 14);
             this.textBox_PhotographHotKey.Name = "textBox_PhotographHotKey";
             this.textBox_PhotographHotKey.ReadOnly = true;
             this.textBox_PhotographHotKey.Size = new System.Drawing.Size(101, 25);
@@ -521,7 +534,7 @@
             // 
             this.label_PhotographHotKey.AutoSize = true;
             this.label_PhotographHotKey.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.label_PhotographHotKey.Location = new System.Drawing.Point(195, 17);
+            this.label_PhotographHotKey.Location = new System.Drawing.Point(193, 16);
             this.label_PhotographHotKey.Name = "label_PhotographHotKey";
             this.label_PhotographHotKey.Size = new System.Drawing.Size(84, 20);
             this.label_PhotographHotKey.TabIndex = 2;
@@ -531,7 +544,7 @@
             // 
             this.textBox_ScreenHotKey.BackColor = System.Drawing.Color.White;
             this.textBox_ScreenHotKey.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.textBox_ScreenHotKey.Location = new System.Drawing.Point(80, 10);
+            this.textBox_ScreenHotKey.Location = new System.Drawing.Point(88, 11);
             this.textBox_ScreenHotKey.Name = "textBox_ScreenHotKey";
             this.textBox_ScreenHotKey.ReadOnly = true;
             this.textBox_ScreenHotKey.Size = new System.Drawing.Size(101, 25);
@@ -555,7 +568,7 @@
             this.button_Cancel.BackColor = System.Drawing.Color.LightGreen;
             this.button_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button_Cancel.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.button_Cancel.Location = new System.Drawing.Point(582, 3);
+            this.button_Cancel.Location = new System.Drawing.Point(624, 3);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(63, 30);
             this.button_Cancel.TabIndex = 11;
@@ -586,9 +599,9 @@
             0,
             0,
             0});
-            this.numericUpDown_DelayTime.Location = new System.Drawing.Point(293, 103);
+            this.numericUpDown_DelayTime.Location = new System.Drawing.Point(309, 103);
             this.numericUpDown_DelayTime.Maximum = new decimal(new int[] {
-            60000,
+            5000,
             0,
             0,
             0});
@@ -631,6 +644,7 @@
             " 热键",
             " Key",
             " 其它",
+            " 更新",
             " 关于"});
             this.listBox_Menu.Location = new System.Drawing.Point(0, 0);
             this.listBox_Menu.Name = "listBox_Menu";
@@ -643,6 +657,7 @@
             this.panel_Main.AutoScroll = true;
             this.panel_Main.AutoScrollMinSize = new System.Drawing.Size(100, 1000);
             this.panel_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_Main.Controls.Add(this.panel_Update);
             this.panel_Main.Controls.Add(this.panel_About);
             this.panel_Main.Controls.Add(this.panel_Other);
             this.panel_Main.Controls.Add(this.panel_HotKey);
@@ -654,15 +669,133 @@
             this.panel_Main.Size = new System.Drawing.Size(706, 272);
             this.panel_Main.TabIndex = 1;
             // 
+            // panel_Update
+            // 
+            this.panel_Update.Controls.Add(this.panel2);
+            this.panel_Update.Controls.Add(this.groupBox2);
+            this.panel_Update.Controls.Add(this.label_DownloadSize);
+            this.panel_Update.Controls.Add(this.progressBar1);
+            this.panel_Update.Controls.Add(this.groupBox1);
+            this.panel_Update.Location = new System.Drawing.Point(2, 837);
+            this.panel_Update.Name = "panel_Update";
+            this.panel_Update.Size = new System.Drawing.Size(682, 272);
+            this.panel_Update.TabIndex = 4;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.panel2.Controls.Add(this.button_CanelUpdate);
+            this.panel2.Controls.Add(this.button_Update);
+            this.panel2.Location = new System.Drawing.Point(550, 124);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(128, 113);
+            this.panel2.TabIndex = 15;
+            // 
+            // button_CanelUpdate
+            // 
+            this.button_CanelUpdate.AutoSize = true;
+            this.button_CanelUpdate.BackColor = System.Drawing.Color.LightBlue;
+            this.button_CanelUpdate.FlatAppearance.BorderSize = 0;
+            this.button_CanelUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_CanelUpdate.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_CanelUpdate.ForeColor = System.Drawing.Color.Black;
+            this.button_CanelUpdate.Location = new System.Drawing.Point(39, 63);
+            this.button_CanelUpdate.Name = "button_CanelUpdate";
+            this.button_CanelUpdate.Size = new System.Drawing.Size(56, 31);
+            this.button_CanelUpdate.TabIndex = 14;
+            this.button_CanelUpdate.Text = "取消";
+            this.button_CanelUpdate.UseVisualStyleBackColor = false;
+            this.button_CanelUpdate.Click += new System.EventHandler(this.button_CanelUpdate_Click);
+            // 
+            // button_Update
+            // 
+            this.button_Update.AutoSize = true;
+            this.button_Update.BackColor = System.Drawing.Color.LightBlue;
+            this.button_Update.FlatAppearance.BorderSize = 0;
+            this.button_Update.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Update.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Update.ForeColor = System.Drawing.Color.Black;
+            this.button_Update.Location = new System.Drawing.Point(13, 18);
+            this.button_Update.Margin = new System.Windows.Forms.Padding(0);
+            this.button_Update.Name = "button_Update";
+            this.button_Update.Size = new System.Drawing.Size(104, 32);
+            this.button_Update.TabIndex = 13;
+            this.button_Update.Text = "下载更新";
+            this.button_Update.UseVisualStyleBackColor = false;
+            this.button_Update.Click += new System.EventHandler(this.button_Update_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label_VersionInfo);
+            this.groupBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBox2.Location = new System.Drawing.Point(550, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(128, 115);
+            this.groupBox2.TabIndex = 14;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "版本信息";
+            // 
+            // label_VersionInfo
+            // 
+            this.label_VersionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label_VersionInfo.Font = new System.Drawing.Font("微软雅黑", 10F);
+            this.label_VersionInfo.ForeColor = System.Drawing.Color.Gray;
+            this.label_VersionInfo.Location = new System.Drawing.Point(3, 19);
+            this.label_VersionInfo.Name = "label_VersionInfo";
+            this.label_VersionInfo.Size = new System.Drawing.Size(122, 93);
+            this.label_VersionInfo.TabIndex = 8;
+            this.label_VersionInfo.Text = "当前版本：2.2.0";
+            // 
+            // label_DownloadSize
+            // 
+            this.label_DownloadSize.AutoSize = true;
+            this.label_DownloadSize.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.label_DownloadSize.Location = new System.Drawing.Point(541, 246);
+            this.label_DownloadSize.Name = "label_DownloadSize";
+            this.label_DownloadSize.Size = new System.Drawing.Size(87, 21);
+            this.label_DownloadSize.TabIndex = 13;
+            this.label_DownloadSize.Text = "0MB/0MB";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(9, 244);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(526, 23);
+            this.progressBar1.TabIndex = 9;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.richTextBox1);
+            this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBox1.Location = new System.Drawing.Point(4, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(529, 237);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "更新日志";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.BackColor = System.Drawing.Color.White;
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.richTextBox1.ForeColor = System.Drawing.Color.ForestGreen;
+            this.richTextBox1.HideSelection = false;
+            this.richTextBox1.Location = new System.Drawing.Point(3, 19);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(523, 215);
+            this.richTextBox1.TabIndex = 9;
+            this.richTextBox1.Text = "时间：2021-03-13 16:19 V2.3.0\n说明：修复BUG";
+            // 
             // panel_About
             // 
             this.panel_About.Controls.Add(this.label15);
             this.panel_About.Controls.Add(this.label14);
             this.panel_About.Controls.Add(this.label13);
-            this.panel_About.Controls.Add(this.label12);
             this.panel_About.Controls.Add(this.label_About);
             this.panel_About.Controls.Add(this.pictureBox1);
-            this.panel_About.Location = new System.Drawing.Point(2, 781);
+            this.panel_About.Location = new System.Drawing.Point(2, 1182);
             this.panel_About.Name = "panel_About";
             this.panel_About.Size = new System.Drawing.Size(664, 272);
             this.panel_About.TabIndex = 3;
@@ -671,7 +804,7 @@
             // 
             this.label15.BackColor = System.Drawing.Color.White;
             this.label15.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label15.ForeColor = System.Drawing.Color.LimeGreen;
+            this.label15.ForeColor = System.Drawing.Color.Tomato;
             this.label15.Location = new System.Drawing.Point(126, 63);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(431, 45);
@@ -687,7 +820,7 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(429, 40);
             this.label14.TabIndex = 9;
-            this.label14.Text = "本程序仅供学习交流使用，不可用作其他用途！\r\n本程序图片素材均来源于网络，仅供学习之用，感谢原作者的分享。";
+            this.label14.Text = "注：\r\n本程序图片素材均来源于网络，仅供学习之用，感谢原作者的分享。";
             // 
             // label13
             // 
@@ -696,19 +829,9 @@
             this.label13.ForeColor = System.Drawing.Color.CornflowerBlue;
             this.label13.Location = new System.Drawing.Point(181, 227);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(288, 27);
+            this.label13.Size = new System.Drawing.Size(345, 27);
             this.label13.TabIndex = 8;
-            this.label13.Text = "Copyright (C) 2020 鹰眼OCR";
-            // 
-            // label12
-            // 
-            this.label12.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.label12.ForeColor = System.Drawing.Color.Gray;
-            this.label12.Location = new System.Drawing.Point(3, 121);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(116, 81);
-            this.label12.TabIndex = 7;
-            this.label12.Text = "当前版本：2.0.0\r\n编译时间：2020-11-28 11:12";
+            this.label13.Text = "Copyright (C) 2020-2021 鹰眼OCR";
             // 
             // label_About
             // 
@@ -716,17 +839,17 @@
             this.label_About.Font = new System.Drawing.Font("微软雅黑", 12F);
             this.label_About.Location = new System.Drawing.Point(124, 4);
             this.label_About.Name = "label_About";
-            this.label_About.Size = new System.Drawing.Size(520, 198);
+            this.label_About.Size = new System.Drawing.Size(539, 198);
             this.label_About.TabIndex = 1;
-            this.label_About.Text = "介绍：\r\n鹰眼OCR 是基于.NET Framework 4.5用C#语言制作的文字识别程序。\r\n\r\n\r\n\r\n\r\n\r\n\r\n感谢您的使用！";
+            this.label_About.Text = "介绍：\r\n鹰眼OCR 是基于.NET Framework 4.8的文字识别程序。\r\n\r\n\r\n\r\n\r\n\r\n\r\n感谢您的使用！";
             // 
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(4, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(4, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(114, 105);
+            this.pictureBox1.Size = new System.Drawing.Size(114, 137);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -749,7 +872,7 @@
             this.panel_Other.Controls.Add(this.checkBox_SaveRecord);
             this.panel_Other.Controls.Add(this.checkBox_AutoDownloadForm);
             this.panel_Other.Controls.Add(this.checkBox_SaveScreen);
-            this.panel_Other.Location = new System.Drawing.Point(-1, 518);
+            this.panel_Other.Location = new System.Drawing.Point(-1, 546);
             this.panel_Other.Name = "panel_Other";
             this.panel_Other.Size = new System.Drawing.Size(667, 232);
             this.panel_Other.TabIndex = 2;
@@ -759,7 +882,7 @@
             this.checkBox_ExportToTXTFile.AutoCheck = false;
             this.checkBox_ExportToTXTFile.AutoSize = true;
             this.checkBox_ExportToTXTFile.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.checkBox_ExportToTXTFile.Location = new System.Drawing.Point(12, 130);
+            this.checkBox_ExportToTXTFile.Location = new System.Drawing.Point(10, 130);
             this.checkBox_ExportToTXTFile.Name = "checkBox_ExportToTXTFile";
             this.checkBox_ExportToTXTFile.Size = new System.Drawing.Size(149, 21);
             this.checkBox_ExportToTXTFile.TabIndex = 26;
@@ -1218,8 +1341,10 @@
             this.Controls.Add(this.panel_Main);
             this.Controls.Add(this.listBox_Menu);
             this.Controls.Add(this.panel_Bottom);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FrmSetting";
             this.Text = "参数设置";
             this.TopMost = true;
@@ -1229,6 +1354,12 @@
             this.panel_HotKey.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_DelayTime)).EndInit();
             this.panel_Main.ResumeLayout(false);
+            this.panel_Update.ResumeLayout(false);
+            this.panel_Update.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
             this.panel_About.ResumeLayout(false);
             this.panel_About.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1326,7 +1457,6 @@
         private AForge.Controls.PictureBox pictureBox1;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label_About;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button button_Cancel;
@@ -1339,5 +1469,15 @@
         private System.Windows.Forms.Label label_20;
         private System.Windows.Forms.CheckBox checkBox_ExportToTXTFile;
         private System.Windows.Forms.Panel panel_Bottom;
+        private System.Windows.Forms.Panel panel_Update;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button button_CanelUpdate;
+        private System.Windows.Forms.Button button_Update;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label_VersionInfo;
+        private System.Windows.Forms.Label label_DownloadSize;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
