@@ -21,7 +21,8 @@ namespace 动作录制
         const int EXE_HOT_KEY_ID = 569; // 热键id
 
         private bool recordState;    // 录制状态
-        private bool executeState;   // 执行状态
+        private bool threadStop;   // 录制状态
+        private bool exeCmd;// 执行状态
         KeyboardHook boardHook;// 键盘钩子
         MouseHook mouseHook;   // 鼠标钩子
         DateTime lastTime;
@@ -158,7 +159,7 @@ namespace 动作录制
         // 录制命令
         private void Record()
         {
-            if (executeState)
+            if (exeCmd)// 正在执行命令
                 return;
             try
             {
@@ -199,27 +200,37 @@ namespace 动作录制
         }
 
         // 执行录制的命令
-        private void Execute(bool forcedStop = false)
+        private void Execute()
         {
-            if (recordState)
+            if (recordState)// 正在录制命令
                 return;
-            if (forcedStop)
-                executeState = true;
             try
             {
-                if (!executeState)
+                if (!exeCmd)
+                {
+                    threadStop = true;
                     StartThread(new TextRange(RichTextBox1.Document.ContentStart, RichTextBox1.Document.ContentEnd).Text.TrimEnd('\r', '\n'));
+                }
                 else
+                {
                     CloseThread(false);
-                executeState = !executeState;
-                RichTextBox1.IsReadOnly = executeState;
-                Button_Record.IsEnabled = !executeState;
-                Button_Execute.Content = (executeState) ? "停止" : "执行(F7)";
+                }
+                exeCmd = !exeCmd;
+                SetControl(exeCmd);
             }
             catch (Exception ex)
             {
                 TextBlock_Info.Text = ex.Message;
             }
+        }
+
+        private void SetControl(bool status)
+        {
+            RichTextBox1.IsReadOnly = status;
+            Button_Record.IsEnabled = !status;
+            Button_Clear.IsEnabled = !status;
+            TextBox_Num.IsEnabled = !status;
+            Button_Execute.Content = status ? "停止" : "执行(F7)";
         }
 
         // 解析命令
@@ -229,7 +240,7 @@ namespace 动作录制
             Keys key = Keys.None;
             int wheel = 0;
             string[] cmds = command.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < cmds.Length && executeState; i++)
+            for (int i = 0; i < cmds.Length && threadStop; i++)
             {
                 ShowText(cmds[i]);
                 string[] oneCmd = cmds[i].Split('_');
@@ -259,7 +270,12 @@ namespace 动作录制
         // 执行完了命令
         private void ExecuteDone()
         {
-            this.Dispatcher.BeginInvoke(new Action(() => Execute(true)));
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SetControl(false);
+                threadStop = false;
+                exeCmd = false;
+            }));
             ShowText("执行完成！");
         }
 
@@ -318,19 +334,15 @@ namespace 动作录制
         private void StartThread(string cmd)
         {
             if (string.IsNullOrEmpty(cmd))
-            {
-                ExecuteDone();
                 return;
-            }
             CloseThread(false); // 如果线程正在运行则结束
-                                //  threadTermination = false;
             newThread = new Thread(() =>
             {
                 try
                 {
                     int num = 0;
                     this.Dispatcher.Invoke(new Action(() => num = int.Parse(TextBox_Num.Text)));
-                    while (num-- > 0)
+                    while (num-- > 0 && threadStop)
                     {
                         PraseCmd(cmd);
                         Thread.Sleep(500);
@@ -360,8 +372,9 @@ namespace 动作录制
                 {
                     if (checkState == false)
                     {
-                        executeState = false;// 关闭线程
-                        Thread.Sleep(500);
+                        threadStop = false;// 关闭线程
+                        while (newThread.ThreadState != ThreadState.Stopped)
+                            Thread.Sleep(100);
                     }
                     return true;
                 }
