@@ -17,7 +17,9 @@
 			<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0 10 0 5">
 				<ComboBox x:Name="ComboBox_RecItem" MinWidth="90" Margin="0 0 20 0" DisplayMemberPath="Type"/>
 				<Button x:Name="Button_Record" Content="录制(F6)" MinWidth="70" Click="Button_Record_Click"/>
-				<Button x:Name="Button_Execute" Content="执行(F7)" MinWidth="70" Margin="10 0 10 0" Click="Button_Execute_Click"/>
+				<Button x:Name="Button_Execute" Content="执行(F7)" MinWidth="70" Margin="10 0 5 0" Click="Button_Execute_Click"/>
+				<TextBox x:Name="TextBox_Num" Width="45" Text="1" FontSize="14" VerticalContentAlignment="Center"/>
+				<Label Content="次" Margin="0 0 10 0"/>
 				<Button x:Name="Button_Clear" Content="清除" MinWidth="70" Margin="0 0 10 0" Click="Button_Clear_Click"/>
 			</StackPanel>
 		</DockPanel>

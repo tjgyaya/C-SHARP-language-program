@@ -7,18 +7,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// 清理所有正在使用的资源。
-        /// </summary>
-        /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+
 
         #region Windows 窗体设计器生成的代码
 
@@ -66,6 +55,8 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -87,8 +78,6 @@
             this.textBox_BaiduApiKey = new System.Windows.Forms.TextBox();
             this.label_BaiduSecretKey = new System.Windows.Forms.Label();
             this.label_BaiduApiKey = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.groupBox_HotKey.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox_FixedTran.SuspendLayout();
@@ -522,6 +511,28 @@
             this.tabPage1.Text = "首页";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.Gray;
+            this.label5.Location = new System.Drawing.Point(10, 325);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(331, 19);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "显示译文窗口时长按CTRL键可延迟关闭译文窗口";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.DimGray;
+            this.label6.Location = new System.Drawing.Point(10, 305);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 19);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "提示:";
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -743,28 +754,6 @@
             this.label_BaiduApiKey.Size = new System.Drawing.Size(136, 17);
             this.label_BaiduApiKey.TabIndex = 0;
             this.label_BaiduApiKey.Text = "百度文字识别API Key：";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
-            this.label5.ForeColor = System.Drawing.Color.Gray;
-            this.label5.Location = new System.Drawing.Point(10, 325);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(331, 19);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "显示译文窗口时长按CTRL键可延迟关闭译文窗口";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
-            this.label6.ForeColor = System.Drawing.Color.DimGray;
-            this.label6.Location = new System.Drawing.Point(10, 305);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 19);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "提示:";
             // 
             // FrmMain
             // 

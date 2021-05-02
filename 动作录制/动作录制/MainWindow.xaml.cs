@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Interop;
 
 namespace 动作录制
 {
@@ -50,7 +50,7 @@ namespace 动作录制
             ComboBox_RecItem.ItemsSource = list;
             ComboBox_RecItem.SelectedIndex = 0;
 
-            ComponentDispatcher.ThreadPreprocessMessage += ThreadPreprocessMessageMethod;
+            System.Windows.Interop.ComponentDispatcher.ThreadPreprocessMessage += ThreadPreprocessMessageMethod;
         }
 
         private void Button_Clear_Click(object sender, RoutedEventArgs e)
@@ -208,7 +208,7 @@ namespace 动作录制
             try
             {
                 if (!executeState)
-                    StartThread(new TextRange(RichTextBox1.Document.ContentStart, RichTextBox1.Document.ContentEnd).Text);
+                    StartThread(new TextRange(RichTextBox1.Document.ContentStart, RichTextBox1.Document.ContentEnd).Text.TrimEnd('\r', '\n'));
                 else
                     CloseThread(false);
                 executeState = !executeState;
@@ -254,7 +254,6 @@ namespace 动作录制
                 else
                     throw new Exception("命令无效！");
             }
-            ExecuteDone();
         }
 
         // 执行完了命令
@@ -318,13 +317,25 @@ namespace 动作录制
         // 启动线程
         private void StartThread(string cmd)
         {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                ExecuteDone();
+                return;
+            }
             CloseThread(false); // 如果线程正在运行则结束
                                 //  threadTermination = false;
             newThread = new Thread(() =>
             {
                 try
                 {
-                    PraseCmd(cmd);
+                    int num = 0;
+                    this.Dispatcher.Invoke(new Action(() => num = int.Parse(TextBox_Num.Text)));
+                    while (num-- > 0)
+                    {
+                        PraseCmd(cmd);
+                        Thread.Sleep(500);
+                    }
+                    ExecuteDone();
                 }
                 catch (Exception ex)
                 {
@@ -359,7 +370,7 @@ namespace 动作录制
         }
 
         // 判断是否按下热键
-        private void ThreadPreprocessMessageMethod(ref MSG m, ref bool handled)
+        private void ThreadPreprocessMessageMethod(ref System.Windows.Interop.MSG m, ref bool handled)
         {
             if (!handled)
             {
@@ -376,7 +387,7 @@ namespace 动作录制
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            IntPtr handle = new WindowInteropHelper(this).Handle;
+            IntPtr handle = new System.Windows.Interop.WindowInteropHelper(this).Handle;
             if (!Api.RegisterHotKey(handle, REC_HOT_KEY_ID, 0, Keys.F6)) // 注册热键f6
                 TextBlock_Info.Text = "注册“录制”热键失败！";
             if (!Api.RegisterHotKey(handle, EXE_HOT_KEY_ID, 0, Keys.F7)) // 注册热键f7
@@ -388,4 +399,6 @@ namespace 动作录制
     {
         public string Type { get; set; }
     }
+
+
 }

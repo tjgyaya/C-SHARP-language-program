@@ -1,15 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace 翻译神器
 {
     class Api
     {
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TagRECT
+        {
+            public int left;
+            public int top;
+            public int right;
+            public int bottom;
+        }
+        [DllImport("user32.dll", EntryPoint = "GetWindowRect")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetWindowRect([In()] IntPtr hWnd, [Out()] out TagRECT lpRect);
+
+
         [DllImport("user32.dll")]
         public static extern int GetAsyncKeyState(int vKey);
 

@@ -1,19 +1,12 @@
-﻿using System;
+﻿using ScreenShot;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Speech.Synthesis;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using 翻译神器.SourceOfTranslation;
 
 namespace 翻译神器
 {
@@ -26,6 +19,7 @@ namespace 翻译神器
         public static string Password;
         public static bool IsEmptyOrNull
         {
+
             get
             {
                 if (string.IsNullOrEmpty(ApiKey) && string.IsNullOrEmpty(SecretKey)
@@ -149,6 +143,7 @@ namespace 翻译神器
             this.ShowInTaskbar = false;
         }
 
+        // 退出
         private void Exit(object sender, EventArgs e)
         {
             UnRegHotKey();
@@ -163,6 +158,7 @@ namespace 翻译神器
             this.WindowState = FormWindowState.Minimized;
         }
 
+        // 加载配置文件
         private void LoadFile(bool reload = false)
         {
             // 判断配置文件是否存在
@@ -178,14 +174,20 @@ namespace 翻译神器
                 if (reload)// 重新加载配置文件
                     UnRegHotKey();
                 RegHotKey();
-                if(!reload)
+                if (!reload)
                     this.notifyIcon1.ShowBalloonTip(5000, this.Text, "欢迎使用" + this.Text, ToolTipIcon.Info);
             }
             catch //(Exception ex)
             {
                 MessageBox.Show("加载配置文件错误，请重新设置！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+            if (BaiduKey.IsEmptyOrNull)
+            {
+                BaiduKey.ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
+                BaiduKey.SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
+                BaiduKey.AppId = "20200424000429104";
+                BaiduKey.Password = "5mzyraBsLRk2yfGQMhXJ";
+            }
         }
 
         // 从字典config恢复数据
@@ -249,9 +251,9 @@ namespace 翻译神器
             return 0;
         }
 
+        // 注册热键
         private void RegHotKey()
         {
-            // 注册热键
             int i = 0, j = 0, id;
             string hotKey;
             Keys key;
@@ -294,11 +296,12 @@ namespace 翻译神器
             putOnTheHook = true;
         }
 
+        // 卸载热键
         private void UnRegHotKey()
         {
             for (int i = 0; i < HOT_KEY_NUM; i++)
             {
-                Api.UnregisterHotKey(this.Handle, 1000 + i); // 卸载热键
+                Api.UnregisterHotKey(this.Handle, 1000 + i);
             }
             putOnTheHook = false;
         }
@@ -369,6 +372,7 @@ namespace 翻译神器
                 ((CheckBox)sender).Checked = false;
         }
 
+        // 保存到配置文件
         private void button_Save_Click(object sender, EventArgs e)
         {
             try
@@ -379,9 +383,12 @@ namespace 翻译神器
                     // 如果控件类型不是TextBox
                     if (!(ctl is TextBox) || string.IsNullOrEmpty(ctl.Text))
                         continue;
-                    list.Add(ctl.Text);
+                    // 判断热键是否重复
+                    if (list.Contains(ctl.Text))
+                        throw new Exception("热键已存在！");
+                    else
+                        list.Add(ctl.Text);
                 }
-
                 InitDictionary();
                 ConfigFile.WriteFile(config);
                 MessageBox.Show("保存成功，立即生效！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -399,6 +406,7 @@ namespace 翻译神器
             ((TextBox)sender).Text = e.KeyData.ToString();
         }
 
+        // 查找并激活窗口
         private IntPtr FindAndActiveWindow()
         {
             if (string.IsNullOrEmpty(textBox_WindowClass.Text) && string.IsNullOrEmpty(textBox_WindowName.Text))
@@ -426,22 +434,12 @@ namespace 翻译神器
             try
             {
                 IntPtr hwnd = FindAndActiveWindow();
-                shot.WindowHandle = hwnd;
-                shot.CopyScreen();
                 // 显示截图窗口
-                DialogResult result = shot.ShowDialog();
-                if (result == DialogResult.Cancel)
+                if (shot.Start(hwnd) == DialogResult.Cancel)
                     throw new Exception("用户取消截图！");
-
-                Api.POINT p = new Api.POINT();
-                p.X = shot.StartPos.X;
-                p.Y = shot.StartPos.Y;
-
-                // 屏幕坐标转为客户端窗口坐标
-                Api.ScreenToClient(hwnd, ref p);
                 // 保存截图坐标高宽
-                screenRect = new Rectangle(p.X, p.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
-                if (shot.SelectedArea.Width > 0 && shot.SelectedArea.Height > 0)
+                screenRect = new Rectangle(shot.SelectedArea.X, shot.SelectedArea.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
+                if (screenRect.X >= 0 && screenRect.Y >= 0 && screenRect.Width > 0 && screenRect.Height > 0)
                     MessageBox.Show("设置成功！\n请点击“保存配置”按钮。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     throw new Exception("设置失败，请重试！");
@@ -507,40 +505,29 @@ namespace 翻译神器
             string from = "en", src, dst = null;
             Image captureImage = default;
             FrmScreenShot shot = new FrmScreenShot();
-            SetStateDelegate setState = new SetStateDelegate(MinimizeWindow);
-
             try
             {   // 截图翻译并显示
                 if (tranMode == TranMode.TranAndShowText)
                 {
-                    this.Invoke((EventHandler)delegate
-                    {
-                        setState(true);
-                    });
+                    this.Invoke(new Action(() => MinimizeWindow(true)));
                     Thread.Sleep(200);
                     // 如果是固定区域翻译（isFixedScreen = true则视为固定区域翻译）
-                    if (isFixedScreen == true)
+                    if (!isFixedScreen)
                     {
-                        captureImage = FixedScreen();
-                    }
-                    else
-                    {
-                        shot.CopyScreen();
-                        if (shot.ShowDialog() == DialogResult.Cancel) // 显示截图窗口
+                        if (shot.Start() == DialogResult.Cancel) // 显示截图窗口
                             return;
                         captureImage = shot.CaptureImage;
                     }
-
+                    else
+                        captureImage = FixedScreen();
                     // 翻译模式isEnToZh=true为英译中，false为俄译中
                     if (isEnToZh == false)
                         from = "ru";
-
                     // sourceOfTran有“有道”两字使用有道翻译，否则使用百度翻译
                     if (sourceOfTran.IndexOf("有道") != -1)
                         Youdao.YoudaoTran(null, from, "zh-CHS", out src, out dst, captureImage);
                     else
                         Baidu.BaiduTran(captureImage, from, out src, out dst);
-
                     if (copySourceTextToClip)
                         Clipboard.SetText(src);// 复制原文到剪切板
                     if (copyDestTextToClip)
@@ -560,20 +547,17 @@ namespace 翻译神器
             }
             catch (Exception ex)
             {
-                if (ex.GetType().FullName == "System.Threading.ThreadAbortException")
-                    return;
-                // 显示错误
-                ShowText("错误：" + ex.Message);
+                if (ex.GetType().FullName != "System.Threading.ThreadAbortException")
+                    ShowText("错误：" + ex.Message);// 显示错误
             }
             finally
             {
                 if (shot != null && !shot.IsDisposed)
                     shot.Dispose();
-                //if (captureImage != null)
-                //    captureImage.Dispose();
             }
         }
 
+        // 显示文本
         private void ShowText(string text)
         {
             using (FrmShowCont sc = new FrmShowCont(showTime))
@@ -595,11 +579,9 @@ namespace 翻译神器
                 if (CloseThread(true) && tranMode != TranMode.ShowText)
                     return;
             }
-
             // 如果线程正在运行则结束
             if (CloseThread(false))
                 Thread.Sleep(100);
-
             // 启动线程
             newThread = new Thread(ScreenTran);
             newThread.SetApartmentState(ApartmentState.STA);
@@ -786,8 +768,7 @@ namespace 翻译神器
             }
             finally
             {
-                g.Dispose();
-                //    bit.Dispose();
+                g?.Dispose();
             }
         }
     }

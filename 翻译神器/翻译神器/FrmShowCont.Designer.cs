@@ -20,6 +20,7 @@
             base.Dispose(disposing);
         }
 
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -62,7 +63,6 @@
             this.Shown += new System.EventHandler(this.FrmShowCont_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

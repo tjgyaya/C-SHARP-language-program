@@ -18,10 +18,7 @@ namespace 翻译神器
         public FrmShowCont(int show_time)
         {
             InitializeComponent();
-
             this.ShowInTaskbar = false;
-            this.TopMost = true;
-
             showTime = show_time * 1000;
         }
 
@@ -54,13 +51,12 @@ namespace 翻译神器
             // 设置宽高与label一致
             this.Width = label1.Width;
             this.Height = label1.Height;
-
             // 在顶部中间显示（屏幕宽 - 窗口宽）/2
             int x = (Screen.PrimaryScreen.Bounds.Width - this.Width) / 2 - 40;
             int y = 0;
             this.Location = new Point(x, y);
+            this.TopMost = true;
         }
-
 
         // 整数个位数向上取整（5或0）
         private int RoundUp(int num)
@@ -71,34 +67,28 @@ namespace 翻译神器
 
             if (num == 0)
                 return num;
-
             // 如果为负数
             if (num < 0)
             {
                 negative = true;
                 num = -num; // 把负数变为整数 
             }
-
             string str = num.ToString();
             // 取这个数个位上的数
             temp = str[str.Length - 1] - '0';
-
             if (temp > 5)// 个位上的数大于5
                 temp = num + (10 - temp);
             else if (temp == 5)
                 temp = num;
             else if (temp < 5)
                 temp = num - temp;
-
             // 如果取整后的数不等于0并且原数为负数
             if (temp != 0 && negative)
                 temp = -temp;
-
             return temp;
         }
 
-
-        // 每隔max个字符，在max+1出插入一个换行符
+        // 每隔max个字符，在max+1处插入一个换行符
         private string InsertChar(string str, int max)
         {
             int i;
@@ -108,10 +98,8 @@ namespace 翻译神器
                 if (i % max == 0)
                     str = str.Insert(i + 1, "\r\n");
             }
-
             return str;
         }
-
 
         private void FrmShowCont_Shown(object sender, EventArgs e)
         {

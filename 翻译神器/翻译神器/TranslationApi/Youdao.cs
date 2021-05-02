@@ -12,7 +12,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
-namespace 翻译神器.SourceOfTranslation
+namespace 翻译神器
 {
     class Youdao
     {

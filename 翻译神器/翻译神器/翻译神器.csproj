@@ -13,6 +13,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -44,7 +46,10 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -69,12 +74,6 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmScreenShot.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmScreenShot.Designer.cs">
-      <DependentUpon>FrmScreenShot.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmShowCont.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,13 +88,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SourceOfTranslation\Baidu.cs" />
-    <Compile Include="SourceOfTranslation\Youdao.cs" />
+    <Compile Include="TranslationApi\Baidu.cs" />
+    <Compile Include="TranslationApi\Youdao.cs" />
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmScreenShot.resx">
-      <DependentUpon>FrmScreenShot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmShowCont.resx">
       <DependentUpon>FrmShowCont.cs</DependentUpon>
@@ -132,6 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="翻译_128x128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\截图类库\截图\ScreenShot.csproj">
+      <Project>{08FEE188-77DD-4929-A9B4-173B080D0124}</Project>
+      <Name>ScreenShot</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

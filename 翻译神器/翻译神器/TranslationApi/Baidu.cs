@@ -13,11 +13,11 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
-namespace 翻译神器.SourceOfTranslation
+namespace 翻译神器
 {
     class Baidu
     {
-      //  private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
+        //  private static string general_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=";
         private static string accurate_basic_host = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=";
 
         /// <summary>
@@ -31,38 +31,36 @@ namespace 翻译神器.SourceOfTranslation
         {
             if (BaiduKey.IsEmptyOrNull)
                 throw new Exception("请设置百度文字识别和翻译Key！");
-
             // 调用百度文字识别
             string srcText = GeneralBasic(from, img);
             if (string.IsNullOrEmpty(srcText))
                 throw new Exception("识别内容为空");
-
             // 调用翻译
             Translate(srcText, from, "zh", out src_text, out dst_text);
         }
 
         // 翻译
+        /// <summary>
+        /// 百度翻译
+        /// </summary>
+        /// <param name="srcText">源文本</param>
+        /// <param name="from">源语言</param>
+        /// <param name="to">目标语言</param>
         public static void Translate(string srcText, string from, string to, out string src_text, out string dst_text)
         {
             if (BaiduKey.IsEmptyOrNull)
                 throw new Exception("请设置百度文字识别和翻译Key！");
-
+            string salt = DateTime.Now.Millisecond.ToString();
             // 源语言
             string languageSrc = from;
             // 目标语言
             string languageTo = to;
-            //string languageTo = "zh";
-            // 随机数
-            string randomNum = DateTime.Now.Millisecond.ToString();
-            // md5编码
-            string md5Enc = GetMD5(BaiduKey.AppId + srcText + randomNum + BaiduKey.Password);
-            // url
-            string url = string.Format("https://fanyi-api.baidu.com/api/trans/vip/translate?q={0}&from={1}&to={2}&appid={3}&salt={4}&sign={5}",
-                HttpUtility.UrlEncode(srcText, Encoding.UTF8), languageSrc, languageTo, BaiduKey.AppId, randomNum, md5Enc);
-            string result;
-            using (WebClient wc = new WebClient())
-                result = wc.DownloadString(url);
-
+            // 签名
+            string sign = GetMD5(BaiduKey.AppId + srcText + salt + BaiduKey.Password);
+            string url = "https://fanyi-api.baidu.com/api/trans/vip/translate";
+            string str = string.Format($"q={HttpUtility.UrlEncode(srcText)}&from={languageSrc}&to={languageTo}" +
+                 $"&appid={BaiduKey.AppId}&salt={salt}&sign={sign}");
+            string result = Request(url, null, str);
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
             BaiduTranslate list = js.Deserialize<BaiduTranslate>(result);  // 将json数据转化为对象类型并赋值给list
             if (list.Error_code != null) // 如果调用Api出现错误
@@ -83,6 +81,30 @@ namespace 翻译神器.SourceOfTranslation
             dst_text = dst.ToString().Remove(dLen);
         }
 
+        /// <summary>
+        /// 发送post请求
+        /// </summary>
+        /// <param name="host">要发送请求的链接</param>
+        /// <param name="token">验证令牌（可为null）</param>
+        /// <param name="param">参数</param>
+        /// <returns>响应数据</returns>
+        public static string Request(string host, string token, string param, string contentType = null)
+        {
+            host += string.IsNullOrEmpty(token) ? "" : token;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
+            request.Method = "post";
+            request.Timeout = 6000;
+            request.ContentType = string.IsNullOrEmpty(contentType) ? "application/x-www-form-urlencoded" : contentType;
+            request.KeepAlive = true;
+            byte[] buffer = Encoding.UTF8.GetBytes(param);
+            request.ContentLength = buffer.Length;
+            request.GetRequestStream().Write(buffer, 0, buffer.Length);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                return reader.ReadToEnd();
+        }
+
         // 获取AccessToken，失败时抛出异常
         private static string GetAccessToken()
         {
@@ -100,48 +122,25 @@ namespace 翻译神器.SourceOfTranslation
             Token list = js.Deserialize<Token>(result);// 将json数据转化为对象并赋值给list
             if (list.error != null)
                 throw new Exception("获取AccessToken失败！" + "\n原因：" + list.error_description);
-
             return list.access_token;
         }
 
         // 调用百度API文字识别
         private static string GeneralBasic(string from, Image img)
         {
-            if (from == "ru")
-                from = "RUS";
-            else
-                from = "CHN_ENG";
-            // 获取文字识别AccessToken
-            string token = GetAccessToken();
-
-            Encoding encoding = Encoding.Default;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(accurate_basic_host + token);
-            request.Method = "post";
-            request.KeepAlive = true;
-
+            from = (from == "ru") ? "RUS" : "CHN_ENG";
+            string token = GetAccessToken();// 获取文字识别AccessToken
             string base64 = ImageToBase64(img);
             string str = "image=" + HttpUtility.UrlEncode(base64) + "&language_type=" + from;
-            byte[] buffer = encoding.GetBytes(str);
-            request.ContentLength = buffer.Length;
-            request.GetRequestStream().Write(buffer, 0, buffer.Length);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            string result;
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-            {
-                result = reader.ReadToEnd();
-            }
-
+            string result = Request(accurate_basic_host, token, str);
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
             BaiduOcrJson list = js.Deserialize<BaiduOcrJson>(result);  // 将json数据转化为对象类型并赋值给list
             if (list.error_code != null) // 如果调用Api出现错误
                 throw new Exception("OCR识别错误！" + "\n原因：" + list.error_msg);
-
             // 接收序列化后的数据
             StringBuilder builder = new StringBuilder();
             foreach (var item in list.words_result)
                 builder.Append(item.words + "\r\n");
-
             // 查找最后一个换行符的位置
             int len = builder.ToString().LastIndexOf('\r');
             return len < 0 ? "" : builder.ToString().Remove(len);
@@ -153,8 +152,7 @@ namespace 翻译神器.SourceOfTranslation
             try
             {
                 GetAccessToken();// 测试文字识别Key只需要测试能否获得AccessToken就可以了
-                string s, r;
-                Translate("Test", "en", "zh", out s, out r);// 测试百度翻译Key
+                Translate("Test", "en", "zh", out string s, out string r);// 测试百度翻译Key
             }
             catch (Exception ex)
             {
@@ -178,19 +176,15 @@ namespace 翻译神器.SourceOfTranslation
         {
             if (str == null)
                 return null;
-
             MD5 md5 = MD5.Create();
             //将输入字符串转换为字节数组并计算哈希数据  
             byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
             StringBuilder builder = new StringBuilder();
-
             //循环遍历哈希数据的每一个字节并格式化为十六进制字符串  
             for (int i = 0; i < data.Length; i++)
                 builder.Append(data[i].ToString("x2"));
-
             return builder.ToString();
         }
-
 
         // 获取百度accesstoken
         class Token
