@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToICO", "ToICO\ToICO.csproj", "{A2F73D9F-EDFD-41A5-9DB2-B0E5AB01FA80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToICO", "ToICO\ToICO.csproj", "{6F41CB67-9601-44C6-A331-D50D3C6A1A29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A2F73D9F-EDFD-41A5-9DB2-B0E5AB01FA80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2F73D9F-EDFD-41A5-9DB2-B0E5AB01FA80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2F73D9F-EDFD-41A5-9DB2-B0E5AB01FA80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2F73D9F-EDFD-41A5-9DB2-B0E5AB01FA80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F41CB67-9601-44C6-A331-D50D3C6A1A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F41CB67-9601-44C6-A331-D50D3C6A1A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F41CB67-9601-44C6-A331-D50D3C6A1A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F41CB67-9601-44C6-A331-D50D3C6A1A29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {88110023-89C5-41D3-A6E3-80F4AC7947C7}
+		SolutionGuid = {8B867164-9E4C-4BBB-9DC7-BB3A3AFD4A83}
 	EndGlobalSection
 EndGlobal

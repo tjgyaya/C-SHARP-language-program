@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ToICO
@@ -97,7 +92,8 @@ namespace ToICO
                 for (int i = 0; i < listView1.Items.Count; i++)
                 {
                     string file = listView1.Items[i].ImageKey;
-                    savePath ??= Path.GetDirectoryName(file);
+                    if (savePath == null)
+                        savePath = Path.GetDirectoryName(file);
                     ConvertImage(file, (string)comboBox_TargetFormat.SelectedItem, savePath);
                 }
                 toolStripStatusLabel1.Text = "保存成功。";
@@ -185,7 +181,11 @@ namespace ToICO
         {
             try
             {
-                pictureBox1.Image = new Bitmap(fileName);
+                pictureBox1.Image?.Dispose();
+                using (Image img = Image.FromFile(fileName))
+                {
+                    pictureBox1.Image = (Image)img.Clone();// 防止文件被锁
+                }
                 label4_tip.Visible = false;
             }
             catch (Exception ex)
@@ -239,6 +239,14 @@ namespace ToICO
                 return sizeStr;
             }
             return sizeStr;
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0)
+                return;
+            string file = listView1.SelectedItems[0].ImageKey;
+            ShowPicture(file);
         }
     }
 
