@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace 翻译神器
 {
+    #region 文字识别Key
     // 百度文字识别和百度翻译key
     public struct BaiduKey
     {
@@ -47,7 +48,7 @@ namespace 翻译神器
             }
         }
     }
-
+    #endregion
     public partial class FrmMain : Form
     {
         // **************************************主窗口**************************************
@@ -67,14 +68,13 @@ namespace 翻译神器
             MenuItem[] childen = new MenuItem[] { show, hide, exit };
             notifyIcon1.ContextMenu = new ContextMenu(childen);
             notifyIcon1.Text = "点击此处显示窗口";
-
             comboBox_TranSource.SelectedIndex = 0;
             InitDictionary();
+            // 添加版本号到标题
+            string ver = Application.ProductVersion;
+            this.Text += " V" + ver.Remove(ver.Length - 4);
         }
-
-        // 设置窗体状态
-        private delegate void SetStateDelegate(bool minimize);
-
+        private SpeechSynthesizer speech = new SpeechSynthesizer();
         private Dictionary<string, string> config = new Dictionary<string, string>(16);
         private Rectangle screenRect = new Rectangle();// 固定截图坐标
         private bool isEnToZh = true;                // 翻译模式 英译中、俄译中
@@ -82,27 +82,29 @@ namespace 翻译神器
         private bool isFixedScreen;                  // 是否为固定截图翻译
         private bool copySourceTextToClip, copyDestTextToClip;     // 翻译后是否复制到剪切板（源语言、目标语言）
         private bool putOnTheHook;                   // 装上钩子
-        private int showTime = 5;                    // 翻译后延迟显示翻译后内容的时间（单位：秒）
+        private int showSec = 5;                     // 翻译后延迟显示翻译后内容的时间（单位：秒）
         private string sourceOfTran = "百度翻译";    // 翻译来源（可选 百度 或 有道）
         private DateTime lastTime = DateTime.Now;    // 记录上次热键按下时间，避免多次按下热键造成卡死闪退
         private Thread newThread;                    // 新线程              
-        private string showCont;                     // 要在ShowCont窗口显示的内容
+        private string showText;                     // 要在ShowText窗口显示的内容
         private TranMode tranMode;                   // 翻译模式（截图翻译并显示 或 不截图翻译只显示）
         private string windowName, windowClass;
         const int HOT_KEY_NUM = 5;                    // 要注册的热键个数
 
+        #region 配置数据
+        // 初始化数据
         private void InitDictionary(bool changeBaiduKey = false, bool changeYoudaoKey = false)
         {
             BaiduKey.ApiKey = config[label_BaiduApiKey.Text] = textBox_BaiduApiKey.Text;
             BaiduKey.SecretKey = config[label_BaiduSecretKey.Text] = textBox_BaiduSecretKey.Text;
             BaiduKey.AppId = config[label_BaiduAppId.Text] = textBox_BaiduAppId.Text;
             BaiduKey.Password = config[label_BaiduPassword.Text] = textBox_BaiduPassword.Text;
-            if (changeBaiduKey)
+            if (changeBaiduKey)// 只改变百度key的值
                 return;
 
             YoudaoKey.AppKey = config[label_YoudaoAppKey.Text] = textBox_YoudaoAppKey.Text;
             YoudaoKey.AppSecret = config[label_YoudaoAppSecret.Text] = textBox_YoudaoAppSecret.Text;
-            if (changeYoudaoKey)
+            if (changeYoudaoKey) // 只改变百度有道key的值
                 return;
 
             config[label_ScreenHotkey.Text] = textBox_ScreenHotkey.Text;   // 截图热键
@@ -123,13 +125,59 @@ namespace 翻译神器
             config[label_WindowClass.Text] = textBox_WindowClass.Text;// 固定翻译类名
         }
 
-        // 翻译模式（tran：截图翻译并显示，show：不截图翻译只显示）
+        // 从字典config恢复数据
+        private void DataRecovery()
+        {
+            // 翻译后延迟显示的时间（秒）
+            showSec = Convert.ToInt32(config[label_Delay.Text]);
+            // 翻译后是否复制到剪切板
+            copySourceTextToClip = Convert.ToBoolean(config[checkBox_CopyOriginalText.Text]);
+            copyDestTextToClip = Convert.ToBoolean(config[checkBox_CopyTranText.Text]);
+            // 翻译后是否朗读译文
+            isSpeak = Convert.ToBoolean(config[checkBox_ReadAloud.Text]);
+            // 固定截图翻译坐标
+            screenRect.X = Convert.ToInt32(config["固定截图X坐标"]);
+            screenRect.Y = Convert.ToInt32(config["固定截图Y坐标"]);
+            screenRect.Width = Convert.ToInt32(config["固定截图宽度"]);
+            screenRect.Height = Convert.ToInt32(config["固定截图高度"]);
+
+            // 恢复数据到窗口
+            textBox_ScreenHotkey.Text = config[label_ScreenHotkey.Text];
+            textBox_TranHotkey.Text = config[label_TranHotkey.Text];
+            textBox_FixedTranHotkey.Text = config[label_FixedTranHotkey.Text];
+            textBox_SwitchEnToCn.Text = config[label_SwitchEnToCn.Text];
+            textBox_SwitchRuToCn.Text = config[label_SwitchRuToCn.Text];
+
+            numericUpDown_Delay.Value = Convert.ToDecimal(config[label_Delay.Text]);
+
+            checkBox_CopyOriginalText.Checked = Convert.ToBoolean(config[checkBox_CopyOriginalText.Text]);
+            checkBox_CopyTranText.Checked = Convert.ToBoolean(config[checkBox_CopyTranText.Text]);
+            checkBox_ReadAloud.Checked = Convert.ToBoolean(config[checkBox_ReadAloud.Text]);
+            // 翻译源
+            sourceOfTran = (string)(comboBox_TranSource.SelectedItem = config[label_TranSource.Text]);
+
+            // 固定翻译窗口标题或类名
+            windowName = textBox_WindowName.Text = config[label_WindowName.Text];
+            windowClass = textBox_WindowClass.Text = config[label_WindowClass.Text];
+
+            BaiduKey.ApiKey = textBox_BaiduApiKey.Text = config[label_BaiduApiKey.Text];
+            BaiduKey.SecretKey = textBox_BaiduSecretKey.Text = config[label_BaiduSecretKey.Text];
+            BaiduKey.AppId = textBox_BaiduAppId.Text = config[label_BaiduAppId.Text];
+            BaiduKey.Password = textBox_BaiduPassword.Text = config[label_BaiduPassword.Text];
+
+            YoudaoKey.AppKey = textBox_YoudaoAppKey.Text = config[label_YoudaoAppKey.Text];
+            YoudaoKey.AppSecret = textBox_YoudaoAppSecret.Text = config[label_YoudaoAppSecret.Text];
+        }
+        #endregion
+
+        // 翻译模式
         enum TranMode
         {
-            TranAndShowText,
-            ShowText,
+            TranAndShowText, // 截图翻译并显示
+            ShowText,// 不截图翻译只显示
         }
 
+        // 显示窗口
         private void ShowWin(object sender, EventArgs e)
         {
             this.Show();
@@ -137,6 +185,7 @@ namespace 翻译神器
             this.ShowInTaskbar = true;
         }
 
+        // 隐藏窗口
         private void HideWin(object sender, EventArgs e)
         {
             this.Hide();
@@ -146,9 +195,11 @@ namespace 翻译神器
         // 退出
         private void Exit(object sender, EventArgs e)
         {
-            UnRegHotKey();
-            CloseThread(false);     // 关闭线程
+            speech.SpeakAsyncCancelAll();
+            CloseThread();          // 关闭线程
+            UnRegHotKey();          // 卸载热键
             notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
+            speech?.Dispose();
             Environment.Exit(0);    // 退出
         }
 
@@ -188,50 +239,6 @@ namespace 翻译神器
                 BaiduKey.AppId = "20200424000429104";
                 BaiduKey.Password = "5mzyraBsLRk2yfGQMhXJ";
             }
-        }
-
-        // 从字典config恢复数据
-        private void DataRecovery()
-        {
-            // 翻译后延迟显示的时间（秒）
-            showTime = Convert.ToInt32(config[label_Delay.Text]);
-            // 翻译后是否复制到剪切板
-            copySourceTextToClip = Convert.ToBoolean(config[checkBox_CopyOriginalText.Text]);
-            copyDestTextToClip = Convert.ToBoolean(config[checkBox_CopyTranText.Text]);
-            // 翻译后是否朗读译文
-            isSpeak = Convert.ToBoolean(config[checkBox_ReadAloud.Text]);
-            // 固定截图翻译坐标
-            screenRect.X = Convert.ToInt32(config["固定截图X坐标"]);
-            screenRect.Y = Convert.ToInt32(config["固定截图Y坐标"]);
-            screenRect.Width = Convert.ToInt32(config["固定截图宽度"]);
-            screenRect.Height = Convert.ToInt32(config["固定截图高度"]);
-
-            // 恢复数据到窗口
-            textBox_ScreenHotkey.Text = config[label_ScreenHotkey.Text];
-            textBox_TranHotkey.Text = config[label_TranHotkey.Text];
-            textBox_FixedTranHotkey.Text = config[label_FixedTranHotkey.Text];
-            textBox_SwitchEnToCn.Text = config[label_SwitchEnToCn.Text];
-            textBox_SwitchRuToCn.Text = config[label_SwitchRuToCn.Text];
-
-            numericUpDown_Delay.Value = Convert.ToDecimal(config[label_Delay.Text]);
-
-            checkBox_CopyOriginalText.Checked = Convert.ToBoolean(config[checkBox_CopyOriginalText.Text]);
-            checkBox_CopyTranText.Checked = Convert.ToBoolean(config[checkBox_CopyTranText.Text]);
-            checkBox_ReadAloud.Checked = Convert.ToBoolean(config[checkBox_ReadAloud.Text]);
-            // 翻译源
-            sourceOfTran = (string)(comboBox_TranSource.SelectedItem = config[label_TranSource.Text]);
-
-            // 固定翻译窗口标题或类名
-            windowName = textBox_WindowName.Text = config[label_WindowName.Text];
-            windowClass = textBox_WindowClass.Text = config[label_WindowClass.Text];
-
-            BaiduKey.ApiKey = textBox_BaiduApiKey.Text = config[label_BaiduApiKey.Text];
-            BaiduKey.SecretKey = textBox_BaiduSecretKey.Text = config[label_BaiduSecretKey.Text];
-            BaiduKey.AppId = textBox_BaiduAppId.Text = config[label_BaiduAppId.Text];
-            BaiduKey.Password = textBox_BaiduPassword.Text = config[label_BaiduPassword.Text];
-
-            YoudaoKey.AppKey = textBox_YoudaoAppKey.Text = config[label_YoudaoAppKey.Text];
-            YoudaoKey.AppSecret = textBox_YoudaoAppSecret.Text = config[label_YoudaoAppSecret.Text];
         }
 
         // 获取功能键键值
@@ -300,16 +307,14 @@ namespace 翻译神器
         private void UnRegHotKey()
         {
             for (int i = 0; i < HOT_KEY_NUM; i++)
-            {
                 Api.UnregisterHotKey(this.Handle, 1000 + i);
-            }
             putOnTheHook = false;
         }
 
         // 通过监视系统消息，判断是否按下热键
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == 0x0312)                    // 如果m.Msg的值为0x0312那么表示用户按下了热键
+            if (m.Msg == 0x0312) // 如果m.Msg的值为0x0312那么表示用户按下了热键
             {
                 switch (m.WParam.ToString())
                 {
@@ -324,10 +329,10 @@ namespace 翻译神器
                         {
                             if (!isEnToZh) // 如果当前翻译模式为 俄 译 中
                             {
-                                showCont = "当前翻译模式：英译中";
+                                showText = "当前翻译模式：英译中";
                                 isEnToZh = true;
                                 tranMode = TranMode.ShowText; // 显示“当前模式：英译中”这句话
-                                StartThread(showCont);
+                                StartThread(showText);
                             }
                             break;
                         }
@@ -340,10 +345,10 @@ namespace 翻译神器
                         {
                             if (isEnToZh) // 如果当前翻译模式为 英 译 中
                             {
-                                showCont = "当前翻译模式：俄译中";
+                                showText = "当前翻译模式：俄译中";
                                 isEnToZh = false;
                                 tranMode = TranMode.ShowText;  // 显示“当前模式：x译中”这句话
-                                StartThread(showCont);
+                                StartThread(showText);
                             }
                             break;
                         }
@@ -392,7 +397,7 @@ namespace 翻译神器
                 InitDictionary();
                 ConfigFile.WriteFile(config);
                 MessageBox.Show("保存成功，立即生效！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadFile(true);
+                LoadFile(true); // 重新加载配置文件
             }
             catch (Exception ex)
             {
@@ -418,7 +423,6 @@ namespace 翻译神器
                 windowName = textBox_WindowName.Text;
                 windowClass = textBox_WindowClass.Text;
             }
-
             IntPtr hwnd = FindWindowHandle();
             MinimizeWindow(true);
             Thread.Sleep(200);
@@ -470,16 +474,11 @@ namespace 翻译神器
         {
             IntPtr hwnd;
             if (!string.IsNullOrEmpty(windowName))
-            {
                 hwnd = Api.FindWindow(null, windowName);
-            }
             else if (!string.IsNullOrEmpty(windowClass))
-            {
                 hwnd = Api.FindWindow(windowClass, null);
-            }
             else
                 throw new Exception("请设置窗口标题或窗口类名！");
-
             if (IntPtr.Zero == hwnd)
                 throw new Exception("找不到对应的窗口句柄！");
             return hwnd;
@@ -490,7 +489,6 @@ namespace 翻译神器
         {
             if (screenRect.Width <= 0 || screenRect.Height <= 0)
                 throw new Exception("请设置固定截图翻译坐标！");
-
             IntPtr hwnd = FindWindowHandle();
             Api.POINT p = new Api.POINT();
             p.X = screenRect.X;
@@ -516,12 +514,14 @@ namespace 翻译神器
                     {
                         if (shot.Start() == DialogResult.Cancel) // 显示截图窗口
                             return;
-                        captureImage = shot.CaptureImage;
+                        captureImage = (Image)shot.CaptureImage?.Clone();
                     }
                     else
                         captureImage = FixedScreen();
-                    // 翻译模式isEnToZh=true为英译中，false为俄译中
-                    if (isEnToZh == false)
+                    // 如果截图错误
+                    if (captureImage == null)
+                        return;
+                    if (isEnToZh == false)// 翻译模式true为英译中，false为俄译中
                         from = "ru";
                     // sourceOfTran有“有道”两字使用有道翻译，否则使用百度翻译
                     if (sourceOfTran.IndexOf("有道") != -1)
@@ -533,14 +533,10 @@ namespace 翻译神器
                     if (copyDestTextToClip)
                         Clipboard.SetText(dst);// 复制译文到剪切板
                     if (isSpeak)
-                    {
-                        SpeechSynthesizer speech = new SpeechSynthesizer();
-                        speech.Rate = 3;   // 语速
-                        speech.SpeakAsync(dst);
-                    }
+                        Speech(dst);           // 文字转语音
                 }
                 else
-                    dst = showCont;
+                    dst = showText;
                 // 不为空
                 if (!string.IsNullOrEmpty(dst))
                     ShowText(dst);
@@ -554,59 +550,64 @@ namespace 翻译神器
             {
                 if (shot != null && !shot.IsDisposed)
                     shot.Dispose();
+                captureImage?.Dispose();
             }
+        }
+
+        // 文字转语音
+        private void Speech(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+            speech.SpeakAsync(text);
         }
 
         // 显示文本
         private void ShowText(string text)
         {
-            using (FrmShowCont sc = new FrmShowCont(showTime))
+            using (FrmShowText st = new FrmShowText(showSec))
             {
-                sc.ContText(text);
-                sc.ShowDialog();
+                st.ShowText(text);
+                st.ShowDialog();
             }
         }
 
-        private void StartThread(string cont)
+        // 启动截图识别线程
+        private void StartThread(string text)
         {
             // 如果此次按热键的时间距离上次不足300毫秒则忽略掉
             if ((DateTime.Now - lastTime).TotalMilliseconds < 500)
                 return;
             lastTime = DateTime.Now;
             // 显示提示内容
-            if (cont != null)
+            if (text != null)
             {   // 如果当前线程未关闭，并且将要关闭的这个线程不为 显示模式（tranMode=TranMode.TranAndShowText）
-                if (CloseThread(true) && tranMode != TranMode.ShowText)
+                if (ThreadIsRun() && tranMode != TranMode.ShowText)
                     return;
             }
             // 如果线程正在运行则结束
-            if (CloseThread(false))
-                Thread.Sleep(100);
+            if (ThreadIsRun())
+                CloseThread();
             // 启动线程
             newThread = new Thread(ScreenTran);
             newThread.SetApartmentState(ApartmentState.STA);
             newThread.Start();
         }
 
-        /// <summary>
-        /// 关闭线程
-        /// </summary>
-        /// <param name="checkState">此项为true则只返回线程的运行状态</param>
-        /// <returns></returns>
-        private bool CloseThread(bool checkState)
+        // 获取线程是否在运行
+        private bool ThreadIsRun()
         {
-            if (newThread != null)  // 如果线程还在运行
-            {
-                if ((newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0)
-                {
-                    if (checkState == false)
-                        newThread.Abort(); // 关闭线程
-                    return true;
-                }
-            }
-            return false;
+            return (newThread != null && (newThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0);
         }
 
+        // 关闭线程
+        private void CloseThread()
+        {
+            if (ThreadIsRun())  // 如果线程还在运行
+                newThread.Abort(); // 关闭线程
+        }
+
+        #region 翻译窗体
         // TranslateForm
         public static int AutoPressKey { get; set; }
         public static int TranDestLang { get; set; }
@@ -626,10 +627,13 @@ namespace 翻译神器
                 ;
             }
         }
+        #endregion
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://ai.baidu.com/tech/ocr/general");
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://api.fanyi.baidu.com/");
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://ai.youdao.com/product-fanyi-picture.s");
 
+        #region 测试密钥是否有效
         private void button_BaiduKeyTest_Click(object sender, EventArgs e)
         {
             if (TextBoxIsEmpty(groupBox1))// 先判断是否有 没有填的项
@@ -687,6 +691,7 @@ namespace 翻译神器
             }
             return false;
         }
+        #endregion
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -712,33 +717,19 @@ namespace 翻译神器
         {
             // 卸载热键再重新注册，避免失效
             UnRegHotKey();
-            if (this.WindowState == FormWindowState.Minimized)
-                this.ShowInTaskbar = false;
-            else
-                this.ShowInTaskbar = true;
+            this.ShowInTaskbar = (this.WindowState == FormWindowState.Minimized) ? false : true;
             try
             {
-                try
-                {
-                    RegHotKey();
-                }
-                catch (Exception ex) { MessageBox.Show(ex.Message + "\r\n请重启程序", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                RegHotKey();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message + "\r\n请重启程序", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
-            else
-                this.WindowState = FormWindowState.Minimized;
+            this.WindowState = (this.WindowState == FormWindowState.Minimized) ? FormWindowState.Normal : FormWindowState.Minimized;
         }
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://ai.youdao.com/product-fanyi-picture.s");
 
         /// <summary>
         /// 从指定坐标截取指定大小区域
@@ -752,7 +743,6 @@ namespace 翻译神器
         {
             Bitmap bit = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bit);
-
             try
             {
                 g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;

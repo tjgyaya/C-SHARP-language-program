@@ -1,6 +1,6 @@
 ﻿namespace 翻译神器
 {
-    partial class FrmShowCont
+    partial class FrmShowText
     {
         /// <summary>
         /// Required designer variable.
@@ -29,44 +29,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmShowCont));
-            this.label1 = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmShowText));
+            this.label_ShowText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // label1
+            // label_ShowText
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(121, 19);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "显示翻译后的内容";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label_ShowText.AutoSize = true;
+            this.label_ShowText.BackColor = System.Drawing.Color.Transparent;
+            this.label_ShowText.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Bold);
+            this.label_ShowText.ForeColor = System.Drawing.Color.White;
+            this.label_ShowText.Location = new System.Drawing.Point(0, 0);
+            this.label_ShowText.Margin = new System.Windows.Forms.Padding(0);
+            this.label_ShowText.Name = "label_ShowText";
+            this.label_ShowText.Size = new System.Drawing.Size(121, 19);
+            this.label_ShowText.TabIndex = 1;
+            this.label_ShowText.Text = "显示翻译后的内容";
+            this.label_ShowText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label_ShowText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.label_ShowText_MouseClick);
             // 
-            // FrmShowCont
+            // FrmShowText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.DimGray;
+            this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(277, 48);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label_ShowText);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.KeyPreview = true;
-            this.Name = "FrmShowCont";
+            this.Name = "FrmShowText";
             this.Text = "显示翻译后的内容";
             this.Load += new System.EventHandler(this.FrmShowCont_Load);
             this.Shown += new System.EventHandler(this.FrmShowCont_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_ShowText;
     }
 }

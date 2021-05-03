@@ -74,11 +74,11 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmShowCont.cs">
+    <Compile Include="FrmShowText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmShowCont.Designer.cs">
-      <DependentUpon>FrmShowCont.cs</DependentUpon>
+    <Compile Include="FrmShowText.Designer.cs">
+      <DependentUpon>FrmShowText.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmTranslate.cs">
       <SubType>Form</SubType>
@@ -93,8 +93,8 @@
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmShowCont.resx">
-      <DependentUpon>FrmShowCont.cs</DependentUpon>
+    <EmbeddedResource Include="FrmShowText.resx">
+      <DependentUpon>FrmShowText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTranslate.resx">
       <DependentUpon>FrmTranslate.cs</DependentUpon>
