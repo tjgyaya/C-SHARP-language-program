@@ -769,6 +769,7 @@
             this.Text = "翻译神器";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            this.Shown += new System.EventHandler(this.FrmMain_Shown);
             this.SizeChanged += new System.EventHandler(this.FrmMain_SizeChanged);
             this.groupBox_HotKey.ResumeLayout(false);
             this.groupBox_HotKey.PerformLayout();

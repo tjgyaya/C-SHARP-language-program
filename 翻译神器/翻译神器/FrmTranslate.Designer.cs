@@ -372,6 +372,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "FrmTranslate";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "翻译窗口-输入文字回车即可";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FrmTranslate_Load);

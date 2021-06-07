@@ -28,9 +28,7 @@ namespace 翻译神器
         private string[] Youdao_to = { "en", "ru", "ja" };  // 目标语言名称
         private string[] Baidu_to = { "en", "ru", "jp" };   // 目标语言名称
         private Keys[] Key = { Keys.T, Keys.Y };
-        string windowName, windowClass;
-
-        public Point Local { get; set; }
+        private string windowName, windowClass;
 
 
         // 获取窗口句柄，并判断是否有效，无效则抛出异常
@@ -56,7 +54,6 @@ namespace 翻译神器
 
         private void FrmTranslate_Load(object sender, EventArgs e)
         {
-            this.Location = new Point(Local.X - this.Width / 2, Local.Y - this.Height / 2);
             Api.SetForegroundWindow(this.Handle);// 激活本窗口
         }
 

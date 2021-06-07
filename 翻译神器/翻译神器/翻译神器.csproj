@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>翻译神器</RootNamespace>
     <AssemblyName>翻译神器</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\截图类库\截图\ScreenShot.csproj">
-      <Project>{08FEE188-77DD-4929-A9B4-173B080D0124}</Project>
+      <Project>{08fee188-77dd-4929-a9b4-173b080d0124}</Project>
       <Name>ScreenShot</Name>
     </ProjectReference>
   </ItemGroup>

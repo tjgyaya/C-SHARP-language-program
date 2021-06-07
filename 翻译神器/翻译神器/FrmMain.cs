@@ -63,7 +63,7 @@ namespace 翻译神器
             hide.Click += new EventHandler(HideWin);
             // 退出菜单项  
             MenuItem exit = new MenuItem("退出");
-            exit.Click += new EventHandler(Exit);
+            exit.Click += new EventHandler((object sender, EventArgs e) => this.Close());
             // 关联托盘控件  
             MenuItem[] childen = new MenuItem[] { show, hide, exit };
             notifyIcon1.ContextMenu = new ContextMenu(childen);
@@ -89,6 +89,7 @@ namespace 翻译神器
         private string showText;                     // 要在ShowText窗口显示的内容
         private TranMode tranMode;                   // 翻译模式（截图翻译并显示 或 不截图翻译只显示）
         private string windowName, windowClass;
+        private FrmShowText st;
         const int HOT_KEY_NUM = 5;                    // 要注册的热键个数
 
         #region 配置数据
@@ -193,14 +194,17 @@ namespace 翻译神器
         }
 
         // 退出
-        private void Exit(object sender, EventArgs e)
+        private void Exit()
         {
-            speech.SpeakAsyncCancelAll();
-            CloseThread();          // 关闭线程
+            if (st != null && !st.IsDisposed)
+            {
+                st.Invoke(new Action(st.CloseWindow));
+            }
+            // CloseThread();          // 关闭线程
             UnRegHotKey();          // 卸载热键
-            notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
+            notifyIcon1?.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
             speech?.Dispose();
-            Environment.Exit(0);    // 退出
+            // Environment.Exit(0);    // 退出
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -364,10 +368,7 @@ namespace 翻译神器
             base.WndProc(ref m);
         }
 
-        private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Exit(null, null);
-        }
+        private void FrmMain_FormClosed(object sender, FormClosedEventArgs e) => Exit();
 
         private void checkBox_Click(object sender, EventArgs e)
         {
@@ -405,9 +406,9 @@ namespace 翻译神器
             }
         }
 
+        // 将按下的键显示到text
         private void textBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            // 将按下的键显示到text
             ((TextBox)sender).Text = e.KeyData.ToString();
         }
 
@@ -539,12 +540,12 @@ namespace 翻译神器
                     dst = showText;
                 // 不为空
                 if (!string.IsNullOrEmpty(dst))
-                    ShowText(dst);
+                    this.Invoke(new Action(() => ShowText(dst)));
             }
             catch (Exception ex)
             {
                 if (ex.GetType().FullName != "System.Threading.ThreadAbortException")
-                    ShowText("错误：" + ex.Message);// 显示错误
+                    this.Invoke(new Action(() => ShowText("错误：" + ex.Message)));
             }
             finally
             {
@@ -559,17 +560,25 @@ namespace 翻译神器
         {
             if (string.IsNullOrEmpty(text))
                 return;
+            speech.SpeakAsyncCancelAll();
             speech.SpeakAsync(text);
         }
 
         // 显示文本
         private void ShowText(string text)
         {
-            using (FrmShowText st = new FrmShowText(showSec))
+            using (st = new FrmShowText(showSec))
             {
+                st.Owner = this;
                 st.ShowText(text);
                 st.ShowDialog();
             }
+        }
+
+        // 在显示文本窗口关闭时关闭发音
+        public void CloseSpeak()
+        {
+            speech.SpeakAsyncCancelAll();
         }
 
         // 启动截图识别线程
@@ -584,6 +593,10 @@ namespace 翻译神器
             {   // 如果当前线程未关闭，并且将要关闭的这个线程不为 显示模式（tranMode=TranMode.TranAndShowText）
                 if (ThreadIsRun() && tranMode != TranMode.ShowText)
                     return;
+            }
+            if (st != null && !st.IsDisposed)
+            {
+                st.Invoke(new Action(st.CloseWindow));
             }
             // 如果线程正在运行则结束
             if (ThreadIsRun())
@@ -619,7 +632,6 @@ namespace 翻译神器
             try
             {
                 FrmTranslate ts = new FrmTranslate(sourceOfTran, windowName, windowClass);
-                ts.Local = new Point(this.Location.X + this.Width / 2, this.Location.Y + this.Height / 2);
                 ts.Show();
             }
             catch
@@ -629,9 +641,11 @@ namespace 翻译神器
         }
         #endregion
 
+        #region 网址
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://ai.baidu.com/tech/ocr/general");
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://api.fanyi.baidu.com/");
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://ai.youdao.com/product-fanyi-picture.s");
+        #endregion
 
         #region 测试密钥是否有效
         private void button_BaiduKeyTest_Click(object sender, EventArgs e)
@@ -707,6 +721,7 @@ namespace 翻译神器
             }
         }
 
+        // 鼠标双击清除内容
         private void textBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -717,12 +732,19 @@ namespace 翻译神器
         {
             // 卸载热键再重新注册，避免失效
             UnRegHotKey();
-            this.ShowInTaskbar = (this.WindowState == FormWindowState.Minimized) ? false : true;
+            this.ShowInTaskbar = (this.WindowState != FormWindowState.Minimized);
             try
             {
                 RegHotKey();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message + "\r\n请重启程序", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        private void FrmMain_Shown(object sender, EventArgs e)
+        {
+            isFixedScreen = false;
+            tranMode = TranMode.TranAndShowText;
+            StartThread(null);
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)

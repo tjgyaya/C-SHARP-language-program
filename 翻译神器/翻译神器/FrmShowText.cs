@@ -14,7 +14,17 @@ namespace 翻译神器
     public partial class FrmShowText : Form
     {
         // **************************************显示翻译结果窗口**************************************
-        private int showMillisec;
+        private int showMillisec;// 窗口自动关闭时间（单位：毫秒）
+
+        /// <summary>
+        /// 此为True时关闭窗口
+        /// </summary>
+        public bool CloseWindowFlag { get; set; } = false;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="show_sec">窗口自动关闭时间（单位：秒）</param>
         public FrmShowText(int show_sec)
         {
             InitializeComponent();
@@ -22,6 +32,10 @@ namespace 翻译神器
             showMillisec = show_sec * 1000;
         }
 
+        /// <summary>
+        /// 显示文本，并在指定时间后关闭窗口
+        /// </summary>
+        /// <param name="text">要显示的文本内容</param>
         public void ShowText(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -29,7 +43,7 @@ namespace 翻译神器
             SizeF Size;
             using (Graphics g = this.CreateGraphics())
                 Size = g.MeasureString("中", this.Font);   // 求出单个中文字体的宽度（像素）
-            // 求出屏幕宽度的3/4能容纳的字符数
+            // 求出屏幕宽度的3/4能容纳的汉字字符数
             int max = (int)(Screen.PrimaryScreen.Bounds.Width * (3.0 / 4.0) / Size.Width);
             label_ShowText.Text = InsertChar(text, max);  // 将要显示的文本显示到label 
             // 如果label宽度太小就增加字号
@@ -91,9 +105,12 @@ namespace 翻译神器
             return str;
         }
 
+        // 第一次是显示窗口时
         private void FrmShowCont_Shown(object sender, EventArgs e) => SleepAsync();
 
+        // 设置窗口透明度
         private void SetOpacity(double opacity) => this.Opacity = opacity;
+
         // 休眠showTime秒后关闭窗口
         private async void SleepAsync()
         {
@@ -101,17 +118,24 @@ namespace 翻译神器
             {
                 try
                 {
-                    double opacity = 0.0;
-                    while ((opacity += 0.2) <= 1.0) // 窗体渐变效果 
+                    double opacity = 0.0;// 窗口透明度
+                    while ((opacity += 0.2) <= 1.0 && !CloseWindowFlag) // 窗体渐变效果 
                     {
                         if (this.IsHandleCreated) // 判断窗口句柄是否存在
                             this.Invoke(new Action(() => SetOpacity(opacity)));
                         Thread.Sleep(200);
                     }
-                    Thread.Sleep(showMillisec);
-                    while (IsKeyDown(Keys.ControlKey)) // 如果按下键则等待键松开再关闭窗口
-                        Thread.Sleep(100);
-                    if (this.IsHandleCreated) //判断窗口句柄是否存在
+                    while (showMillisec > 0 && !CloseWindowFlag)
+                    {
+                        Thread.Sleep(50);
+                        showMillisec -= 50;
+                    }
+                    while (IsKeyDown(Keys.ControlKey) && !CloseWindowFlag) // 如果按下键则等待键松开再关闭窗口
+                        Thread.Sleep(50);
+                    // 关闭主窗口的文字转语音
+                    FrmMain frmMain = (FrmMain)this.Owner;
+                    frmMain.CloseSpeak();
+                    if (this.IsHandleCreated) // 判断窗口句柄是否存在
                         this.BeginInvoke(new Action(CloseWindow));
                 }
                 catch
@@ -124,7 +148,15 @@ namespace 翻译神器
         // 判断键盘任一按键是否按下
         private bool IsKeyDown(Keys key) => Api.GetAsyncKeyState((int)key) != 0;
 
-        private void CloseWindow() => this.Close();
+        /// <summary>
+        ///  关闭窗口
+        /// </summary>
+        public void CloseWindow()
+        {
+            CloseWindowFlag = true;
+            Thread.Sleep(100);
+            this.Close();
+        }
 
         private void label_ShowText_MouseClick(object sender, MouseEventArgs e)
         {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ScreenShot
@@ -34,6 +36,8 @@ namespace ScreenShot
         private Rectangle selectedArea;  // 选择的区域大小坐标 
         private Image screenImage;       // 截取的全屏图像
         private IntPtr windowHandle;     // 要截图的目标窗口句柄
+        private IntPtr autoHwnd = IntPtr.Zero;// 自动框选的窗口句柄
+        private Point lastPoint;// 鼠标上次所在的坐标
 
         /// <summary>
         /// 截图完成后的图像
@@ -56,23 +60,13 @@ namespace ScreenShot
         {
             this.windowHandle = windowHandle;
             if (windowHandle != IntPtr.Zero)
-            {
-                GetWindowRect(out Size size, out Point point);
-                screenImage = CopyScreen(point.X, point.Y, size.Width, size.Height);
+            {    // windowHandle不为空，则表示只针对某个窗口截图，而不是全屏截图
+                Rectangle rect = Api.GetWindowRectByHandle(windowHandle);
+                screenImage = CopyScreen(rect.X, rect.Y, rect.Width, rect.Height);// 截取这个窗口的图片
             }
             else
-                screenImage = CopyScreen();
-            return this.ShowDialog();
-        }
-
-        // 通过窗体句柄获取窗体大小和坐标
-        private void GetWindowRect(out Size size, out Point point)
-        {
-            bool result = Api.GetWindowRect(windowHandle, out Api.TagRECT rect);
-            if (!result)
-                throw new Exception("无法获取窗口大小和坐标信息！");
-            size = new Size(rect.right - rect.left, rect.bottom - rect.top);
-            point = new Point(rect.left, rect.top);
+                screenImage = CopyScreen(); // 截取全屏图片
+            return this.ShowDialog();// 显示窗口
         }
 
         // 设置窗口大小
@@ -80,11 +74,12 @@ namespace ScreenShot
         {
             if (windowHandle != IntPtr.Zero)
             {
-                GetWindowRect(out Size size, out Point point);
-                this.Size = size;
-                this.Location = point;
+                Rectangle rect = Api.GetWindowRectByHandle(windowHandle);
+                this.Size = rect.Size;
+                this.Location = rect.Location;
             }
             else
+                //;
                 this.WindowState = FormWindowState.Maximized;
             this.TopMost = true;
         }
@@ -116,6 +111,9 @@ namespace ScreenShot
         // 把选择的矩形的大小坐标记录下来，并绘制选择的矩形
         private void FrmScreenShot_MouseMove(object sender, MouseEventArgs e)
         {
+            if (lastPoint == e.Location)
+                return;
+            lastPoint = e.Location;
             LockMouseMove();
             if (screenImage == null)
                 Cancel();
@@ -126,13 +124,17 @@ namespace ScreenShot
                 selectedArea.Width = Math.Abs(e.Location.X - startPos.X);
                 selectedArea.Height = Math.Abs(e.Location.Y - startPos.Y);
                 this.Invalidate();  // 使窗口重绘引发Paint事件
+                return;
             }
+            autoHwnd = Api.GetWindowHandleByPos(e.Location, this.Handle);
+            Api.GetWindowRect(autoHwnd, out Api.TagRECT tagRect);
+            this.Invalidate();  // 使窗口重绘引发Paint事件
         }
 
         // 锁定鼠标光标
         private void LockMouseMove()
         {
-            Cursor.Clip = new Rectangle(new Point(this.Location.X, this.Location.Y), new Size(this.Width, this.Height));
+            Cursor.Clip = new Rectangle(this.Location, this.Size);
         }
 
         // 窗体重绘事件
@@ -143,9 +145,45 @@ namespace ScreenShot
             // 将原图显示到窗体
             e.Graphics.DrawImage(this.screenImage, 0, 0, this.screenImage.Width, this.screenImage.Height);
             using (SolidBrush sb = new SolidBrush(Color.FromArgb(100, 0, 0, 0)))
-                e.Graphics.FillRectangle(sb, this.ClientRectangle); // 对窗体显示的图片进行灰度处理
-                                                                    // 绘制选择的矩形
-            DrawLargeRect(e.Graphics);
+                e.Graphics.FillRectangle(sb, this.ClientRectangle);
+            // 对窗体显示的图片进行灰度处理
+            if (MouseButtons == MouseButtons.Left)
+                DrawSelectedRect(e.Graphics);// 绘制选择的矩形
+            else
+                AutoDrawRect(e.Graphics);// 自动绘制鼠标所在的窗口
+        }
+
+        // 自动查找鼠标所在的窗口并绘制窗口矩形
+        private void AutoDrawRect(Graphics g)
+        {
+            Rectangle rect = Api.GetWindowRectByHandle(autoHwnd);
+            rect.Intersect(this.ClientRectangle);// 避免截图区域超出屏幕
+            string str = $"鼠标坐标：{MousePosition.X},{MousePosition.Y}\r\n窗口坐标：{rect.X},{rect.Y}\r\n窗口大小：{rect.Width}x{rect.Height}";
+            Font font = new Font("微软雅黑", 10f);
+            Size size = g.MeasureString(str, font).ToSize();// 字体大小
+            Point displayPos = new Point(rect.Left, rect.Top - size.Height - 5);
+            DrawStr(g, displayPos, str, font, size);
+            using (Pen pen = new Pen(Color.Cyan, 3))
+            {
+                g.DrawImage(this.screenImage, rect, rect, GraphicsUnit.Pixel);
+                g.DrawRectangle(pen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
+            }
+        }
+
+        // 在指定位置绘制字符串
+        private void DrawStr(Graphics g, Point displayPos, string str, Font font, Size strSize)
+        {
+            // 确定显示坐标
+            displayPos.Y = (displayPos.Y <= 0) ? 5 : displayPos.Y;
+            displayPos.X = (displayPos.X + strSize.Width > this.Width) ? this.Width - strSize.Width : displayPos.X;
+            displayPos.X = (displayPos.X <= 0) ? 5 : displayPos.X;
+            // 在指定坐标绘制字体
+            using (SolidBrush Brush = new SolidBrush(Color.FromArgb(125, 0, 0, 0)))
+            {
+                // 在矩形内部填充半透明黑色
+                g.FillRectangle(Brush, new Rectangle(displayPos, strSize));
+                g.DrawString(str, font, Brushes.Orange, displayPos);
+            }
         }
 
         // 绘制四周的小矩形
@@ -172,43 +210,27 @@ namespace ScreenShot
             }
         }
 
-        // 获取坐标大小等信息
-        private string GetInfo()
-        {
-            // 不是相对坐标截图
-            if (windowHandle == IntPtr.Zero)
-                return string.Format($"按鼠标右键或ESC取消\n起始坐标:{this.startPos.X},{this.startPos.Y} 鼠标坐标:{MousePosition.X},{MousePosition.Y}\n截图大小:{this.selectedArea.Width}x{this.selectedArea.Height}");
-            // 是相对坐标截图
-            Point mousePoint = new Point(MousePosition.X, MousePosition.Y);
-            // 屏幕坐标转为客户端窗口坐标
-            mousePoint = this.PointToClient(mousePoint);
-            return string.Format($"按鼠标右键或ESC取消\n起始坐标(相对):{this.startPos.X},{this.startPos.Y} 鼠标坐标(相对):{mousePoint.X},{mousePoint.Y}\n截图大小:{this.selectedArea.Width}x{this.selectedArea.Height}");
-        }
-
-        // 绘制大矩形
-        private void DrawLargeRect(Graphics g)
+        // 绘制选择的矩形
+        private void DrawSelectedRect(Graphics g)
         {
             Font font = new Font("微软雅黑", 10f);
             g.DrawImage(this.screenImage, this.selectedArea, this.selectedArea, GraphicsUnit.Pixel);
             g.DrawRectangle(Pens.DodgerBlue, this.selectedArea.Left, this.selectedArea.Top, this.selectedArea.Width - 1, this.selectedArea.Height - 1);
             // 绘制四周的小矩形
             DrawSmallRect(g);
-            // 绘制文字
-            string showText = GetInfo();
-            // 测量显示字体需要的尺寸
-            Size sizeRequired = g.MeasureString(showText, font).ToSize();
-            // 字体的坐标
-            Point displayPos = new Point(this.selectedArea.Left, this.selectedArea.Top - sizeRequired.Height - 5);
-            displayPos.Y = (displayPos.Y <= 0) ? 5 : displayPos.Y;
-            displayPos.X = (displayPos.X + sizeRequired.Width > this.Width) ? this.Width - sizeRequired.Width : displayPos.X;
-            displayPos.X = (displayPos.X <= 0) ? 5 : displayPos.X;
-            // 在指定坐标绘制字体
-            using (SolidBrush Brush = new SolidBrush(Color.FromArgb(125, 0, 0, 0)))
+            string str;
+            if (windowHandle != IntPtr.Zero)  // 是指定窗口截图
             {
-                // 在矩形内部填充半透明黑色
-                g.FillRectangle(Brush, new Rectangle(displayPos, sizeRequired));
-                g.DrawString(showText, font, Brushes.Orange, displayPos);
+                Point mousePoint = this.PointToClient(MousePosition);// 屏幕坐标转为客户端窗口坐标
+                str = string.Format($"按鼠标右键或ESC取消\n起始坐标(相对):{this.startPos.X},{this.startPos.Y} " +
+                    $"鼠标坐标(相对):{mousePoint.X},{mousePoint.Y}\n截图大小:{this.selectedArea.Width}x{this.selectedArea.Height}");
             }
+            else // 不是指定窗口截图
+                str = string.Format($"按鼠标右键或ESC取消\n起始坐标:{this.startPos.X},{this.startPos.Y} " +
+                    $"鼠标坐标:{MousePosition.X},{MousePosition.Y}\n截图大小:{this.selectedArea.Width}x{this.selectedArea.Height}");
+            Size size = g.MeasureString(str, font).ToSize();// 字体大小
+            Point displayPos = new Point(this.selectedArea.Left, this.selectedArea.Top - size.Height - 5);
+            DrawStr(g, displayPos, str, font, size);// 绘制文字
         }
 
         // 鼠标弹起，截图完成
@@ -218,15 +240,17 @@ namespace ScreenShot
                 Cancel();
             if (e.Button != MouseButtons.Left)
                 return;
-            // 使窗口的整个画面无效并重绘控件
-            this.Invalidate();
-            // 复制图片到剪切板
-            Rectangle area = new Rectangle(selectedArea.X, selectedArea.Y, selectedArea.Width, selectedArea.Height);
-            if (area.Height > 0 && area.Width > 0) // 宽度和高度必须大于零
-            {
-                using (Bitmap bmpImage = new Bitmap(screenImage))
-                    CaptureImage = bmpImage.Clone(area, bmpImage.PixelFormat);
-            }
+            this.Invalidate(); // 使窗口的整个画面无效并重绘控件
+            Rectangle area;// 目标矩形
+            if (startPos.X == e.X && startPos.Y == e.Y && autoHwnd != IntPtr.Zero)
+                area = Api.GetWindowRectByHandle(autoHwnd);// 自动选择窗口截图
+            else
+                area = selectedArea;     // 手动拖动截图 
+            area.Intersect(this.ClientRectangle);
+            // 在全屏图片上裁剪目标矩形
+            using (Bitmap bmpImage = new Bitmap(screenImage))
+                CaptureImage = bmpImage.Clone(area, bmpImage.PixelFormat);
+           // CaptureImage.Save("1.png", ImageFormat.Png);
             this.Close();
             this.DialogResult = DialogResult.OK;
             OnCapturedEvent();
@@ -257,7 +281,6 @@ namespace ScreenShot
         {
             CapturedEvent?.Invoke((Image)CaptureImage.Clone());
         }
-
 
         /// <summary>
         /// Required designer variable.

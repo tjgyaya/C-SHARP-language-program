@@ -92,6 +92,7 @@ namespace 翻译神器
         {
             host += string.IsNullOrEmpty(token) ? "" : token;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
+           // request.ServicePoint.BindIPEndPointDelegate = (ServicePoint servicePoint, IPEndPoint remoteEndPoint, int retryCount) => new IPEndPoint(IPAddress.Any, 0);
             request.Method = "post";
             request.Timeout = 6000;
             request.ContentType = string.IsNullOrEmpty(contentType) ? "application/x-www-form-urlencoded" : contentType;
@@ -105,23 +106,22 @@ namespace 翻译神器
                 return reader.ReadToEnd();
         }
 
-        // 获取AccessToken，失败时抛出异常
-        private static string GetAccessToken()
+        /// <summary>
+        /// 获取AccessToken，失败时抛出异常
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAccessToken()
         {
-            string authHost = "https://aip.baidubce.com/oauth/2.0/token";
-            HttpClient client = new HttpClient();
-            List<KeyValuePair<string, string>> paraList = new List<KeyValuePair<string, string>>();
-            paraList.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
-            paraList.Add(new KeyValuePair<string, string>("client_id", BaiduKey.ApiKey));
-            paraList.Add(new KeyValuePair<string, string>("client_secret", BaiduKey.SecretKey));
-
-            HttpResponseMessage response = client.PostAsync(authHost, new FormUrlEncodedContent(paraList)).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-
+            string host = "https://aip.baidubce.com/oauth/2.0/token";
+            string ak = BaiduKey.ApiKey;
+            string sk = BaiduKey.SecretKey;
+            string str = string.Format($"grant_type=client_credentials&client_id={ak}&client_secret={sk}");
+            string result = Request(host, "", str);
             JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
             Token list = js.Deserialize<Token>(result);// 将json数据转化为对象并赋值给list
             if (list.error != null)
                 throw new Exception("获取AccessToken失败！" + "\n原因：" + list.error_description);
+
             return list.access_token;
         }
 
