@@ -51,11 +51,11 @@
             this.button1_SetOCRKey = new System.Windows.Forms.Button();
             this.button2_SetOCRKeyWord = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button_DelConfig = new System.Windows.Forms.Button();
+            this.button_SaveConfig = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button_DelConfig = new System.Windows.Forms.Button();
-            this.button_SaveConfig = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -321,6 +321,32 @@
             this.pictureBox1.TabStop = false;
             this.toolTip1.SetToolTip(this.pictureBox1, "pictureBox控件存在的意义就是为了获取不同缩放比下的截图区域大小");
             // 
+            // button_DelConfig
+            // 
+            this.button_DelConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_DelConfig.Font = new System.Drawing.Font("微软雅黑", 8F);
+            this.button_DelConfig.Location = new System.Drawing.Point(81, 19);
+            this.button_DelConfig.Name = "button_DelConfig";
+            this.button_DelConfig.Size = new System.Drawing.Size(53, 25);
+            this.button_DelConfig.TabIndex = 75;
+            this.button_DelConfig.Text = "删除";
+            this.toolTip1.SetToolTip(this.button_DelConfig, "删除配置文件");
+            this.button_DelConfig.UseVisualStyleBackColor = true;
+            this.button_DelConfig.Click += new System.EventHandler(this.button_DelConfig_Click);
+            // 
+            // button_SaveConfig
+            // 
+            this.button_SaveConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_SaveConfig.Font = new System.Drawing.Font("微软雅黑", 8F);
+            this.button_SaveConfig.Location = new System.Drawing.Point(81, 62);
+            this.button_SaveConfig.Name = "button_SaveConfig";
+            this.button_SaveConfig.Size = new System.Drawing.Size(53, 25);
+            this.button_SaveConfig.TabIndex = 76;
+            this.button_SaveConfig.Text = "保存";
+            this.toolTip1.SetToolTip(this.button_SaveConfig, "保存到配置文件");
+            this.button_SaveConfig.UseVisualStyleBackColor = true;
+            this.button_SaveConfig.Click += new System.EventHandler(this.button_SaveConfig_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.LightSkyBlue;
@@ -364,32 +390,6 @@
             this.groupBox4.TabIndex = 74;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "日志";
-            // 
-            // button_DelConfig
-            // 
-            this.button_DelConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_DelConfig.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button_DelConfig.Location = new System.Drawing.Point(81, 19);
-            this.button_DelConfig.Name = "button_DelConfig";
-            this.button_DelConfig.Size = new System.Drawing.Size(53, 25);
-            this.button_DelConfig.TabIndex = 75;
-            this.button_DelConfig.Text = "删除";
-            this.toolTip1.SetToolTip(this.button_DelConfig, "删除配置文件");
-            this.button_DelConfig.UseVisualStyleBackColor = true;
-            this.button_DelConfig.Click += new System.EventHandler(this.button_DelConfig_Click);
-            // 
-            // button_SaveConfig
-            // 
-            this.button_SaveConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_SaveConfig.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button_SaveConfig.Location = new System.Drawing.Point(81, 62);
-            this.button_SaveConfig.Name = "button_SaveConfig";
-            this.button_SaveConfig.Size = new System.Drawing.Size(53, 25);
-            this.button_SaveConfig.TabIndex = 76;
-            this.button_SaveConfig.Text = "保存";
-            this.toolTip1.SetToolTip(this.button_SaveConfig, "保存到配置文件");
-            this.button_SaveConfig.UseVisualStyleBackColor = true;
-            this.button_SaveConfig.Click += new System.EventHandler(this.button_SaveConfig_Click);
             // 
             // FrmMain
             // 

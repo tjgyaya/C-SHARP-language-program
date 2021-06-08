@@ -384,7 +384,6 @@ namespace 自动进入钉钉直播
         {
             identifyType = "other";
             Bitmap bit = null;
-            Action<string> updateLog = new Action<string>(UpdateLog);
             // 判断直播窗口句柄是否存在（直播窗口句柄存在则说明当前直播未断开，就不需要通过截图来判断直播是否断开） 
             if (Api.FindWindow(dingLiveWindowClassName, null) != IntPtr.Zero)
                 return true;
@@ -403,8 +402,9 @@ namespace 自动进入钉钉直播
                 {
                     identifyType = "RGB";
                     return true;
-                } // 如果RGB判断未成功则通过OCR文字识别判断关键字
-                else if (OCR.Is_Live(bit))
+                }
+                // 如果RGB判断未成功则通过OCR文字识别判断关键字
+                if (OCR.Is_Live(bit))
                 {
                     identifyType = "OCR";
                     return true;
@@ -412,7 +412,7 @@ namespace 自动进入钉钉直播
             }
             catch (Exception ex)
             {
-                this.Invoke(updateLog, ex.Message);
+                UpdateLog(ex.Message);
             }
             finally
             {
@@ -468,7 +468,7 @@ namespace 自动进入钉钉直播
             try
             {
                 File.Delete(ConfigFile.ConfigPath);
-                UpdateLog("删除成功");
+                UpdateLog("删除配置文件成功");
             }
             catch (Exception ex)
             {
@@ -481,7 +481,7 @@ namespace 自动进入钉钉直播
             ConfigFile.WriteFile(checkBox11_ShowTop.Text, checkBox11_ShowTop.Checked.ToString());
             ConfigFile.WriteFile(checkBox13_preventSleep.Text, checkBox13_preventSleep.Checked.ToString());
             ConfigFile.WriteFile(dingPathKey, dingDingPath);
-            UpdateLog("保存成功");
+            UpdateLog("保存配置文件成功");
         }
     }
 }

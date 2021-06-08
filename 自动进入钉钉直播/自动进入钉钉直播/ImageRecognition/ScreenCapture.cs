@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.WebSockets;
 using System.Windows.Forms;
 
 namespace 自动进入钉钉直播
@@ -76,6 +69,8 @@ namespace 自动进入钉钉直播
         // 将文件中的RGB数据读到列表中
         private static void ReadFile(string path)
         {
+            if (!File.Exists(path))
+                return;
             using (StreamReader sr = new StreamReader(path))
             {
                 string str;

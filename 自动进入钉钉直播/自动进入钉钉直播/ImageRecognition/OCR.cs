@@ -42,7 +42,15 @@ namespace 自动进入钉钉直播
         // 通过关键字判断钉钉是否在直播
         public static bool Is_Live(Image img)
         {
-            string word = BaiduOCR.GeneralBasic(img, apiKey, sercretKey); // 识别图片文字
+            string word;
+            try
+            {
+               word = BaiduOCR.GeneralBasic(img, apiKey, sercretKey); // 识别图片文字
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("调用OcrApi失败\r\n" + ex.Message);
+            }
             if (string.IsNullOrEmpty(word)) // 如果返回结果为空
                 return false;
             foreach (char c in word)
