@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -13,62 +8,60 @@ namespace 自动进入钉钉直播
     class Reg
     {
         /// <summary>
-        /// 从注册表获取钉钉安装路径
+        /// 通过注册表、桌面、手动选择路径的方式
+        /// 获取钉钉安装路径
         /// </summary>
         /// <returns>返回钉钉安装路径</returns>
-        public static string GetDingDingPath()
+        public static string GetdingDingPath()
         {
-            // 64位系统注册表路径
-            string Key = "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
-            string DingDingPath;
-
-            // 如果是32位系统
-            if (!Environment.Is64BitOperatingSystem)
-                Key = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";// 32位系统钉钉在注册表的路径
-
             // 从注册表获取钉钉路径
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(Key, false);// 打开注册表
-            if (key != null)// 如果打开成功
-            {
-                string path = key.GetValue("UninstallString").ToString();
-                if (path != null)
-                {
-                    DingDingPath = Path.Combine(Path.GetDirectoryName(path) + "\\", "DingtalkLauncher.exe");
-                    if (File.Exists(DingDingPath))// 判断路径是否存在
-                    {
-                        return DingDingPath;
-                    }
-                }
-            }
-
-            // 从注册表获取钉钉路径失败时 将会 从桌面获取钉钉快捷方式
-            DingDingPath = "C:\\Users\\Public\\Desktop\\钉钉.lnk";
-            if (File.Exists(DingDingPath))
-            {
-                return DingDingPath;
-            }
-
-            // 如果不能从桌面获取钉钉快捷方式
-            DialogResult result = MessageBox.Show("无法从注册表和桌面获取钉钉路径，\n请手动选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）。", "自动进入钉钉直播间", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            string path = GetDingPathFromRegist();
+            if (path != null)
+                return path;
+            // 从桌面获取钉钉路径
+            path = GetDingPathFromDesktop();
+            if (path != null)
+                return path;
+            // 手动选择钉钉路径
+            DialogResult result = MessageBox.Show("无法从注册表和桌面获取钉钉路径，\n请手动选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）。", Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (result == DialogResult.Cancel)
                 return null;
-
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
                 dialog.Filter = "DingtalkLauncher.exe (*.exe)| *.exe";
                 dialog.Title = "请选择“DingtalkLauncher.exe”路径（在钉钉安装目录里）";
                 dialog.DefaultExt = "exe";
-                dialog.AddExtension = true;
-                dialog.CheckFileExists = true;
-                dialog.CheckPathExists = true;
-                dialog.Multiselect = false;
-
-                result = dialog.ShowDialog();
-                return result == DialogResult.OK ? dialog.FileName : null;
+                return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
             }
-
         }
 
+        private static string GetDingPathFromRegist()
+        {
+            // 64位系统注册表路径
+            string subKey = "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";
+            if (!Environment.Is64BitOperatingSystem)// 如果是32位系统
+                subKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\钉钉";// 32位系统钉钉在注册表的路径
+            // 从注册表获取钉钉路径
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(subKey, false);// 打开注册表
+            if (key != null)// 如果打开成功
+            {
+                string path = key.GetValue("UninstallString").ToString();
+                if (path != null)
+                {
+                    string dingDingPath = Path.Combine(Path.GetDirectoryName(path) + "\\", "DingtalkLauncher.exe");
+                    return File.Exists(dingDingPath) ? dingDingPath : null;
+                }
+            }
+            return null;
+        }
+
+        private static string GetDingPathFromDesktop()
+        {
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory);
+            // 从桌面获取钉钉快捷方式
+            string dingDingPath = $"{desktop}\\钉钉.lnk";
+            return File.Exists(dingDingPath) ? dingDingPath : null;
+        }
 
         /// <summary>
         /// 修改注册表添加自启动
@@ -80,15 +73,8 @@ namespace 自动进入钉钉直播
         {
             // 打开注册表
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"))
-            {
-                // 判断键值是否存在
-                if (key.GetValue(KeyName) != null)
-                    key.DeleteValue(KeyName);
-                // 设置值
-                key.SetValue(KeyName, Path, RegistryValueKind.String);
-            }
+                key.SetValue(KeyName, Path, RegistryValueKind.String);  // 设置值
         }
-
 
         /// <summary>
         /// 修改注册表删除自启动
@@ -99,10 +85,7 @@ namespace 自动进入钉钉直播
         {
             // 打开注册表
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"))
-            {
-                // 删除值
-                key.DeleteValue(KeyName);
-            }
+                key.DeleteValue(KeyName);   // 删除值
         }
     }
 }

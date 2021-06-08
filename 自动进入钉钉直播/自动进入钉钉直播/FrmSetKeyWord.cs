@@ -23,7 +23,7 @@ namespace 自动进入钉钉直播
         {
             InitializeComponent();
             local = new Point(x - this.Width / 2, y - this.Height / 2);// 设置窗口在主窗口居中
-            DelFile();                                                 // 删除残余文件
+            ClearFile();
         }
 
         private void button2_RGBExamples_Click(object sender, EventArgs e)
@@ -32,19 +32,12 @@ namespace 自动进入钉钉直播
             {
                 if (currentWindow == "RGB")
                     return;
-
                 currentWindow = "RGB";
-                if (!File.Exists(RGBMth))
-                {
-                    File.WriteAllBytes(RGBMth, Properties.Resources.RGB);// 将资源文件（*.mht）写入到磁盘
-                    FileInfo fi = new FileInfo(RGBMth);
-                    fi.Attributes = FileAttributes.Temporary | FileAttributes.Hidden;
-                }
-                webBrowser1.Navigate(RGBMth);                            // 用webBrowser控件加载“mth”文件
+                LoadMthFile(RGBMth, Properties.Resources.RGB);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -54,20 +47,24 @@ namespace 自动进入钉钉直播
             {
                 if (currentWindow == "OCR")
                     return;
-
                 currentWindow = "OCR";
-                if (!File.Exists(OCRMth))
-                {
-                    File.WriteAllBytes(OCRMth, Properties.Resources.OCR);// 将资源文件（*.mht）写入到磁盘
-                    FileInfo fi = new FileInfo(OCRMth);
-                    fi.Attributes = FileAttributes.Temporary | FileAttributes.Hidden;
-                }
-                webBrowser1.Navigate(OCRMth);                            // 用webBrowser控件加载“mth”文件
+                LoadMthFile(OCRMth, Properties.Resources.OCR);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message ,"自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void LoadMthFile(string path, byte[] bytes)
+        {
+            if (!File.Exists(path))
+            {
+                File.WriteAllBytes(path, bytes);// 将资源文件（*.mht）写入到磁盘
+                FileInfo fi = new FileInfo(path);
+                fi.Attributes = FileAttributes.Temporary | FileAttributes.Hidden;
+            }
+            webBrowser1.Navigate(path);  // 用webBrowser控件加载“mth”文件
         }
 
         private void button1_SetRgbKey_Click(object sender, EventArgs e)
@@ -82,7 +79,7 @@ namespace 自动进入钉钉直播
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message ,"自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -99,26 +96,24 @@ namespace 自动进入钉钉直播
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message ,"自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "自动进入钉钉直播", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void FrmSetKeyWord_Load(object sender, EventArgs e)
         {
-            if (local.X >= 0 && local.Y >= 0)
-                this.Location = local;
-
+            this.Location = local;
             button2_RGBExamples_Click(null, null);
         }
 
         private void FrmSetKeyWord_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DelFile();
+            ClearFile();
             webBrowser1.Dispose();
             this.Dispose();
         }
 
-        private void DelFile()
+        private void ClearFile()
         {
             if (File.Exists(RGBMth))
                 File.Delete(RGBMth);

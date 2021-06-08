@@ -21,35 +21,23 @@ namespace 自动进入钉钉直播
             {
                 try
                 {
-                    string iniDir = Path.GetDirectoryName(Form1.iniPath);
-                    if (Directory.Exists(iniDir))
-                    {
-                        Directory.Delete(iniDir, true);
-                        MessageBox.Show("删除配置文件成功！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                        MessageBox.Show("未找到配置文件！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    Environment.Exit(0);// 退出
+                    Directory.Delete(Path.GetDirectoryName(ConfigFile.ConfigPath), true);
+                    MessageBox.Show("删除配置文件成功！", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("删除配置文件失败！\n原因：" + ex.Message, "删除配置文件失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Environment.Exit(-1);// 退出
+                    MessageBox.Show("删除配置文件失败！\n原因：" + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                return;
             }
-
-            if (!IsRun()) // 判断当前程序是否在运行
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1(args));
+            if (IsRun()) // 判断当前程序是否在运行
+            {            // 已经有一个实例在运行     
+                MessageBox.Show("当前程序已经在运行！", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else
-            {
-                //已经有一个实例在运行      
-                MessageBox.Show("当前程序已经在运行！", "自动进入钉钉直播间", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Environment.Exit(-1);
-            }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new FrmMain());
         }
 
 
