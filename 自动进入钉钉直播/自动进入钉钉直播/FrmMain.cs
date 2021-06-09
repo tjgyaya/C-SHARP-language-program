@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using 自动进入钉钉直播.ImageRecognition;
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-//                   非1920x1080分辨率的屏幕可能会卡在“第xx次 检测钉钉是否正在直播”
-///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 namespace 自动进入钉钉直播
@@ -45,24 +37,25 @@ namespace 自动进入钉钉直播
         // 钉钉子窗口类名（显示XX群正在直播的那个窗口）
         private readonly string dingChildWindowClassName = "DingChatWnd";
         // 钉钉进程名
-        private readonly string dingProcessName = "DingTalk";
+        private readonly string dingProcessName = "DingTalk"; 
         private readonly string dingPathKey = "钉钉路径";
+        // OCR识别关键字（当OCR识别到以下关键字时，判定直播已开启）
         private static readonly char[] keyWords = { '群', '正', '在', '直', '播' };
 
-        private LocalOCR localOCR;
-        private Rectangle rectCapture;                   // 截图坐标宽度和高度
-        private string dingDingPath;                     // 钉钉安装路径                    
-        private bool startFlag;                          // 运行状态（是否启动）
+        private LocalOCR localOCR;                      // OCR
+        private Rectangle rectCapture;                  // 截图坐标宽度和高度
+        private string dingDingPath;                    // 钉钉安装路径                    
+        private bool startFlag;                         // 运行状态（是否启动）
         private bool saveToDesk;                        // 是否将截图保存到桌面
-        private OpenMode openMode;
+        private OpenMode openMode;                      // 当前运行模式
 
         /// <summary>
         /// 当前运行模式 检测直播是否断开/打开直播
         /// </summary>
         enum OpenMode
         {
-            Open,
-            Check
+            Open,// 打开直播
+            Check// 检测直播断开
         }
 
         // 钉钉窗口始终显示在最顶层
@@ -150,10 +143,10 @@ namespace 自动进入钉钉直播
         }
 
         // 通过右上角“X”退出软件时
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            localOCR.Dispose();
-            notifyIcon1.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
+            localOCR?.Dispose();
+            notifyIcon1?.Dispose();  // 释放notifyIcon1的所有资源，保证托盘图标在程序关闭时立即消失
             if (checkBox13_preventSleep.Checked)// 如果设置了阻止系统休眠
                 Api.SetThreadExecutionState(Api.ES_CONTINUOUS);// 清除执行状态标志以禁用离开模式并允许系统空闲以正常睡眠
         }
@@ -188,8 +181,9 @@ namespace 自动进入钉钉直播
             }
         }
 
+
         //加载窗口时读取配置文件
-        private void Form1_Load(object sender, EventArgs e)
+        private void FrmMain_Load(object sender, EventArgs e)
         {
             this.Text += "V" + Application.ProductVersion.Remove(Application.ProductVersion.Length - 4);
             try
@@ -217,7 +211,7 @@ namespace 自动进入钉钉直播
             }
         }
 
-        private void Form1_Shown(object sender, EventArgs e) => Start();
+        private void FrmMain_Shown(object sender, EventArgs e) => Start();
 
         // 点击任务栏托盘图标时显示窗口
         private void notifyIcon1_Click(object sender, EventArgs e) => Show();
@@ -225,8 +219,10 @@ namespace 自动进入钉钉直播
         // 启动
         private void button5_Start_Click(object sender, EventArgs e) => Start();
 
+        // 启动
         private void Start()
         {
+            //return;
             timer1.Interval = 100;
             openMode = OpenMode.Open;
             startFlag = !startFlag;
@@ -243,17 +239,17 @@ namespace 自动进入钉钉直播
         {
             try
             {
-                if (openMode == OpenMode.Open)
+                if (openMode == OpenMode.Open)// 打开直播
                 {
-                    OpenDingDing();
+                    OpenDingDing();  // 打开钉钉
                     Thread.Sleep(1000);
-                    if (!LiveBegin())
+                    if (!LiveBegin())// 检测直播是否开启
                     {
                         UpdateLog("直播未开启...");
                         return;
                     }
                     if (!OpenLive())
-                        return;
+                        return; // 检测到直播开启，但打开直播失败
                     openMode = OpenMode.Check;
                     return;
                 }
@@ -263,8 +259,8 @@ namespace 自动进入钉钉直播
                     ShowWindow(dingWindowClassName);
                     Thread.Sleep(200);
                 }
+                // 检测直播是否断开
                 UpdateLog("检测直播是否断开...");
-                // 如果 钉钉直播窗口句柄 不存在，则截图并判断图片中的（rgb或文字）是否含有钉钉正在直播时的（rgb或关键字）
                 if (!LiveBegin())
                 {
                     UpdateLog($"检测到直播断开");
@@ -332,13 +328,13 @@ namespace 自动进入钉钉直播
         // 打开直播
         private bool OpenLive()
         {
-            rectCapture.Location = GetScreenPos();
+            rectCapture.Location = GetChildWindowPos();
             int x = rectCapture.X + rectCapture.Width / 2;
             int y = rectCapture.Y + rectCapture.Height / 2;
-            Api.SendMessage(GetScreenHandle(), Api.WM_LBUTTONDOWN, x, y);
-            Api.SendMessage(GetScreenHandle(), Api.WM_LBUTTONUP, x, y);
+            Api.SendMessage(GetChildWindowHandle(), Api.WM_LBUTTONDOWN, x, y);
+            Api.SendMessage(GetChildWindowHandle(), Api.WM_LBUTTONUP, x, y);
             Thread.Sleep(2000);
-            UpdateLog($"鼠标点击{x},{y}");
+            UpdateLog($"模拟鼠标点击{x},{y}");
             // 查找钉钉直播窗口类名，如果找到，则已打开直播
             if (Api.FindWindow(dingLiveWindowClassName, null) != IntPtr.Zero)
             {
@@ -359,8 +355,8 @@ namespace 自动进入钉钉直播
             string text;
             try
             {
-                rectCapture.Location = GetScreenPos(); // 获取截图坐标
-                using (var bit = Screenshot(rectCapture))  // 截取指定坐标图片
+                rectCapture.Location = GetChildWindowPos(); // 获取截图坐标
+                using (var bit = ScreenCapture.Capture(rectCapture))  // 截取指定坐标图片
                 {
                     // 如果打开截图保存到桌面
                     if (saveToDesk)
@@ -386,16 +382,10 @@ namespace 自动进入钉钉直播
         }
 
         // 获取钉钉子窗口坐标（钉钉子窗口坐标=鼠标点击坐标=截图坐标）
-        private Point GetScreenPos()
+        private Point GetChildWindowPos()
         {
-            // 查找钉钉窗口句柄
-            IntPtr hwnd = Api.FindWindow(dingWindowClassName, null);
-            if (hwnd == IntPtr.Zero)
-                throw new Exception("获取钉钉窗口句柄失败");
             // 查找子窗口句柄（显示XX群正在直播的那个窗口）
-            IntPtr childHandle = Api.FindWindowEx(hwnd, IntPtr.Zero, dingChildWindowClassName, string.Empty);
-            if (childHandle == IntPtr.Zero)
-                throw new Exception("获取截图区域句柄失败");
+            IntPtr childHandle = GetChildWindowHandle();
             // 查找子窗口坐标相对于屏幕的坐标
             if (!Api.ClientToScreen(childHandle, out Api.POINT p))
                 throw new Exception("获取截图区域坐标失败");
@@ -403,7 +393,7 @@ namespace 自动进入钉钉直播
         }
 
         // 获取钉钉子窗口句柄
-        private IntPtr GetScreenHandle()
+        private IntPtr GetChildWindowHandle()
         {
             // 查找钉钉窗口句柄
             IntPtr hwnd = Api.FindWindow(dingWindowClassName, null);
@@ -426,20 +416,6 @@ namespace 自动进入钉钉直播
                     return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// 从指定坐标截取指定大小区域
-        /// </summary>
-        public static Image Screenshot(Rectangle rect)
-        {
-            Bitmap bit = new Bitmap(rect.Width, rect.Height);
-            using (Graphics g = Graphics.FromImage(bit))
-            {
-                g.CompositingQuality = CompositingQuality.HighQuality;// 质量设为最高
-                g.CopyFromScreen(rect.Location, Point.Empty, rect.Size);
-            }
-            return bit;
         }
 
         private void 显示ToolStripMenuItem_Click(object sender, EventArgs e)

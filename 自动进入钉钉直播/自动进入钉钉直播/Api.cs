@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace 自动进入钉钉直播
 {
@@ -91,6 +87,16 @@ namespace 自动进入钉钉直播
         public const uint ES_SYSTEM_REQUIRED = 0x00000001;
         public const uint ES_DISPLAY_REQUIRED = 0x00000002;
         public const uint ES_CONTINUOUS = 0x80000000;
+
+        [DllImport("user32.dll")]
+       public static extern IntPtr GetSystemMenu(IntPtr hwnd, bool bRevert);
+        [DllImport("user32.dll")]
+        public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
+
+        public const uint SC_CLOSE = 0xF060;   //关闭
+        public const uint MF_BYCOMMAND = 0x00; 
+        public const uint MF_GRAYED = 0x01;    //变灰
+        public const uint MF_DISABLED = 0x02;  //不可用
 
     }
 }

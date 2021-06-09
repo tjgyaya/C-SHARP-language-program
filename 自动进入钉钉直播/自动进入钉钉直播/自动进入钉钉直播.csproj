@@ -122,6 +122,7 @@
     <Compile Include="FrmAutoUpdate.Designer.cs">
       <DependentUpon>FrmAutoUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="ScreenCapture.cs" />
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>

@@ -37,6 +37,7 @@
             this.button1_Update = new System.Windows.Forms.Button();
             this.button2_CancelUpdate = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,7 +69,7 @@
             this.groupBox1.Controls.Add(this.textBox1_UpdateCont);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.groupBox1.Location = new System.Drawing.Point(0, 71);
+            this.groupBox1.Location = new System.Drawing.Point(0, 61);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(309, 126);
             this.groupBox1.TabIndex = 2;
@@ -119,12 +120,21 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.progressBar1.Location = new System.Drawing.Point(16, 68);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(281, 23);
+            this.progressBar1.TabIndex = 7;
+            // 
             // AutoUpdateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
-            this.ClientSize = new System.Drawing.Size(309, 197);
+            this.ClientSize = new System.Drawing.Size(309, 187);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2_CancelUpdate);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2_UpdateVersion);
@@ -138,6 +148,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "自动进入钉钉直播-发现新版本";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoUpdateForm_FormClosing);
             this.Load += new System.EventHandler(this.AutoUpdateForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -155,5 +166,6 @@
         private System.Windows.Forms.Button button1_Update;
         private System.Windows.Forms.Button button2_CancelUpdate;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

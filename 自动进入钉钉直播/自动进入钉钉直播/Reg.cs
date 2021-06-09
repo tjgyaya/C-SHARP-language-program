@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace 自动进入钉钉直播
 {
@@ -14,12 +14,10 @@ namespace 自动进入钉钉直播
         /// <returns>返回钉钉安装路径</returns>
         public static string GetdingDingPath()
         {
-            // 从注册表获取钉钉路径
-            string path = GetDingPathFromRegist();
+            string path = GetDingPathFromRegist(); // 从注册表获取钉钉路径
             if (path != null)
                 return path;
-            // 从桌面获取钉钉路径
-            path = GetDingPathFromDesktop();
+            path = GetDingPathFromDesktop();// 从桌面获取钉钉路径
             if (path != null)
                 return path;
             // 手动选择钉钉路径
@@ -35,6 +33,7 @@ namespace 自动进入钉钉直播
             }
         }
 
+        // 从注册表获取钉钉路径
         private static string GetDingPathFromRegist()
         {
             // 64位系统注册表路径
@@ -55,10 +54,10 @@ namespace 自动进入钉钉直播
             return null;
         }
 
+        // 从桌面获取钉钉快捷方式
         private static string GetDingPathFromDesktop()
         {
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory);
-            // 从桌面获取钉钉快捷方式
             string dingDingPath = $"{desktop}\\钉钉.lnk";
             return File.Exists(dingDingPath) ? dingDingPath : null;
         }

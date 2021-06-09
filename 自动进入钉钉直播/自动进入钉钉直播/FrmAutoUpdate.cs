@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -29,10 +25,16 @@ namespace 自动进入钉钉直播
         private static string FileMd5 { get; set; }
         private static string UpdateCont { get; set; }
 
+        private CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private CancellationToken token;
+
+
         public AutoUpdateForm()
         {
             InitializeComponent();
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            progressBar1.Visible = false;
+            token = tokenSource.Token;
         }
 
         private void AutoUpdateForm_Load(object sender, EventArgs e)
@@ -49,26 +51,43 @@ namespace 自动进入钉钉直播
 
         private void button1_Update_Click(object sender, EventArgs e)
         {
+            DisableButton();
+            timer1.Enabled = false;
+            progressBar1.Visible = true;
+            button1_Update.Enabled = false;
+            this.Size = new System.Drawing.Size(325, 260);
             try
             {
-                // 下载更新文件
-                using (WebClient client = new WebClient())
-                    client.DownloadFile(FileUrl, temp_file);
-                // 判断下载的文件MD5是否和Xml文件中的一致
-                if (!FileMd5.ToLower().Equals(GetMd5(temp_file).ToLower()))
-                    throw new Exception("下载的文件MD5不一致");
-                RunScript();
+                Task.Run(new Action(() =>
+                  {
+                      DownloadFile(FileUrl, temp_file);
+                      if (tokenSource.IsCancellationRequested)
+                          return;
+                      // 判断下载的文件MD5是否和Xml文件中的一致
+                      if (!FileMd5.ToLower().Equals(GetMd5(temp_file).ToLower()))
+                          throw new Exception("下载的文件MD5不一致");
+                      RunScript();
+                  }),
+                  token);
             }
             catch (Exception ex)
             {
                 Clipboard.SetText(FileUrl); // 将下载链接复制到剪贴板
-                MessageBox.Show("更新失败，已将下载链接复制到剪切板。\n原因：" + ex.Message, "自动进入钉钉直播间_更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("更新失败，已将下载链接复制到剪切板。\n原因：" + ex.Message, "更新失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 CancelUpdate();
             }
         }
 
+        // 禁用关闭按钮
+        private void DisableButton()
+        {
+            IntPtr hMenu = Api.GetSystemMenu(this.Handle, false); // 获取程序窗体的句柄
+            if (hMenu != IntPtr.Zero)
+                Api.EnableMenuItem(hMenu, Api.SC_CLOSE, Api.MF_BYCOMMAND | Api.MF_GRAYED | Api.MF_DISABLED); // 禁用关闭按钮
+        }
+
         private void button2_CancelUpdate_Click(object sender, EventArgs e) => CancelUpdate();
-      
+
         // 运行修改文件名脚本
         private void RunScript()
         {
@@ -77,14 +96,14 @@ namespace 自动进入钉钉直播
                 + "del /f \"" + downloadPath + "\"\r\n"                        // 删除原文件
                 + "move /y \"" + temp_file + "\" \"" + downloadPath + "\"\r\n" // 重命名文件
                 + "start \"自动进入钉钉直播间\" " + downloadPath + "\"\r\n"    // 打开新文件                                                
+               // + "pause\r\n del /f %0\r\n";
                 + "del /f %0\r\n";
-            //+ "pause";
             File.WriteAllText(batPath, bat, Encoding.GetEncoding("GB2312"));   // 写入bat文件
             Process pro = new Process();           // 运行脚本
             pro.StartInfo.WorkingDirectory = Application.StartupPath;
             pro.StartInfo.FileName = batPath;
-            pro.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            //pro.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+          //  pro.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            pro.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             pro.Start();
             // 杀死当前进程
             Process.GetCurrentProcess().Kill();
@@ -93,7 +112,6 @@ namespace 自动进入钉钉直播
         // 取消更新
         private void CancelUpdate()
         {
-            timer1.Enabled = false;
             this.Close();
             this.DialogResult = DialogResult.Cancel;
         }
@@ -140,12 +158,52 @@ namespace 自动进入钉钉直播
             return (new Version(Application.ProductVersion) < new Version(UpdateVersion));
         }
 
+        public void DownloadFile(string url, string fileName)
+        {
+            byte[] bArr = new byte[1024];
+            int len;
+            long totalSize, totalWrite = 0;
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
+            Stream stream = null;
+            try
+            {
+                request = (HttpWebRequest)WebRequest.Create(url);
+                response = (HttpWebResponse)request.GetResponse();
+                totalSize = response.ContentLength;
+                stream = response.GetResponseStream();
+                using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                {
+                    while ((len = stream.Read(bArr, 0, bArr.Length)) > 0)
+                    {
+                        fs.Write(bArr, 0, len);
+                        totalWrite += len;
+                        int t = (int)((double)totalWrite / totalSize * 100);
+                        if (!tokenSource.IsCancellationRequested&&!progressBar1.IsDisposed)
+                            progressBar1.Invoke(new Action(() => UpdateProgress(t)));
+                    }
+                }
+            }
+            finally
+            {
+                response?.Dispose();
+                stream?.Dispose();
+            }
+        }
+
+        private void UpdateProgress(int progress)
+        {
+            if (progress < 0)
+                progress = 0;
+            this.progressBar1.Value = progress > 100 ? 100 : progress;
+        }
+
         // 获取文件MD5
         private string GetMd5(string path)
         {
             byte[] data;
             using (FileStream fs = new FileStream(path, FileMode.Open))
-            using (MD5 md5 = new MD5CryptoServiceProvider())
+            using (var md5 = new MD5CryptoServiceProvider())
                 data = md5.ComputeHash(fs);
             StringBuilder sb = new StringBuilder(data.Length);
             for (int i = 0; i < data.Length; i++)
@@ -158,6 +216,13 @@ namespace 自动进入钉钉直播
             if (sec <= 0)// 15秒倒计时
                 CancelUpdate();
             sec--;
+        }
+
+        private void AutoUpdateForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            tokenSource.Cancel();
+            timer1.Enabled = false;
+            this.DialogResult = DialogResult.Cancel;
         }
     }
 }
