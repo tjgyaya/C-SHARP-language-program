@@ -9,6 +9,12 @@ namespace 自动进入钉钉直播
 {
     class Api
     {
+        [DllImport("user32.dll", EntryPoint = "SendMessage")]
+        public static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+
+        public const int WM_LBUTTONDOWN = 0x0201;
+        public const int WM_LBUTTONUP = 0x0202;
+
         [DllImport("user32.dll")]
         public extern static IntPtr GetDC(IntPtr ptr);
         [DllImport("gdi32.dll")]

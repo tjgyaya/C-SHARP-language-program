@@ -59,35 +59,5 @@ namespace 自动进入钉钉直播.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] OCR {
-            get {
-                object obj = ResourceManager.GetObject("OCR", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] OCR_KEY {
-            get {
-                object obj = ResourceManager.GetObject("OCR_KEY", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] RGB {
-            get {
-                object obj = ResourceManager.GetObject("RGB", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

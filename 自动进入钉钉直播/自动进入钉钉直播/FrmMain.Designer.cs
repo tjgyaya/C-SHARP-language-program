@@ -36,7 +36,6 @@
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
             this.textBox1_log = new System.Windows.Forms.TextBox();
             this.checkBox11_ShowTop = new System.Windows.Forms.CheckBox();
             this.button5_start = new System.Windows.Forms.Button();
@@ -48,8 +47,6 @@
             this.button3_DelStart = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
-            this.button1_SetOCRKey = new System.Windows.Forms.Button();
-            this.button2_SetOCRKeyWord = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button_DelConfig = new System.Windows.Forms.Button();
             this.button_SaveConfig = new System.Windows.Forms.Button();
@@ -77,6 +74,7 @@
             // 
             // contextMenuStrip1
             // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(28, 28);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.显示ToolStripMenuItem,
             this.退出ToolStripMenuItem});
@@ -105,29 +103,13 @@
             this.label19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label19.Font = new System.Drawing.Font("微软雅黑", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label19.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.label19.Location = new System.Drawing.Point(284, 232);
+            this.label19.Location = new System.Drawing.Point(242, 230);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(63, 21);
             this.label19.TabIndex = 42;
             this.label19.Text = "下载源码";
             this.toolTip1.SetToolTip(this.label19, "点此处下载软件源代码");
             this.label19.Click += new System.EventHandler(this.label19_Click);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label20.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label20.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label20.Font = new System.Drawing.Font("微软雅黑", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label20.ForeColor = System.Drawing.Color.LightSalmon;
-            this.label20.Location = new System.Drawing.Point(215, 232);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(63, 21);
-            this.label20.TabIndex = 41;
-            this.label20.Text = "吾爱破解";
-            this.toolTip1.SetToolTip(this.label20, "点此处进入论坛发布页面");
-            this.label20.Click += new System.EventHandler(this.label20_Click);
             // 
             // textBox1_log
             // 
@@ -168,9 +150,9 @@
             this.button5_start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5_start.Font = new System.Drawing.Font("微软雅黑", 20F, System.Drawing.FontStyle.Bold);
             this.button5_start.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.button5_start.Location = new System.Drawing.Point(227, 164);
+            this.button5_start.Location = new System.Drawing.Point(182, 160);
             this.button5_start.Name = "button5_start";
-            this.button5_start.Size = new System.Drawing.Size(263, 48);
+            this.button5_start.Size = new System.Drawing.Size(263, 52);
             this.button5_start.TabIndex = 12;
             this.button5_start.Text = "开启";
             this.toolTip1.SetToolTip(this.button5_start, "启动");
@@ -198,7 +180,7 @@
             this.linkLabel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.linkLabel1.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
             this.linkLabel1.LinkColor = System.Drawing.Color.SlateBlue;
-            this.linkLabel1.Location = new System.Drawing.Point(423, 232);
+            this.linkLabel1.Location = new System.Drawing.Point(381, 230);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(67, 21);
             this.linkLabel1.TabIndex = 43;
@@ -259,11 +241,11 @@
             // 
             this.label24.AutoSize = true;
             this.label24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label24.Font = new System.Drawing.Font("微软雅黑", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label24.Font = new System.Drawing.Font("微软雅黑", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
             this.label24.ForeColor = System.Drawing.Color.Magenta;
-            this.label24.Location = new System.Drawing.Point(16, 232);
+            this.label24.Location = new System.Drawing.Point(12, 230);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(191, 21);
+            this.label24.Size = new System.Drawing.Size(179, 21);
             this.label24.TabIndex = 69;
             this.label24.Text = "注意：请不要遮挡钉钉窗口";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -277,39 +259,13 @@
             this.label25.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label25.Font = new System.Drawing.Font("微软雅黑", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label25.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label25.Location = new System.Drawing.Point(353, 232);
+            this.label25.Location = new System.Drawing.Point(311, 230);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(66, 21);
             this.label25.TabIndex = 75;
             this.label25.Text = "BUG提交";
             this.toolTip1.SetToolTip(this.label25, "提交BUG时请提交：\r\n1、windows版本\r\n2、在何时出现\r\n感谢您的反馈");
             this.label25.Click += new System.EventHandler(this.label25_Click);
-            // 
-            // button1_SetOCRKey
-            // 
-            this.button1_SetOCRKey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1_SetOCRKey.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button1_SetOCRKey.Location = new System.Drawing.Point(141, 19);
-            this.button1_SetOCRKey.Name = "button1_SetOCRKey";
-            this.button1_SetOCRKey.Size = new System.Drawing.Size(51, 25);
-            this.button1_SetOCRKey.TabIndex = 73;
-            this.button1_SetOCRKey.Text = "KEY";
-            this.toolTip1.SetToolTip(this.button1_SetOCRKey, "设置文字识别Key，防止多人使用同一Key\r\n造成识别钉钉直播是否开启失效");
-            this.button1_SetOCRKey.UseVisualStyleBackColor = true;
-            this.button1_SetOCRKey.Click += new System.EventHandler(this.button1_SetOCRKey_Click);
-            // 
-            // button2_SetOCRKeyWord
-            // 
-            this.button2_SetOCRKeyWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2_SetOCRKeyWord.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button2_SetOCRKeyWord.Location = new System.Drawing.Point(141, 62);
-            this.button2_SetOCRKeyWord.Name = "button2_SetOCRKeyWord";
-            this.button2_SetOCRKeyWord.Size = new System.Drawing.Size(51, 25);
-            this.button2_SetOCRKeyWord.TabIndex = 74;
-            this.button2_SetOCRKeyWord.Text = "关键字";
-            this.toolTip1.SetToolTip(this.button2_SetOCRKeyWord, "设置RGB识别数据和OCR识别关键字，\r\n提高识别钉钉直播是否开启的准确性。");
-            this.button2_SetOCRKeyWord.UseVisualStyleBackColor = true;
-            this.button2_SetOCRKeyWord.Click += new System.EventHandler(this.button2_SetOCRKeyWord_Click);
             // 
             // pictureBox1
             // 
@@ -325,7 +281,7 @@
             // 
             this.button_DelConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_DelConfig.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button_DelConfig.Location = new System.Drawing.Point(81, 19);
+            this.button_DelConfig.Location = new System.Drawing.Point(102, 19);
             this.button_DelConfig.Name = "button_DelConfig";
             this.button_DelConfig.Size = new System.Drawing.Size(53, 25);
             this.button_DelConfig.TabIndex = 75;
@@ -338,7 +294,7 @@
             // 
             this.button_SaveConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_SaveConfig.Font = new System.Drawing.Font("微软雅黑", 8F);
-            this.button_SaveConfig.Location = new System.Drawing.Point(81, 62);
+            this.button_SaveConfig.Location = new System.Drawing.Point(102, 62);
             this.button_SaveConfig.Name = "button_SaveConfig";
             this.button_SaveConfig.Size = new System.Drawing.Size(53, 25);
             this.button_SaveConfig.TabIndex = 76;
@@ -352,14 +308,12 @@
             this.groupBox1.BackColor = System.Drawing.Color.LightSkyBlue;
             this.groupBox1.Controls.Add(this.button_SaveConfig);
             this.groupBox1.Controls.Add(this.button_DelConfig);
-            this.groupBox1.Controls.Add(this.button2_SetOCRKeyWord);
-            this.groupBox1.Controls.Add(this.button1_SetOCRKey);
             this.groupBox1.Controls.Add(this.button3_DelStart);
             this.groupBox1.Controls.Add(this.button2_AddStart);
             this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox1.Location = new System.Drawing.Point(15, 6);
+            this.groupBox1.Location = new System.Drawing.Point(12, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(206, 100);
+            this.groupBox1.Size = new System.Drawing.Size(163, 100);
             this.groupBox1.TabIndex = 71;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "其它设置";
@@ -371,9 +325,9 @@
             this.groupBox2.Controls.Add(this.checkBox13_preventSleep);
             this.groupBox2.Controls.Add(this.checkBox11_ShowTop);
             this.groupBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox2.Location = new System.Drawing.Point(15, 112);
+            this.groupBox2.Location = new System.Drawing.Point(12, 112);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(206, 100);
+            this.groupBox2.Size = new System.Drawing.Size(163, 100);
             this.groupBox2.TabIndex = 72;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "使用设置";
@@ -384,7 +338,7 @@
             this.groupBox4.Controls.Add(this.pictureBox1);
             this.groupBox4.Controls.Add(this.textBox1_log);
             this.groupBox4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox4.Location = new System.Drawing.Point(227, -2);
+            this.groupBox4.Location = new System.Drawing.Point(182, -2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(263, 151);
             this.groupBox4.TabIndex = 74;
@@ -396,7 +350,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(505, 266);
+            this.ClientSize = new System.Drawing.Size(457, 258);
             this.Controls.Add(this.label25);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.label24);
@@ -404,7 +358,6 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.button5_start);
-            this.Controls.Add(this.label20);
             this.Controls.Add(this.label19);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -433,7 +386,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label20;
         private System.Windows.Forms.CheckBox checkBox11_ShowTop;
         private System.Windows.Forms.Button button5_start;
         private System.Windows.Forms.CheckBox checkBox12_SaveToDesk;
@@ -449,8 +401,6 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Button button2_SetOCRKeyWord;
-        private System.Windows.Forms.Button button1_SetOCRKey;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 显示ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;

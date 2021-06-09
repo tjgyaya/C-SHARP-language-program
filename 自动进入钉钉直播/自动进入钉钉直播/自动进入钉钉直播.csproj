@@ -98,6 +98,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tesseract, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tesseract.4.1.1\lib\net45\Tesseract.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -109,24 +112,10 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSetKeyWord.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmSetKeyWord.Designer.cs">
-      <DependentUpon>FrmSetKeyWord.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmSetOCRKey.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmSetOCRKey.Designer.cs">
-      <DependentUpon>FrmSetOCRKey.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ImageRecognition\OCR.cs" />
-    <Compile Include="ImageRecognition\BaiduOCR.cs" />
+    <Compile Include="ImageRecognition\LocalOCR.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reg.cs" />
-    <Compile Include="ImageRecognition\ScreenCapture.cs" />
     <Compile Include="FrmAutoUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,12 +124,6 @@
     </Compile>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmSetKeyWord.resx">
-      <DependentUpon>FrmSetKeyWord.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmSetOCRKey.resx">
-      <DependentUpon>FrmSetOCRKey.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -156,6 +139,10 @@
       <DependentUpon>FrmAutoUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="data\chi_sim.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -166,9 +153,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\OCR.mht" />
-    <None Include="Resources\OCR_KEY.mht" />
-    <None Include="Resources\RGB.mht" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -185,6 +169,15 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Tesseract.4.1.1\build\Tesseract.targets" Condition="Exists('..\packages\Tesseract.4.1.1\build\Tesseract.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Tesseract.4.1.1\build\Tesseract.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Tesseract.4.1.1\build\Tesseract.targets'))" />
+  </Target>
 </Project>

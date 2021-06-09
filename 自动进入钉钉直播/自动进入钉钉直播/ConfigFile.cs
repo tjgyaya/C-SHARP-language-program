@@ -37,13 +37,13 @@ namespace 自动进入钉钉直播
         }
 
         // 读配置文件
-        public static string ReadFile(string key)
+        public static string ReadFile(string key, string defaultVal = "")
         {
             // 判断文件是否存在
             if (!File.Exists(ConfigPath))
                 return null;
             StringBuilder sb = new StringBuilder(SIZE);
-            GetPrivateProfileString(Section, key, "", sb, SIZE, ConfigPath);
+            GetPrivateProfileString(Section, key, defaultVal, sb, SIZE, ConfigPath);
             return sb.ToString();
         }
     }
