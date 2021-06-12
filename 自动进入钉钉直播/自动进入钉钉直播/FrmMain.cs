@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -37,7 +36,7 @@ namespace 自动进入钉钉直播
         // 钉钉子窗口类名（显示XX群正在直播的那个窗口）
         private readonly string dingChildWindowClassName = "DingChatWnd";
         // 钉钉进程名
-        private readonly string dingProcessName = "DingTalk"; 
+        private readonly string dingProcessName = "DingTalk";
         private readonly string dingPathKey = "钉钉路径";
         // OCR识别关键字（当OCR识别到以下关键字时，判定直播已开启）
         private static readonly char[] keyWords = { '群', '正', '在', '直', '播' };
@@ -231,7 +230,7 @@ namespace 自动进入钉钉直播
             if (startFlag)
                 localOCR = new LocalOCR("data", "chi_sim");
             else
-                localOCR.Dispose();
+                localOCR?.Dispose();
         }
 
         // timer1检测直播是否断开
@@ -241,7 +240,8 @@ namespace 自动进入钉钉直播
             {
                 if (openMode == OpenMode.Open)// 打开直播
                 {
-                    OpenDingDing();  // 打开钉钉
+                    if (!OpenDingDing())  // 打开钉钉
+                        return;
                     Thread.Sleep(1000);
                     if (!LiveBegin())// 检测直播是否开启
                     {
@@ -291,7 +291,7 @@ namespace 自动进入钉钉直播
         #endregion
 
         // 打开钉钉
-        private void OpenDingDing()
+        private bool OpenDingDing()
         {
             if (timer1.Interval != 30000)
                 timer1.Interval = 30000;
@@ -305,7 +305,10 @@ namespace 自动进入钉钉直播
                         ConfigFile.WriteFile(dingPathKey, dingDingPath);
                 }
                 if (!File.Exists(dingDingPath))
+                {
+                    Start();
                     throw new Exception("钉钉路径无效！");
+                }
                 Process.Start(dingDingPath);// 打开钉钉
                 UpdateLog("正在打开钉钉...");
                 // 等待钉钉进程
@@ -318,10 +321,12 @@ namespace 自动进入钉钉直播
                     Thread.Sleep(3000);                        // 如未找到则等待3秒再查找
                 }
                 UpdateLog("已找到钉钉进程");
+                return true;
             }
             catch (Exception ex)
             {
                 UpdateLog(ex.Message);
+                return false;
             }
         }
 

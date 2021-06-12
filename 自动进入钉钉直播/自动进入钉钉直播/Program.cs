@@ -53,9 +53,7 @@ namespace 自动进入钉钉直播
                 {
                     // 判断要打开的进程和已经存在的进程是否来自同一路径                                                                                                                        
                     if (Assembly.GetExecutingAssembly().Location.Replace("/", "\\") == current.MainModule.FileName)
-                    {
                         return true;
-                    }
                 }
             }
             return false;

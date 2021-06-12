@@ -64,23 +64,12 @@ namespace 自动进入钉钉直播
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern bool ClientToScreen(IntPtr hWnd, out POINT pt);
 
-        [DllImport("user32.dll", EntryPoint = "SetCursorPos", CharSet = CharSet.Auto)]
-        public extern static void SetCursorPos(int x, int y);// 设置鼠标光标位置
-
-        [DllImport("user32.dll", EntryPoint = "GetCursorPos", CharSet = CharSet.Auto)]
-        public extern static bool GetCursorPos(out POINT p);// 获取鼠标光标位置
-
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
             public int X;
             public int Y;
         }
-
-        [DllImport("user32", EntryPoint = "mouse_event", CharSet = CharSet.Auto)]
-        public static extern int mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);// 模拟鼠标左键按下 
-        public const int MOUSEEVENTF_LEFTDOWN = 0x0002; // 模拟鼠标左键按下      
-        public const int MOUSEEVENTF_LEFTUP = 0x0004;   // 模拟鼠标左键抬起 
 
         [DllImport("kernel32.dll")]
         public static extern uint SetThreadExecutionState(uint esFlags);// 阻止休眠
