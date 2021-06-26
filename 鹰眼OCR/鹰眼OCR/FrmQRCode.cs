@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using 鹰眼OCR.OCR;
 
@@ -41,10 +33,7 @@ namespace 鹰眼OCR
                     pictureBox1.Image.Dispose();
                     pictureBox1.Image = null;
                 }
-                //if (IsOnline) // 在线生成二维码
-                //    pictureBox1.Image = LocalQRCode.OnlineGenerateQRCode(size, _Content);
-                //else          // 本地生成二维码
-                    pictureBox1.Image = LocalQRCode.LocalGenerateQRCode(size, text);
+                pictureBox1.Image = LocalQRCode.LocalGenerateQRCode(size, text);
             }
             catch (Exception ex)
             {
@@ -68,33 +57,31 @@ namespace 鹰眼OCR
         {
             if (e.Button != MouseButtons.Right)
                 return;
-            SaveFileDialog fileDialog = new SaveFileDialog();
             try
             {
-                fileDialog.Filter = "图片（*.png、*.bmp、*.jpg、*.gif）|*.png;*.bmp;*.jpg;*.gif";
-                fileDialog.FileName = "*.png";
-                fileDialog.AddExtension = true;
-                fileDialog.DefaultExt = "png";
-                DialogResult result = fileDialog.ShowDialog();
-                if (result == DialogResult.OK)
+                using (var fileDialog = new SaveFileDialog())
                 {
-                    ImageFormat format = ImageFormat.Png;
-                    string ext = Path.GetExtension(fileDialog.FileName);
-                    if (ext == ".bmp")
-                        format = ImageFormat.Bmp;
-                    else if (ext == ".jpg")
-                        format = ImageFormat.Jpeg;
-                    else if (ext == ".gif")
-                        format = ImageFormat.Gif;
-
-                    pictureBox1.Image.Save(fileDialog.FileName, format);
+                    fileDialog.Filter = "图片（*.png、*.bmp、*.jpg、*.gif）|*.png;*.bmp;*.jpg;*.gif";
+                    fileDialog.FileName = "*.png";
+                    fileDialog.AddExtension = true;
+                    fileDialog.DefaultExt = "png";
+                    if (fileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        ImageFormat format = ImageFormat.Png;
+                        string ext = Path.GetExtension(fileDialog.FileName);
+                        if (ext == ".bmp")
+                            format = ImageFormat.Bmp;
+                        else if (ext == ".jpg")
+                            format = ImageFormat.Jpeg;
+                        else if (ext == ".gif")
+                            format = ImageFormat.Gif;
+                        pictureBox1.Image.Save(fileDialog.FileName, format);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ShowError(true, ex.Message);
-                if (fileDialog != null)
-                    fileDialog.Dispose();
             }
         }
 

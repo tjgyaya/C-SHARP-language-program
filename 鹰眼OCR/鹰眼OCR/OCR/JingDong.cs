@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Security;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Script.Serialization;
 
 namespace 鹰眼OCR.OCR
@@ -37,14 +33,11 @@ namespace 鹰眼OCR.OCR
             request.KeepAlive = true;
             request.ContentLength = buffer.Length;
             request.GetRequestStream().Write(buffer, 0, buffer.Length);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            string result;
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
-                result = reader.ReadToEnd();
-                response.Dispose();
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    return reader.ReadToEnd();
             }
-            return result;
         }
 
         public static string BankCard(Image img)
@@ -239,10 +232,7 @@ namespace 鹰眼OCR.OCR
             return sb.ToString();
         }
 
-        private static string GetSign(string sk, string ts)
-        {
-            return WebExt.GetMD5(sk + ts);
-        }
+        private static string GetSign(string sk, string ts) => WebExt.GetMD5(sk + ts);
 
         private static string TimeSpan()
         {

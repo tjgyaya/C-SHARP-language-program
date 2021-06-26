@@ -1,15 +1,6 @@
-﻿using Microsoft.JScript;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using 鹰眼OCR.Audio;
 
@@ -27,9 +18,14 @@ namespace 鹰眼OCR
         /// </summary>
         public Point Position { get; set; }
 
-        //保存到本地的音频文件名称 
+        /// <summary>
+        /// 保存到本地的音频文件名称 
+        /// </summary>
         public string FileName { get; private set; }
 
+        /// <summary>
+        /// 保存路径
+        /// </summary>
         public string SaveDir { get; set; }
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace 鹰眼OCR
         public string RecordLang { get; set; }
 
         /// <summary>
-        /// wav文件采样率（16000或8000）
+        /// wav文件采样率（16000或8000），默认16000
         /// </summary>
         public int SamplingRate { get; set; }
 
@@ -53,11 +49,14 @@ namespace 鹰眼OCR
             }
         }
 
+        /// <summary>
+        /// 最大录制时间
+        /// </summary>
         public int MaxSec { get; set; }
 
         private Recorder recorder = new Recorder();
         private PlayAudio playAudio = new PlayAudio();
-        private int MaxTime;
+        private int maxTime;
         public FrmAsr()
         {
             InitializeComponent();
@@ -65,21 +64,21 @@ namespace 鹰眼OCR
         }
 
         // 开始录音
-        private void button1_Start_Click(object sender, EventArgs e)
+        private void button1_Start_Click(object sender, EventArgs e) => Start();
+
+        private void Start()
         {
             FileName = SaveDir + DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss") + ".wav";
             if (!Directory.Exists(Path.GetDirectoryName(FileName)))
                 Directory.CreateDirectory(Path.GetDirectoryName(FileName));
-
             try
             {
                 if (recorder.Starting)
                     throw new Exception("正在录音！");
-
                 if (File.Exists(FileName))
                     File.Delete(FileName);
                 recorder.Start(FileName, SamplingRate);
-                MaxTime = MaxSec;
+                maxTime = MaxSec;
                 timer1_RecordingTime.Enabled = true;
                 label2.Text = MaxSec.ToString() + "秒";
                 label3.ForeColor = Color.DeepSkyBlue;
@@ -97,7 +96,9 @@ namespace 鹰眼OCR
         }
 
         // 结束录音
-        private void button2_Stop_Click(object sender, EventArgs e)
+        private void button2_Stop_Click(object sender, EventArgs e) => Stop();
+
+        private void Stop()
         {
             try
             {
@@ -127,10 +128,10 @@ namespace 鹰眼OCR
                 {
                     if (!File.Exists(FileName))
                         throw new Exception("文件不存在");
-                    playAudio.Play(FileName);
+                    playAudio.PlayAsync(FileName);
                 }
                 else
-                    playAudio.ClosePlay();
+                    playAudio.CancelPlay();
             }
             catch (Exception ex)
             {
@@ -139,50 +140,39 @@ namespace 鹰眼OCR
         }
 
         // 识别录音
-        private void button_Recognition_Click(object sender, EventArgs e)
+        private void button_Recognition_Click(object sender, EventArgs e) => Recognition();
+
+        private void Recognition()
         {
-            //if (recorder.RecordedTime == -1)
-            //    return;
             if (recorder.Starting)
-                button2_Stop_Click(null, null);
+                Stop();
             SpeechRecognition?.Invoke();// 调用委托，识别录制的语音
         }
 
         private void FrmSoundRecording_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.N && !recorder.Starting)    // 按下的是N键 并且 已停止录音
-                button1_Start_Click(null, null);
+                Start();
             else if (e.KeyCode == Keys.N && recorder.Starting)// 按下的是N键 并且 正在录音
-                button_Recognition_Click(null, null);
+                Recognition();
         }
 
-        private void FrmSoundRecording_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            button2_Stop_Click(null, null);
+        private void FrmSoundRecording_FormClosing(object sender, FormClosingEventArgs e) => Stop();
 
-        }
+        // 显示窗口后自动开始录音
+        private void FrmSoundRecording_Shown(object sender, EventArgs e) => Start();
 
-        private void FrmSoundRecording_Shown(object sender, EventArgs e)
-        {
-            // 显示窗口后录音
-            button1_Start_Click(null, null);
-        }
-
-        private void FrmSoundRecording_Load(object sender, EventArgs e)
-        {
-            this.Location = Position;
-        }
+        private void FrmSoundRecording_Load(object sender, EventArgs e) => this.Location = Position;
 
         private void timer1_RecordingTime_Tick(object sender, EventArgs e)
         {   // 显示录制时间
-            // label2.Text = string.Format($"{((int)recorder.RecordedTime / 60).ToString().PadLeft(2, '0')}分{((int)recorder.RecordedTime % 60).ToString().PadLeft(2, '0')}秒");
             try
             {
-                MaxTime--;
-                label2.Text = MaxTime.ToString() + "秒";
-                if (MaxTime <= 0)
+                maxTime--;
+                label2.Text = maxTime.ToString() + "秒";
+                if (maxTime <= 0)
                 {
-                    button_Recognition_Click(null, null);
+                    Recognition();
                     throw new Exception("已到达最大录制时间。");
                 }
             }
@@ -192,10 +182,7 @@ namespace 鹰眼OCR
             }
         }
 
-        private void comboBox_Lang_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            RecordLang = comboBox_Lang.SelectedItem.ToString();
-        }
+        private void comboBox_Lang_SelectedIndexChanged(object sender, EventArgs e) => RecordLang = comboBox_Lang.SelectedItem.ToString();
 
         public void RefreshLanguage(string[] lang)
         {

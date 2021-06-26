@@ -1,19 +1,15 @@
-﻿using System;
+﻿using ScreenShot;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using 鹰眼OCR.OCR;
-using System.Runtime.InteropServices;
-using System.Web;
-using System.Net;
 
 namespace 鹰眼OCR
 {
@@ -21,8 +17,11 @@ namespace 鹰眼OCR
     {
         public delegate void InstallingHotkeyDelegate();
 
-        AutoUpdate update;
+        // 自动更新
+        private AutoUpdate update;
+        private Thread newThread;
 
+        // 窗体显示坐标
         public Point Position { get; set; }
 
         private Rectangle screenRect;
@@ -170,21 +169,6 @@ namespace 鹰眼OCR
             // 腾讯Key
             ConfigFile.WriteFile(KeyName.JingDongAk, textBox_JingDongAk.Text);
             ConfigFile.WriteFile(KeyName.JingDongSk, textBox_JingDongSk.Text);
-
-            //BaiduKey.ApiKey = textBox_BaiduOCRAk.Text;
-            //BaiduKey.SecretKey = textBox_BaiduOCRSk.Text;
-            //BaiduKey.TTS_ApiKey = textBox_BaiduTTSAk.Text;
-            //BaiduKey.TTS_SecretKey = textBox_BaiduTTSSk.Text;
-            //BaiduKey.CorrectionAK = textBox_BaiduCorrectionAk.Text;
-            //BaiduKey.CorrectionSK = textBox_BaiduCorrectionSk.Text;
-            //BaiduKey.AppId = textBox_BaiduTranId.Text;
-            //BaiduKey.Password = textBox_BaiduTranPw.Text;
-
-            //YoudaoKey.AppKey = textBox_YoudaoAK.Text;
-            //YoudaoKey.AppSecret = textBox_YoudaoSK.Text;
-
-            //TengXunKey.app_id = textBox_TengxunId.Text;
-            //TengXunKey.app_key = textBox_TengxunAk.Text;
         }
 
         /// <summary>
@@ -206,7 +190,6 @@ namespace 鹰眼OCR
             ConfigFile.WriteFile(HotKey.PhotographHotKey_KeyName, textBox_PhotographHotKey.Text);
             ConfigFile.WriteFile(HotKey.RecordHotKey_KeyName, textBox_RecordHotKey.Text);
             ConfigFile.WriteFile(HotKey.FixedScreenHotKey_KeyName, textBox_FixedScreenHotKey.Text);
-
             ConfigFile.WriteFile(FixedScreen.WindowClass_KeyName, textBox_WindowClass.Text);
             ConfigFile.WriteFile(FixedScreen.WindowName_KeyName, textBox_WindowName.Text);
             ConfigFile.WriteFile(FixedScreen.X_KeyName, screenRect.X.ToString());
@@ -214,20 +197,6 @@ namespace 鹰眼OCR
             ConfigFile.WriteFile(FixedScreen.Width_KeyName, screenRect.Width.ToString());
             ConfigFile.WriteFile(FixedScreen.Height_KeyName, screenRect.Height.ToString());
             ConfigFile.WriteFile(FixedScreen.AutoTranslate_KeyName, checkBox_FixedScreenTran.Checked.ToString());
-
-            //HotKey.ScreenHotKey = textBox_ScreenHotKey.Text;
-            //HotKey.PhotographHotKey = textBox_PhotographHotKey.Text;
-            //HotKey.RecordHotKey = textBox_RecordHotKey.Text;
-            //HotKey.FixedScreenHotKey = textBox_FixedScreenHotKey.Text;
-            //HotKey.SwitchEnToCn = textBox_SwitchEnToCn.Text;
-            //HotKey.SwitchRuToCn = textBox_SwitchRuToCn.Text;
-            //FixedScreen.WindowClass = textBox_WindowClass.Text;
-            //FixedScreen.WindowName = textBox_WindowName.Text;
-            //FixedScreen.X = screenRect.X;
-            //FixedScreen.Y = screenRect.Y;
-            //FixedScreen.Width = screenRect.Width;
-            //FixedScreen.Height = screenRect.Height;
-            //FixedScreen.AutoTranslate = checkBox_FixedScreenTran.Checked;
         }
 
         /// <summary>
@@ -381,19 +350,18 @@ namespace 鹰眼OCR
             foreach (var item in panel_Main.Controls)
             {
                 // 如果当前控件不是Panel
-                if (!(item is Panel))
-                    continue;
-
-                // 隐藏面板
-                ((Panel)item).Visible = false;
-                if (((Panel)item).Name == noHidden_PanelName)
-                {// 显示不隐藏的面板
-                    ((Panel)item).Visible = true;
-                    ((Panel)item).Top = panel_Main.Top;
+                if (item is Panel panel)
+                {
+                    // 隐藏面板
+                    panel.Visible = false;
+                    if (panel.Name == noHidden_PanelName)
+                    {// 显示不隐藏的面板
+                        panel.Visible = true;
+                        panel.Top = panel_Main.Top;
+                    }
                 }
             }
         }
-
 
         private void button_Cancel_Click(object sender, EventArgs e)
         {
@@ -416,8 +384,6 @@ namespace 鹰眼OCR
         // 保存窗口类名和窗口标题
         private void SaveWindowNameAndWindowClass()
         {
-            //if (string.IsNullOrEmpty(textBox_WindowClass.Text) && string.IsNullOrEmpty(textBox_WindowName.Text))
-            //    throw new Exception("\n请填写 窗口标题 或 窗口类名！");
             if (!string.IsNullOrEmpty(textBox_WindowClass.Text) && !string.IsNullOrEmpty(textBox_WindowName.Text))
                 throw new Exception("\n请不要同时填写 窗口标题 或 窗口类名！");
             else
@@ -431,43 +397,35 @@ namespace 鹰眼OCR
         private void button_SetPosition_Click(object sender, EventArgs e)
         {
             bool change = HideWindow();// 隐藏窗口
-            FrmScreenShot shot = null;
             IntPtr hwnd = IntPtr.Zero;
+            Rectangle rect;
             try
             {
                 SaveWindowNameAndWindowClass();
+                using (var shot = new FrmScreenShot())
+                {
+                    if (!FixedScreen.WindowNameAndClassIsNull)
+                    {
+                        // 通过窗口类名或窗口标题获的窗口句柄
+                        hwnd = Api.FindWindowHandle(FixedScreen.WindowName, FixedScreen.WindowClass);
+                        // 激活目标窗口，让目标窗口显示在最前方
+                        Api.SetForegroundWindow(hwnd);
+                        Thread.Sleep(300);// 延时，等待窗口显示到最前方
+                    }
+                    // 开始截图
+                    if (shot.Start(hwnd) == DialogResult.Cancel)
+                        return;
+                    rect = shot.SelectedArea;
+                }
                 if (!FixedScreen.WindowNameAndClassIsNull)
                 {
-                    // 通过窗口类名或窗口标题获的窗口句柄
-                    hwnd = Api.FindWindowHandle(FixedScreen.WindowName, FixedScreen.WindowClass);
-                    // 激活目标窗口，让目标窗口显示在最前方
-                    Api.SetForegroundWindow(hwnd);
-                    Thread.Sleep(300);// 延时，等待窗口显示到最前方
-
-                    shot = new FrmScreenShot();
-                    shot.WindowHandle = hwnd;
+                    Api.POINT p = new Api.POINT(rect.X, rect.Y);
+                    Api.ScreenToClient(hwnd, ref p); // 屏幕坐标转为客户端窗口坐标
+                    screenRect = new Rectangle(p.X, p.Y, rect.Width, rect.Height);  // 保存截图坐标高宽
                 }
                 else
-                    shot = new FrmScreenShot();
-
-                // 显示截图窗口
-                if (shot.ShowDialog() == DialogResult.Cancel)
-                    return;
-
-                if (!FixedScreen.WindowNameAndClassIsNull)
-                {
-                    Api.POINT p = new Api.POINT();
-                    p.X = shot.StartPos.X;
-                    p.Y = shot.StartPos.Y;
-                    // 屏幕坐标转为客户端窗口坐标
-                    Api.ScreenToClient(hwnd, ref p);
-                    // 保存截图坐标高宽
-                    screenRect = new Rectangle(p.X, p.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
-                }
-                else
-                    // 保存截图坐标高宽
-                    screenRect = new Rectangle(shot.StartPos.X, shot.StartPos.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
-                if (shot.SelectedArea.Width > 0 && shot.SelectedArea.Height > 0)
+                    screenRect = rect; // 保存截图坐标高宽
+                if (rect.Width > 0 && rect.Height > 0)
                     MessageBox.Show("设置成功！\n请点击“保存”按钮。", "截图翻译", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     throw new Exception("设置失败，请重试！");
@@ -480,8 +438,6 @@ namespace 鹰眼OCR
             {
                 if (change)
                     this.WindowState = FormWindowState.Normal;
-                if (shot != null && !shot.IsMyDisposed)
-                    shot.MyDispose();
             }
         }
 
@@ -550,15 +506,13 @@ namespace 鹰眼OCR
             DelDir(Save_Path.YoudaoAudioSavePath);
         }
 
-        #region 删除指定目录下的所有文件及文件夹
-
-        public static void DelDir(string file)
+        // 删除指定目录下的所有文件及文件夹
+        private static void DelDir(string file)
         {
             try
             {
                 if (!Directory.Exists(file) && !File.Exists(file))
                     return;
-
                 // 去除文件夹的只读属性
                 DirectoryInfo fileInfo = new DirectoryInfo(file);
                 fileInfo.Attributes = FileAttributes.Normal & FileAttributes.Directory;
@@ -581,12 +535,10 @@ namespace 鹰眼OCR
                 MessageBox.Show(ex.Message, "删除失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        #endregion
 
-        private Thread newThread;
-
-        private void DownloadUpdate(string fileName)
+        private void DownloadUpdate()
         {
+            string fileName = Path.Combine(Path.GetTempPath(), "未下载完的更新.tmp");
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpWebResponse response = null;
             Stream stream = null;
@@ -601,23 +553,24 @@ namespace 鹰眼OCR
                 double totalSize = 0.0;
                 int len = default;
                 // 刷新进度条委托
-                Action action = new Action(() => { RefreshProgress(totalSize); });
+                Action action = new Action(() => RefreshProgress(totalSize));
                 while ((len = stream.Read(bArr, 0, bArr.Length)) > 0)
                 {
                     fs.Write(bArr, 0, len);
                     totalSize += len;
-                    progressBar1.BeginInvoke(action);
+                    progressBar1?.BeginInvoke(action);
                 }
                 fs.Close();
-
-                Thread.Sleep(1000);
                 // 判断下载的文件是否存在
                 if (!File.Exists(fileName))
                     throw new Exception("下载更新文件失败");
                 // 判断下载的文件MD5是否和Xml文件中的一致
                 if (!update.FileMd5.ToLower().Equals(update.GetMd5(fileName).ToLower()))
                     throw new Exception("下载的文件MD5不一致");
-                RenameFile(fileName, Process.GetCurrentProcess().MainModule.FileName);
+                if (long.Parse(update.UpdateSize) > 1048576)
+                    RenameFile(fileName, fileName.Replace(".tmp", ".exe"));
+                else
+                    RenameFile(fileName, Process.GetCurrentProcess().MainModule.FileName);
             }
             catch (Exception ex)
             {
@@ -632,6 +585,7 @@ namespace 鹰眼OCR
             }
         }
 
+        // 刷新进度条
         private void RefreshProgress(double curSize)
         {
             if (curSize == 0.0)
@@ -643,14 +597,20 @@ namespace 鹰眼OCR
             label_DownloadSize.Text = (curSize / 1048576).ToString("f2") + "MB/" + (totalSize / 1048576).ToString("f2") + "MB";
         }
 
+        // 重命名文件
         private void RenameFile(string source, string dest)
         {
             string name = Application.StartupPath + "\\重命名文件.exe";
-            File.WriteAllBytes(name, Properties.Resources.重命名文件);
             string arguments = $"鹰眼OCR_重命名 \"{source}\" \"{dest}\"";
-            Process.Start(name, arguments);
-            // 退出当前进程
-            Environment.Exit(0);
+            try
+            {
+                File.WriteAllBytes(name, Properties.Resources.重命名文件);
+                Process.Start(name, arguments);
+                // 退出当前进程
+                Environment.Exit(0);
+            }
+            catch
+            { }
         }
 
         private void button_CanelUpdate_Click(object sender, EventArgs e)
@@ -674,10 +634,10 @@ namespace 鹰眼OCR
             }
         }
 
-        private void StartThread(string fileName)
+        private void StartThread()
         {   // 启动新线程
             CloseThread();
-            newThread = new Thread(() => { DownloadUpdate(fileName); });
+            newThread = new Thread(DownloadUpdate);
             newThread.SetApartmentState(ApartmentState.STA);
             newThread.Start(); // 启动新线程
         }
@@ -691,12 +651,9 @@ namespace 鹰眼OCR
                     MessageBox.Show("没有更新。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                //DialogResult result = MessageBox.Show("检测到更新，打开下载页面？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                //if (result == DialogResult.Yes)
-                //    OpenUrl(update.FileUrl);
                 button_Update.Enabled = false;
-                string destFile = Application.StartupPath + "\\未下载完的更新.tmp";
-                StartThread(destFile);
+                StartThread();
+
             }
             catch (Exception ex)
             {
@@ -704,6 +661,7 @@ namespace 鹰眼OCR
             }
         }
 
+        // 显示更新信息
         private void ShowUpdateInfo()
         {
             try

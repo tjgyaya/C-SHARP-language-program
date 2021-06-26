@@ -5,9 +5,21 @@ namespace 鹰眼OCR.Audio
 {
     class WavInfo
     {
+        /// <summary>
+        /// 是否为wav文件
+        /// </summary>
         public bool IsWavFile { get; set; }
+        /// <summary>
+        /// 声道数
+        /// </summary>
         public int Channel { get; set; }
+        /// <summary>
+        /// 比率
+        /// </summary>
         public int Rate { get; set; }
+        /// <summary>
+        /// 音频文件长度
+        /// </summary>
         public int Len { get; set; }
 
         public WavInfo(string fileName)
@@ -35,10 +47,11 @@ namespace 鹰眼OCR.Audio
             }
         }
 
+        // 获取wav文件长度
         private int GetWavLen(double size, int channel, int rate, int bit)
         {
             double len = size * 8.0 / (rate / 1000.0 * bit * channel);
-            return (int)(len + 0.5);
+            return (int)(len + 0.5);// 四舍五入
         }
     }
 }

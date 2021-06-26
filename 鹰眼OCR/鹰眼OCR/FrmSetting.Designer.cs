@@ -841,7 +841,7 @@
             this.label_About.Name = "label_About";
             this.label_About.Size = new System.Drawing.Size(539, 198);
             this.label_About.TabIndex = 1;
-            this.label_About.Text = "介绍：\r\n鹰眼OCR 是基于.NET Framework 4.8的文字识别程序。\r\n\r\n\r\n\r\n\r\n\r\n\r\n感谢您的使用！";
+            this.label_About.Text = "介绍：\r\n鹰眼OCR 是基于.NET Framework 4.7的文字识别程序。\r\n\r\n\r\n\r\n\r\n\r\n\r\n感谢您的使用！";
             // 
             // pictureBox1
             // 
@@ -1344,10 +1344,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "FrmSetting";
             this.Text = "参数设置";
-            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmSetting_FormClosed);
             this.Load += new System.EventHandler(this.FrmSetting_Load);
             this.panel_HotKey.ResumeLayout(false);

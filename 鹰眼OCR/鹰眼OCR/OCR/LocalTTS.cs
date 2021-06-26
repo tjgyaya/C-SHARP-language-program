@@ -1,5 +1,4 @@
-﻿using NAudio.MediaFoundation;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using System;
 using System.Speech.Synthesis;
 
@@ -32,21 +31,6 @@ namespace 鹰眼OCR.OCR
             }
         }
 
-        /// <summary>
-        /// 将wav文件转换为mp3文件
-        /// </summary>
-        /// <param name="wavFile">wav文件路径</param>
-        /// <param name="mp3File">mp3文件路径</param>
-        public static void WAVtoMP3(string wavFile, string mp3File)
-        {
-            var mediaType = MediaFoundationEncoder.SelectMediaType(AudioSubtypes.MFAudioFormat_MP3,new WaveFormat(44100, 1),0);
-            using (var reader = new MediaFoundationReader(wavFile))
-            {
-                using (var encoder = new MediaFoundationEncoder(mediaType))
-                {
-                    encoder.Encode(mp3File, reader);
-                }
-            }
-        }
+       
     }
 }

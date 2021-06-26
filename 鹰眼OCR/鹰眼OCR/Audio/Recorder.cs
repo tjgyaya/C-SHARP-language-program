@@ -6,13 +6,14 @@ namespace 鹰眼OCR.Audio
 {
     class Recorder
     {
-        private WaveIn waveIn = null;
+        private WaveIn waveIn = new WaveIn();
         private WaveFileWriter waveFile = null;
 
         /// <summary>
         /// 获取录制状态（是否启动）
         /// </summary>
-        public bool Starting { get; private set; }
+        public bool Starting { get => _Starting; }
+        private bool _Starting;
 
         ///// <summary>
         /////  获取录音时长
@@ -27,6 +28,12 @@ namespace 鹰眼OCR.Audio
         //    }
         //}
 
+        public Recorder()
+        {
+            // 录音中接收到数据事件
+            waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
+        }
+
         /// <summary>
         /// 开始录音
         /// </summary>
@@ -34,22 +41,18 @@ namespace 鹰眼OCR.Audio
         {
             try
             {
-                waveIn = new WaveIn();
                 // 设置录音格式
                 waveIn.WaveFormat = new WaveFormat(rate, 16, 1);
-                // 录音中接收到数据事件
-                waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
-                // 录音结束事件
-                waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStopped);
-
+                DisposeObject(ref waveFile);
                 waveFile = new WaveFileWriter(fileName, waveIn.WaveFormat);
                 // 开始录音
                 waveIn.StartRecording();
-                Starting = true;
+                _Starting = true;
             }
-            catch 
+            catch
             {
                 Stop();
+                DisposeObject(ref waveFile);
                 if (File.Exists(fileName))
                     File.Delete(fileName);
                 throw new Exception("请插入麦克风！");
@@ -61,9 +64,20 @@ namespace 鹰眼OCR.Audio
         /// </summary>
         public void Stop()
         {
-            Starting = false;
+            _Starting = false;
             waveIn.StopRecording();
-            waveIn_RecordingStopped(null, null);
+            DisposeObject(ref waveFile);
+        }
+
+        private void DisposeObject<T>(ref T obj)
+        {
+            if (obj == null)
+                return;
+            if (obj is IDisposable disposable)
+            {
+                disposable.Dispose();
+                obj = default;
+            }
         }
 
         /// <summary>
@@ -71,32 +85,17 @@ namespace 鹰眼OCR.Audio
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void waveIn_DataAvailable(object sender, WaveInEventArgs e)
+        private void waveIn_DataAvailable(object sender, WaveInEventArgs e) => waveFile.Write(e.Buffer, 0, e.BytesRecorded);
+
+        ~Recorder()
         {
-            if (waveFile != null)
-            {
-                waveFile.Write(e.Buffer, 0, e.BytesRecorded);
-            }
+            Dispose();
         }
 
-        /// <summary>
-        /// 录音结束回调函数
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void waveIn_RecordingStopped(object sender, StoppedEventArgs e)
+        private void Dispose()
         {
-            if (waveIn != null)
-            {
-                waveIn.Dispose();
-                waveIn = null;
-            }
-
-            if (waveFile != null)
-            {
-                waveFile.Dispose();
-                waveFile = null;
-            }
+            DisposeObject(ref waveIn);
+            DisposeObject(ref waveFile);
         }
     }
 }

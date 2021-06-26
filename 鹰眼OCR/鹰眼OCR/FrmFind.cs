@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace 鹰眼OCR
 {
     public partial class FrmFind : Form
     {
-        private string findStr = null; //要查找的字符串
-        private string replaceStr = null;//要替换成的字符串
+        private string findStr; //要查找的字符串
+        private string replaceStr;//要替换成的字符串
         private int findPos = 0;//当前查找的位置
         private int lastfindPos = 0;//上次的查找的位置
         private bool radioButton_UpValue, radioButton_DownValue;
@@ -172,8 +166,6 @@ namespace 鹰眼OCR
                 }
             }
 
-
-
             if (checkBox1.Checked)//匹配大小写
             {
                 if (radioButton_Down.Checked) //向下查找
@@ -209,8 +201,6 @@ namespace 鹰眼OCR
                 }
             }
 
-
-
             if (findPos == -1 && number == 1)//如果未找到
             {
                 label_Msg.Enabled = true;
@@ -223,7 +213,6 @@ namespace 鹰眼OCR
                 findPos = lastfindPos;//还原上次查找的位置
                 return false;
             }
-
 
             //向下查找并且不为替换模式
             if (radioButton_Down.Checked && !replace)

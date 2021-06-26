@@ -1,14 +1,6 @@
 ﻿using AForge.Video.DirectShow;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace 鹰眼OCR
@@ -41,12 +33,10 @@ namespace 鹰眼OCR
             try
             {
                 comboBox1_SwitchingDevice.Items.Clear();
-
                 // 查找视频输入设备并添加到comboBox1
                 videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
                 if (videoDevices.Count == 0)
                     throw new Exception("没有视频设备");
-
                 foreach (FilterInfo device in videoDevices)
                     comboBox1_SwitchingDevice.Items.Add(device.Name);
                 groupBox1.Text = "发现新设备";
@@ -94,7 +84,6 @@ namespace 鹰眼OCR
             currentDeviceIndex = comboBox1_SwitchingDevice.SelectedIndex; // 保留连接的视频设备索引
             VideoCaptureDevice videoCapture = new VideoCaptureDevice(videoDevices[comboBox1_SwitchingDevice.SelectedIndex].MonikerString);
             videoCapture.VideoResolution = videoCapture.VideoCapabilities[comboBox2_SwitchResolution.SelectedIndex];
-            //videoCapture.DesiredFrameRate = 1;
             videoPlayer1.VideoSource = videoCapture;
             videoPlayer1.Start();
             groupBox1.Text = "正在拍照";
@@ -121,10 +110,7 @@ namespace 鹰眼OCR
             OnPhotograph(videoPlayer1.GetCurrentVideoFrame());
         }
 
-        private void OnPhotograph(Image img)
-        {
-            PhotographEvent?.Invoke(img);
-        }
+        private void OnPhotograph(Image img) => PhotographEvent?.Invoke(img);
 
         // 窗口加载时，自动连接摄像头
         private void FrmPhotograph_Load(object sender, EventArgs e)
@@ -147,11 +133,7 @@ namespace 鹰眼OCR
                 }
                 videoPlayer1.Dispose();
             }
-
-            if (!this.IsDisposed)
-                this.Dispose(true);
         }
-
 
         // 切换分辨率时关闭并重新打开摄像头
         private void comboBox2_SwitchResolution_SelectedIndexChanged(object sender, EventArgs e)

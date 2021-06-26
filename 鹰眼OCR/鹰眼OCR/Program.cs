@@ -34,8 +34,7 @@ namespace 鹰眼OCR
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "鹰眼OCR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

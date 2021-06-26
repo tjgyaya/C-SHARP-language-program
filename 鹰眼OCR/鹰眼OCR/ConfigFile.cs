@@ -18,6 +18,11 @@ namespace 鹰眼OCR
         const int MAX_PATH = 260;
         const string ERROR = "Error";
 
+        /// <summary>
+        /// 写配置文件
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public static void WriteFile(string key, string value)
         {
             WritePrivateProfileString(Section, key, value, SavePath.ConfigPath);

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ScreenShot</name>
+    </assembly>
+    <members>
+        <member name="M:ScreenShot.Api.GetWindowHandleByPos(System.Drawing.Point,System.IntPtr)">
+            <summary>
+            根据鼠标所在的坐标获取窗口句柄
+            </summary>
+            <param name="p">坐标</param>
+            <param name="exceptHandle">要排除的窗口句柄</param>
+            <returns></returns>
+        </member>
+        <member name="T:ScreenShot.FrmScreenShot">
+            <summary>
+            截图类
+            </summary>
+        </member>
+        <member name="T:ScreenShot.FrmScreenShot.CapturedDelegate">
+            <summary>
+            截图完成委托
+            </summary>
+            <param name="img"></param>
+        </member>
+        <member name="E:ScreenShot.FrmScreenShot.CapturedEvent">
+            <summary>
+            截图完成事件
+            </summary>
+        </member>
+        <member name="M:ScreenShot.FrmScreenShot.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="P:ScreenShot.FrmScreenShot.CaptureImage">
+            <summary>
+            截图完成后的图像
+            </summary>
+        </member>
+        <member name="P:ScreenShot.FrmScreenShot.SelectedArea">
+            <summary>
+            选取的矩形大小和坐标（截图大小和坐标）
+            </summary>
+        </member>
+        <member name="M:ScreenShot.FrmScreenShot.Start(System.IntPtr)">
+            <summary>
+            开始截图
+            </summary> 
+        </member>
+        <member name="F:ScreenShot.FrmScreenShot.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:ScreenShot.FrmScreenShot.Dispose(System.Boolean)">
+            <summary>
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:ScreenShot.FrmScreenShot.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:ScreenShot.ImageHelper.ZoomImage(System.Drawing.Image,System.Single)">
+            <summary>
+            缩放图像
+            </summary>
+            <param name="image"></param>
+            <param name="scale"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ScreenShot.Win32">
+            <summary>
+            Win32函数封装
+            </summary>
+        </member>
+        <member name="M:ScreenShot.Win32.GetWindowFromPoint(System.Int32,System.Int32,System.IntPtr,System.Boolean,System.Boolean)">
+            <summary>
+            根据鼠标位置获取窗口句柄
+            </summary>
+            <param name="x">x坐标</param>
+            <param name="y">y坐标</param>
+            <param name="hWndExcept">需要忽略的窗口句柄 通常该值为调用者窗口句柄</param>
+            <param name="bVisbleOnly">是否只获取可见窗口</param>
+            <param name="bTransparent">是否获取透明窗口</param>
+            <returns></returns>
+        </member>
+        <member name="M:ScreenShot.Win32.GetWindowText(System.IntPtr)">
+            <summary>
+            获取窗口文字
+            </summary>
+            <param name="hWnd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ScreenShot.Win32.GetClassName(System.IntPtr)">
+            <summary>
+            获取类名
+            </summary>
+            <param name="hWnd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ScreenShot.Win32.GetDesktopRect">
+            <summary>
+            获取整个屏幕的矩形区域
+            </summary>
+            <returns>矩形区域</returns>
+        </member>
+        <member name="M:ScreenShot.Win32.GetHtmlDocument(System.IntPtr)">
+            <summary>
+            根据句柄获取webbrowser控件
+            </summary>
+            <param name="hwnd">webbrowser控件句柄</param>
+            <returns>Document对象</returns>
+        </member>
+        <member name="M:ScreenShot.Win32.DrawCurToScreen(System.Drawing.Point)">
+            <summary>
+            在桌面绘制鼠标
+            </summary>
+            <param name="ptMousePosition"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
