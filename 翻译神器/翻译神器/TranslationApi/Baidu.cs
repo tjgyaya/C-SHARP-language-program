@@ -27,16 +27,66 @@ namespace 翻译神器
         /// <param name="from">源语言</param>
         /// <returns></returns>
         /// 
-        public static void BaiduTran(Image img, string from, out string src_text, out string dst_text)
+        public static void BaiduTran(Image img, string from, string to, out string src_text, out string dst_text)
         {
             if (BaiduKey.IsEmptyOrNull)
                 throw new Exception("请设置百度文字识别和翻译Key！");
+            //Picture(img, from, "zh", out src_text, out dst_text);
             // 调用百度文字识别
             string srcText = GeneralBasic(from, img);
             if (string.IsNullOrEmpty(srcText))
                 throw new Exception("识别内容为空");
             // 调用翻译
-            Translate(srcText, from, "zh", out src_text, out dst_text);
+            Translate(srcText, from, to, out src_text, out dst_text);
+        }
+
+        public static void Picture(Image img, string from, string to, out string src_text, out string dst_text)
+        {
+            string url = "https://fanyi-api.baidu.com/api/trans/sdk/picture?";
+            string salt = new Random().Next(1024, 8192).ToString();
+            string cuid = "APICUID";
+            string mac = "mac";
+            string base64;
+            byte[] buffer;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, ImageFormat.Png);
+                buffer = ms.ToArray();
+                base64 = string.Join("", ms.ToArray());
+            }
+            string pictureMd5 = GetMD5(base64);
+            string sign = GetMD5(BaiduKey.AppId + pictureMd5 + salt + cuid + mac + BaiduKey.Password);
+            url += $"from={from}&to={to}&appid={BaiduKey.AppId}&salt={salt}&cuid={cuid}&mac={mac}&erase=0&sign={sign}";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "post";
+            request.ContentType = "multipart/form-data;image/png";
+            request.Timeout = 6000;
+            request.ContentLength = buffer.Length;
+            request.GetRequestStream().Write(buffer, 0, buffer.Length);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream myResponseStream = response.GetResponseStream();
+            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+            string result = myStreamReader.ReadToEnd();
+            myStreamReader.Close();
+            myResponseStream.Close();
+
+            JavaScriptSerializer js = new JavaScriptSerializer();// 实例化一个能够序列化数据的类
+            var list = js.Deserialize<PictureTranslate>(result);  // 将json数据转化为对象类型并赋值给list
+            if (list.error_code != null) // 如果调用Api出现错误
+                throw new Exception("调用百度翻译失败" + "\n原因：" + list.error_msg);
+            // 接收序列化后的数据
+            StringBuilder dst = new StringBuilder();
+            StringBuilder src = new StringBuilder();
+            foreach (var item in list.content)
+            {
+                src.Append(item.src + "\r\n");
+                dst.Append(item.dst + "\r\n");
+            }
+            int sLen = src.ToString().LastIndexOf('\r');
+            int dLen = dst.ToString().LastIndexOf('\r');
+            src_text = src.ToString().Remove(sLen);
+            dst_text = dst.ToString().Remove(dLen);
         }
 
         // 翻译
@@ -88,14 +138,14 @@ namespace 翻译神器
         /// <param name="token">验证令牌（可为null）</param>
         /// <param name="param">参数</param>
         /// <returns>响应数据</returns>
-        public static string Request(string host, string token, string param, string contentType = null)
+        public static string Request(string host, string token, string param, string contentType = "application/x-www-form-urlencoded")
         {
             host += string.IsNullOrEmpty(token) ? "" : token;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
-           // request.ServicePoint.BindIPEndPointDelegate = (ServicePoint servicePoint, IPEndPoint remoteEndPoint, int retryCount) => new IPEndPoint(IPAddress.Any, 0);
+            // request.ServicePoint.BindIPEndPointDelegate = (ServicePoint servicePoint, IPEndPoint remoteEndPoint, int retryCount) => new IPEndPoint(IPAddress.Any, 0);
             request.Method = "post";
             request.Timeout = 6000;
-            request.ContentType = string.IsNullOrEmpty(contentType) ? "application/x-www-form-urlencoded" : contentType;
+            request.ContentType = contentType;
             request.KeepAlive = true;
             byte[] buffer = Encoding.UTF8.GetBytes(param);
             request.ContentLength = buffer.Length;
@@ -174,16 +224,27 @@ namespace 翻译神器
 
         private static string GetMD5(string str)
         {
-            if (str == null)
-                return null;
             MD5 md5 = MD5.Create();
             //将输入字符串转换为字节数组并计算哈希数据  
             byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
-            StringBuilder builder = new StringBuilder();
-            //循环遍历哈希数据的每一个字节并格式化为十六进制字符串  
-            for (int i = 0; i < data.Length; i++)
-                builder.Append(data[i].ToString("x2"));
-            return builder.ToString();
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in data)
+                sb.Append(b.ToString("x2"));
+            return sb.ToString();
+        }
+        private static string GetImageMD5(Image img)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, ImageFormat.Png);
+                //将输入字符串转换为字节数组并计算哈希数据  
+                byte[] data = md5.ComputeHash(ms.ToArray());
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in data)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
+            }
         }
 
         // 获取百度accesstoken
@@ -220,6 +281,20 @@ namespace 翻译神器
             public string error_code { get; set; }
             public string error_msg { get; set; }
             public List<Words_resultItem> words_result { get; set; }
+        }
+
+        public class PictureTranslate
+        {
+            public string error_code { get; set; }
+            public string error_msg { get; set; }
+            public List<Content> content { get; set; }
+            public class Content
+            {
+                public string src { get; set; } //分段翻译的原文
+                public string dst { get; set; }   //分段翻译译文
+            }
+            public string sumSrc { get; set; }
+            public string sumDst { get; set; }
         }
     }
 }

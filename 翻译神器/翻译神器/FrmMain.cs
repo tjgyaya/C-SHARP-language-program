@@ -73,6 +73,7 @@ namespace 翻译神器
             // 添加版本号到标题
             string ver = Application.ProductVersion;
             this.Text += " V" + ver.Remove(ver.Length - 4);
+            label_Version.Text = this.Text;
         }
         private SpeechSynthesizer speech = new SpeechSynthesizer();
         private Dictionary<string, string> config = new Dictionary<string, string>(16);
@@ -209,18 +210,18 @@ namespace 翻译神器
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            LoadFile();
-            this.WindowState = FormWindowState.Minimized;
+            if (LoadFile())
+                this.WindowState = FormWindowState.Minimized;
         }
 
         // 加载配置文件
-        private void LoadFile(bool reload = false)
+        private bool LoadFile(bool reload = false)
         {
             // 判断配置文件是否存在
             if (!File.Exists(ConfigFile.ConfigPath))
             {
-                MessageBox.Show("请先设定热键！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                MessageBox.Show("首次使用请先设定热键和翻译Key。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
             }
             try
             {
@@ -228,21 +229,22 @@ namespace 翻译神器
                 DataRecovery();
                 if (reload)// 重新加载配置文件
                     UnRegHotKey();
-                RegHotKey();
                 if (!reload)
                     this.notifyIcon1.ShowBalloonTip(5000, this.Text, "欢迎使用" + this.Text, ToolTipIcon.Info);
             }
             catch //(Exception ex)
             {
                 MessageBox.Show("加载配置文件错误，请重新设置！", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
-            if (BaiduKey.IsEmptyOrNull)
-            {
-                BaiduKey.ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
-                BaiduKey.SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
-                BaiduKey.AppId = "20200424000429104";
-                BaiduKey.Password = "5mzyraBsLRk2yfGQMhXJ";
-            }
+            return true;
+            //if (BaiduKey.IsEmptyOrNull)
+            //{
+            //    BaiduKey.ApiKey = "AznG9zhnWiW1HX0MjwA0hMVX";
+            //    BaiduKey.SecretKey = "qq2LcLeS6hm3aydfkko14AfeVGo2lSUq";
+            //    BaiduKey.AppId = "20200424000429104";
+            //    BaiduKey.Password = "5mzyraBsLRk2yfGQMhXJ";
+            //}
         }
 
         // 获取功能键键值
@@ -424,11 +426,9 @@ namespace 翻译神器
                 windowName = textBox_WindowName.Text;
                 windowClass = textBox_WindowClass.Text;
             }
-            IntPtr hwnd = FindWindowHandle();
+            IntPtr hwnd = Api.FindWindowHandle(windowName, windowClass);
             MinimizeWindow(true);
-            Thread.Sleep(200);
-            Api.SetForegroundWindow(hwnd);
-            Thread.Sleep(200);
+            Api.ShowWindowWait(hwnd, Api.SW_SHOWNORMAL, 300);
             return hwnd;
         }
 
@@ -443,7 +443,7 @@ namespace 翻译神器
                 if (shot.Start(hwnd) == DialogResult.Cancel)
                     throw new Exception("用户取消截图！");
                 // 保存截图坐标高宽
-                screenRect = new Rectangle(shot.SelectedArea.X, shot.SelectedArea.Y, shot.SelectedArea.Width, shot.SelectedArea.Height);
+                screenRect = shot.SelectedArea;
                 if (screenRect.X >= 0 && screenRect.Y >= 0 && screenRect.Width > 0 && screenRect.Height > 0)
                     MessageBox.Show("设置成功！\n请点击“保存配置”按钮。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
@@ -470,32 +470,16 @@ namespace 翻译神器
                 this.WindowState = FormWindowState.Normal;
         }
 
-        // 获取窗口句柄，并判断是否有效，无效则抛出异常
-        private IntPtr FindWindowHandle()
-        {
-            IntPtr hwnd;
-            if (!string.IsNullOrEmpty(windowName))
-                hwnd = Api.FindWindow(null, windowName);
-            else if (!string.IsNullOrEmpty(windowClass))
-                hwnd = Api.FindWindow(windowClass, null);
-            else
-                throw new Exception("请设置窗口标题或窗口类名！");
-            if (IntPtr.Zero == hwnd)
-                throw new Exception("找不到对应的窗口句柄！");
-            return hwnd;
-        }
-
         // 固定区域截图
         private Bitmap FixedScreen()
         {
             if (screenRect.Width <= 0 || screenRect.Height <= 0)
                 throw new Exception("请设置固定截图翻译坐标！");
-            IntPtr hwnd = FindWindowHandle();
-            Api.POINT p = new Api.POINT();
-            p.X = screenRect.X;
-            p.Y = screenRect.Y;
+            IntPtr hwnd = Api.FindWindowHandle(windowName, windowClass);
+            Api.ShowWindowWait(hwnd, Api.SW_SHOWNORMAL, 500);
+            Api.POINT p = new Api.POINT(screenRect.X, screenRect.Y);
             Api.ClientToScreen(hwnd, ref p);
-            return Screenshot(p.X, p.Y, screenRect.Width, screenRect.Height);
+            return SpecifyScreenshot.Screenshot(p.X, p.Y, screenRect.Width, screenRect.Height);
         }
 
         // 截图翻译
@@ -519,6 +503,7 @@ namespace 翻译神器
                     }
                     else
                         captureImage = FixedScreen();
+                  //  captureImage.Save("1.png");
                     // 如果截图错误
                     if (captureImage == null)
                         return;
@@ -528,7 +513,7 @@ namespace 翻译神器
                     if (sourceOfTran.IndexOf("有道") != -1)
                         Youdao.YoudaoTran(null, from, "zh-CHS", out src, out dst, captureImage);
                     else
-                        Baidu.BaiduTran(captureImage, from, out src, out dst);
+                        Baidu.BaiduTran(captureImage, from, "zh", out src, out dst);
                     if (copySourceTextToClip)
                         Clipboard.SetText(src);// 复制原文到剪切板
                     if (copyDestTextToClip)
@@ -742,46 +727,26 @@ namespace 翻译神器
 
         private void FrmMain_Shown(object sender, EventArgs e)
         {
-            isFixedScreen = false;
-            tranMode = TranMode.TranAndShowText;
-            StartThread(null);
+            //isFixedScreen = false;
+            //tranMode = TranMode.TranAndShowText;
+            //StartThread(null);
+        }
+
+        private void label_Url_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("https://www.52pojie.cn/thread-1483668-1-1.html");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
             this.WindowState = (this.WindowState == FormWindowState.Minimized) ? FormWindowState.Normal : FormWindowState.Minimized;
-        }
-
-
-        /// <summary>
-        /// 从指定坐标截取指定大小区域
-        /// </summary>
-        /// <param name="x">左上角横坐标</param>
-        /// <param name="y">左上角纵坐标</param>
-        /// <param name="width">宽度</param>
-        /// <param name="height">高度</param>
-        /// <returns></returns>
-        public static Bitmap Screenshot(int x, int y, int width, int height)
-        {
-            Bitmap bit = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(bit);
-            try
-            {
-                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.CopyFromScreen(x, y, 0, 0, new Size(width, height));
-                return bit;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                g?.Dispose();
-            }
         }
     }
 }

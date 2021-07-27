@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ScreenShot
@@ -32,12 +33,12 @@ namespace ScreenShot
             InitializeComponent();
         }
 
-        private Point startPos;          // 起始点位置
-        private Rectangle selectedArea;  // 选择的区域大小坐标 
-        private Image screenImage;       // 截取的全屏图像
+        private Point startPos;          // 起始点位置（相对于当前窗口左上角）
+        private Rectangle selectedArea;  // 选择的区域大小坐标（坐标相对于当前窗口左上角） 
+        private Image screenImage;     // 截取的全屏图像
         private IntPtr windowHandle;     // 要截图的目标窗口句柄
-        private IntPtr autoHwnd = IntPtr.Zero;// 自动框选的窗口句柄
-        private Point lastPoint;// 鼠标上次所在的坐标
+        private IntPtr autoHwnd;         // 自动框选的窗口句柄
+        private Point lastPoint;         // 鼠标上次所在的坐标（相对于当前窗口左上角）
 
         /// <summary>
         /// 截图完成后的图像
@@ -50,17 +51,18 @@ namespace ScreenShot
         public Rectangle SelectedArea
         {
             get { return selectedArea; }
-            private set { selectedArea = value; }
         }
 
         /// <summary>
         /// 开始截图
         /// </summary> 
-        public DialogResult Start(IntPtr windowHandle = default)
+        public virtual DialogResult Start(IntPtr windowHandle = default)
         {
             this.windowHandle = windowHandle;
             if (windowHandle != IntPtr.Zero)
-            {    // windowHandle不为空，则表示只针对某个窗口截图，而不是全屏截图
+            {
+                // windowHandle不为空，则表示只针对某个窗口截图，而不是全屏截图
+                Api.ShowWindowWait(windowHandle, Api.SW_SHOWNORMAL, 500);
                 Rectangle rect = Api.GetWindowRectByHandle(windowHandle);
                 screenImage = CopyScreen(rect.X, rect.Y, rect.Width, rect.Height);// 截取这个窗口的图片
             }
@@ -79,7 +81,6 @@ namespace ScreenShot
                 this.Location = rect.Location;
             }
             else
-                //;
                 this.WindowState = FormWindowState.Maximized;
             this.TopMost = true;
         }
@@ -126,10 +127,10 @@ namespace ScreenShot
                 this.Invalidate();  // 使窗口重绘引发Paint事件
                 return;
             }
-            autoHwnd = Api.GetWindowHandleByPos(e.Location, this.Handle);
-            Api.GetWindowRect(autoHwnd, out Api.TagRECT tagRect);
+            autoHwnd = Api.GetWindowHandleByPos(e.Location, this);
             this.Invalidate();  // 使窗口重绘引发Paint事件
         }
+
 
         // 锁定鼠标光标
         private void LockMouseMove()
@@ -158,16 +159,16 @@ namespace ScreenShot
         {
             Rectangle rect = Api.GetWindowRectByHandle(autoHwnd);
             rect.Intersect(this.ClientRectangle);// 避免截图区域超出屏幕
-            string str = $"鼠标坐标：{MousePosition.X},{MousePosition.Y}\r\n窗口坐标：{rect.X},{rect.Y}\r\n窗口大小：{rect.Width}x{rect.Height}";
-            Font font = new Font("微软雅黑", 10f);
-            Size size = g.MeasureString(str, font).ToSize();// 字体大小
-            Point displayPos = new Point(rect.Left, rect.Top - size.Height - 5);
-            DrawStr(g, displayPos, str, font, size);
             using (Pen pen = new Pen(Color.Cyan, 3))
             {
                 g.DrawImage(this.screenImage, rect, rect, GraphicsUnit.Pixel);
                 g.DrawRectangle(pen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
             }
+            string str = $"鼠标坐标：{MousePosition.X},{MousePosition.Y}\r\n窗口坐标：{rect.X},{rect.Y}\r\n窗口大小：{rect.Width}x{rect.Height}";
+            Font font = new Font("微软雅黑", 10f);
+            Size size = g.MeasureString(str, font).ToSize();// 字体大小
+            Point displayPos = new Point(rect.Left, rect.Top);
+            DrawStr(g, displayPos, str, font, size);
         }
 
         // 在指定位置绘制字符串
@@ -221,9 +222,11 @@ namespace ScreenShot
             string str;
             if (windowHandle != IntPtr.Zero)  // 是指定窗口截图
             {
-                Point mousePoint = this.PointToClient(MousePosition);// 屏幕坐标转为客户端窗口坐标
-                str = string.Format($"按鼠标右键或ESC取消\n起始坐标(相对):{this.startPos.X},{this.startPos.Y} " +
-                    $"鼠标坐标(相对):{mousePoint.X},{mousePoint.Y}\n截图大小:{this.selectedArea.Width}x{this.selectedArea.Height}");
+                Point mousePoint = ScreenToClient(windowHandle, MousePosition);
+                Point p = ClientToScreen(this.Handle, this.startPos);
+                Point startPos = ScreenToClient(windowHandle, ClientToScreen(this.Handle, this.startPos));
+                str = string.Format($"按鼠标右键或ESC取消\n起始坐标(相对):{startPos.X},{startPos.Y} 绝对{p.X},{p.Y}" +
+                     $"鼠标坐标(相对):{mousePoint.X},{mousePoint.Y}\n截图大小:{this.selectedArea.Width}x{this.selectedArea.Height}");
             }
             else // 不是指定窗口截图
                 str = string.Format($"按鼠标右键或ESC取消\n起始坐标:{this.startPos.X},{this.startPos.Y} " +
@@ -250,10 +253,28 @@ namespace ScreenShot
             // 在全屏图片上裁剪目标矩形
             using (Bitmap bmpImage = new Bitmap(screenImage))
                 CaptureImage = bmpImage.Clone(area, bmpImage.PixelFormat);
-           // CaptureImage.Save("1.png", ImageFormat.Png);
+            //CaptureImage.Save("0.png", ImageFormat.Png);
+            if (windowHandle != null)
+                selectedArea = new Rectangle(ScreenToClient(windowHandle, ClientToScreen(this.Handle, area.Location)), area.Size);
+            else
+                selectedArea = area;
             this.Close();
             this.DialogResult = DialogResult.OK;
             OnCapturedEvent();
+        }
+
+        private Point ScreenToClient(IntPtr hWnd, Point p)
+        {
+            Api.POINT pt = new Api.POINT(p);
+            Api.ScreenToClient(hWnd, ref pt);// 屏幕坐标转为客户端窗口坐标
+            return new Point(pt.X, pt.Y);
+        }
+
+        private Point ClientToScreen(IntPtr hWnd, Point p)
+        {
+            Api.POINT pt = new Api.POINT(p);
+            Api.ClientToScreen(hWnd, ref pt);// 屏幕坐标转为客户端窗口坐标
+            return new Point(pt.X, pt.Y);
         }
 
         // 拷贝整个屏幕

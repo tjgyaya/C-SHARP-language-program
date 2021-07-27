@@ -42,7 +42,6 @@ namespace ScreenShot
             this.Name = "FrmScreenShot";
             this.ShowInTaskbar = false;
             this.Text = "截图";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmScreenShot_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FrmScreenShot_Paint);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmScreenShot_KeyUp);

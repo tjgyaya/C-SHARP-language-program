@@ -18,13 +18,13 @@ namespace 翻译神器
         private static extern int WritePrivateProfileString(string lpApplicationName, string lpKeyName, string lpString, string lpFileName);
 
         // 配置文件节点名称
-        private static string Section = "截图翻译";
+        private static string Section = "翻译神器";
 
         // 配置文件路径
         public static string ConfigPath
         {
             get;
-        } = Path.Combine(Environment.GetEnvironmentVariable("APPDATA") + @"\截图翻译\", "截图翻译.ini");
+        } = Path.Combine(Environment.GetEnvironmentVariable("APPDATA") + @"\翻译神器\", "翻译神器.ini");
 
         const int SIZE = 100;
 
